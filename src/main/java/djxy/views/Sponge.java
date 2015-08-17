@@ -18,6 +18,7 @@
 
 package djxy.views;
 
+import djxy.api.MinecraftGuiAPI;
 import djxy.controllers.MainController;
 import djxy.models.PluginInterface;
 import org.spongepowered.api.Game;
@@ -29,6 +30,7 @@ import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.service.ProviderExistsException;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandException;
@@ -56,6 +58,11 @@ public class Sponge implements PluginInterface {
     protected void onPreInitializationEvent(PreInitializationEvent event) {
         game = event.getGame();
         new CommandGui(this, event.getGame());
+        try {
+            game.getServiceManager().setProvider(this, MinecraftGuiAPI.class, mainController.getMinecraftGuiAPI());
+        } catch (ProviderExistsException e) {
+            e.printStackTrace();
+        }
         mainController.serverInit();
     }
 

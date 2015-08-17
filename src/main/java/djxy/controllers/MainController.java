@@ -18,6 +18,7 @@
 
 package djxy.controllers;
 
+import djxy.api.MinecraftGuiAPI;
 import djxy.controllers.NetworkController.PlayerConnection;
 import djxy.models.ComponentManager;
 import djxy.models.Form;
@@ -40,89 +41,6 @@ public final class MainController {
     public static final String PATH = "mods/MinecraftGUI";
     private static MainController instance = null;
 
-    /**
-     * You need to use this method to register your ComponentManager.
-     *
-     * @param manager The ComponentManager you are using to receive the events from MinecraftGUI.
-     */
-    public static void registerComponentManager(ComponentManager manager, boolean playerNeedAuthentication, ArrayList<Resource> resourceToDownload){
-        instance.addComponentManager(manager, playerNeedAuthentication);
-        instance.resourcesToDownload.addAll(resourceToDownload);
-    }
-
-    /**
-     * You need to use this method to register your ComponentManager.
-     *
-     * @param manager The ComponentManager you are using to receive the events from MinecraftGUI.
-     */
-    public static void registerComponentManager(ComponentManager manager, boolean playerNeedAuthentication){
-        instance.addComponentManager(manager, playerNeedAuthentication);
-    }
-
-    public static void listenButton(ComponentManager manager, String buttonId){
-        instance.addComponentManagerListenButton(manager, buttonId);
-    }
-
-    public static void createTimerRemover(String playerUUID, String componentIdToRemove, int second){
-        Boolean auth = instance.isPlayerAuthenticated(playerUUID);
-
-        if(auth != null && auth == true)
-            instance.sendTimerRemover(playerUUID, componentIdToRemove, second);
-    }
-
-    public static void callButtonEvent(String playerUUID, String buttonId){
-        Boolean auth = instance.isPlayerAuthenticated(playerUUID);
-
-        if(auth != null && auth == true)
-            instance.sendCallButtonEvent(playerUUID, buttonId);
-    }
-
-    /**
-     * This method will create one component on the screen of the player
-     *
-     * @param playerUUID The player to send the component
-     * @param component The component to create
-     */
-    public static void createComponent(String playerUUID, Component component){
-        Boolean auth = instance.isPlayerAuthenticated(playerUUID);
-
-        if(auth != null && auth == true)
-            instance.sendComponentCreate(playerUUID, component);
-    }
-
-    /**
-     * This method will change properties of one component on the screen of the player
-     *
-     * @param playerUUID The player to send the update
-     * @param attributes The attributes to send
-     */
-    public static void updateComponent(String playerUUID, Attributes attributes){
-        Boolean auth = instance.isPlayerAuthenticated(playerUUID);
-
-        if(auth != null && auth == true)
-            instance.sendComponentUpdate(playerUUID, attributes);
-    }
-
-    /**
-     * This method will remove a component of the player's screen
-     *
-     * @param playerUUID The player to remove the component
-     * @param componentId The id of the component to remove
-     */
-    public static void removeComponent(String playerUUID, String componentId){
-        Boolean auth = instance.isPlayerAuthenticated(playerUUID);
-
-        if(auth != null && auth == true)
-            instance.sendComponentRemove(playerUUID, componentId);
-    }
-
-    public static void downloadResource(String playerUUID, Resource resource){
-        Boolean auth = instance.isPlayerAuthenticated(playerUUID);
-
-        if(auth != null && auth == true)
-            instance.sendResource(playerUUID, resource);
-    }
-
     //**************************************************************************
     //**************************************************************************
 
@@ -134,6 +52,7 @@ public final class MainController {
     private final ComponentLocationController componentLocationController;
     private final AuthenticationManager authenticationManager;
     private final PluginInterface pluginInterface;
+    private final MinecraftGuiAPI minecraftGuiAPI;
     private boolean playerNeedAuthentication = false;
 
     public MainController(PluginInterface pluginInterface) throws Exception {
@@ -141,6 +60,7 @@ public final class MainController {
             throw new Exception();
 
         instance = this;
+        minecraftGuiAPI = new Api();
         resourcesToDownload = new ArrayList<>();
         this.pluginInterface = pluginInterface;
         componentsCreated = new HashMap<>();
@@ -149,6 +69,10 @@ public final class MainController {
         this.authenticationManager = new AuthenticationManager(this);
         networkController = new NetworkController(this, 20000);
         componentLocationController = new ComponentLocationController();
+    }
+
+    public MinecraftGuiAPI getMinecraftGuiAPI() {
+        return minecraftGuiAPI;
     }
 
     public void reloadPlayerScreen(String playerUUID){
@@ -402,6 +326,74 @@ public final class MainController {
         array.add(object);
 
         return array;
+    }
+
+    private class Api extends MinecraftGuiAPI{
+
+        @Override
+        public void registerComponentManager(ComponentManager manager, boolean playerNeedAuthentication, ArrayList<Resource> resourceToDownload) {
+            addComponentManager(manager, playerNeedAuthentication);
+            resourcesToDownload.addAll(resourceToDownload);
+        }
+
+        @Override
+        public void registerComponentManager(ComponentManager manager, boolean playerNeedAuthentication) {
+            addComponentManager(manager, playerNeedAuthentication);
+        }
+
+        @Override
+        public void listenButton(ComponentManager manager, String buttonId) {
+            addComponentManagerListenButton(manager, buttonId);
+        }
+
+        @Override
+        public void createTimerRemover(String playerUUID, String componentIdToRemove, int second) {
+            Boolean auth = isPlayerAuthenticated(playerUUID);
+
+            if(auth != null && auth == true)
+                sendTimerRemover(playerUUID, componentIdToRemove, second);
+        }
+
+        @Override
+        public void callButtonEvent(String playerUUID, String buttonId) {
+            Boolean auth = isPlayerAuthenticated(playerUUID);
+
+            if(auth != null && auth == true)
+                sendCallButtonEvent(playerUUID, buttonId);
+        }
+
+        @Override
+        public void createComponent(String playerUUID, Component component) {
+            Boolean auth = isPlayerAuthenticated(playerUUID);
+
+            if(auth != null && auth == true)
+                sendComponentCreate(playerUUID, component);
+        }
+
+        @Override
+        public void updateComponent(String playerUUID, Attributes attributes) {
+            Boolean auth = isPlayerAuthenticated(playerUUID);
+
+            if(auth != null && auth == true)
+                sendComponentUpdate(playerUUID, attributes);
+        }
+
+        @Override
+        public void removeComponent(String playerUUID, String componentId) {
+            Boolean auth = instance.isPlayerAuthenticated(playerUUID);
+
+            if(auth != null && auth == true)
+                instance.sendComponentRemove(playerUUID, componentId);
+        }
+
+        @Override
+        public void downloadResource(String playerUUID, Resource resource) {
+            Boolean auth = instance.isPlayerAuthenticated(playerUUID);
+
+            if(auth != null && auth == true)
+                instance.sendResource(playerUUID, resource);
+        }
+
     }
 
 }

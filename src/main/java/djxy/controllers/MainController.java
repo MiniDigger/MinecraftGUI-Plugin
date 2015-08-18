@@ -18,7 +18,7 @@
 
 package djxy.controllers;
 
-import djxy.api.MinecraftGuiAPI;
+import djxy.api.MinecraftGuiService;
 import djxy.controllers.NetworkController.PlayerConnection;
 import djxy.models.ComponentManager;
 import djxy.models.Form;
@@ -52,7 +52,7 @@ public final class MainController {
     private final ComponentLocationController componentLocationController;
     private final AuthenticationManager authenticationManager;
     private final PluginInterface pluginInterface;
-    private final MinecraftGuiAPI minecraftGuiAPI;
+    private final MinecraftGuiService minecraftGuiService;
     private boolean playerNeedAuthentication = false;
 
     public MainController(PluginInterface pluginInterface) throws Exception {
@@ -60,7 +60,7 @@ public final class MainController {
             throw new Exception();
 
         instance = this;
-        minecraftGuiAPI = new Api();
+        minecraftGuiService = new Service();
         resourcesToDownload = new ArrayList<>();
         this.pluginInterface = pluginInterface;
         componentsCreated = new HashMap<>();
@@ -71,8 +71,8 @@ public final class MainController {
         componentLocationController = new ComponentLocationController();
     }
 
-    public MinecraftGuiAPI getMinecraftGuiAPI() {
-        return minecraftGuiAPI;
+    public MinecraftGuiService getMinecraftGuiService() {
+        return minecraftGuiService;
     }
 
     public void reloadPlayerScreen(String playerUUID){
@@ -328,7 +328,7 @@ public final class MainController {
         return array;
     }
 
-    private class Api extends MinecraftGuiAPI{
+    private class Service implements MinecraftGuiService {
 
         @Override
         public void registerComponentManager(ComponentManager manager, boolean playerNeedAuthentication, ArrayList<Resource> resourceToDownload) {

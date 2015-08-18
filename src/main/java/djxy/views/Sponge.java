@@ -18,7 +18,7 @@
 
 package djxy.views;
 
-import djxy.api.MinecraftGuiAPI;
+import djxy.api.MinecraftGuiService;
 import djxy.controllers.MainController;
 import djxy.models.PluginInterface;
 import org.spongepowered.api.Game;
@@ -59,7 +59,7 @@ public class Sponge implements PluginInterface {
         game = event.getGame();
         new CommandGui(this, event.getGame());
         try {
-            game.getServiceManager().setProvider(this, MinecraftGuiAPI.class, mainController.getMinecraftGuiAPI());
+            game.getServiceManager().setProvider(this, MinecraftGuiService.class, mainController.getMinecraftGuiService());
         } catch (ProviderExistsException e) {
             e.printStackTrace();
         }

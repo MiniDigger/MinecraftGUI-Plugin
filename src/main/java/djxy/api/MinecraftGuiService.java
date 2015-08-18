@@ -27,7 +27,7 @@ import djxy.models.resource.Resource;
 
 import java.util.ArrayList;
 
-public abstract class MinecraftGuiAPI {
+public abstract interface MinecraftGuiService {
 
     /**
      * You need to use this method to register your ComponentManager.

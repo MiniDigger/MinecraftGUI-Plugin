@@ -19,6 +19,7 @@
 package djxy.controllers;
 
 import djxy.models.component.Attributes;
+import djxy.models.component.ComponentAttribute;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -60,8 +61,8 @@ public final class ComponentLocationController {
             LocationRelative locationRelative = locationRelatives.get(attributes.getId().toLowerCase());
             
             if(locationRelative != null){
-                attributes.setXRelative(locationRelative.xRelative);
-                attributes.setYRelative(locationRelative.yRelative);
+                attributes.setAttribute(ComponentAttribute.X_RELATIVE.name(), locationRelative.xRelative);
+                attributes.setAttribute(ComponentAttribute.Y_RELATIVE.name(), locationRelative.yRelative);
             }
         }
     }

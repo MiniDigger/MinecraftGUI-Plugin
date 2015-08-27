@@ -18,20 +18,19 @@
 
 package djxy.models;
 
-import djxy.models.component.ComponentAttribute;
 import djxy.models.component.ComponentState;
 
 public class ButtonEvent {
 
     private String componentIdToUpdate;
     private ComponentState state;
-    private ComponentAttribute componentAttribute;
-    private String value;
+    private String attribute;
+    private Object value;
 
-    public ButtonEvent(String componentIdToUpdate, ComponentState state, ComponentAttribute componentAttribute, String value) {
+    public ButtonEvent(String componentIdToUpdate, ComponentState state, String attribute, Object value) {
         this.componentIdToUpdate = componentIdToUpdate;
         this.state = state;
-        this.componentAttribute = componentAttribute;
+        this.attribute = attribute;
         this.value = value;
     }
 
@@ -43,11 +42,11 @@ public class ButtonEvent {
         this.state = state;
     }
 
-    public void setComponentAttribute(ComponentAttribute componentAttribute) {
-        this.componentAttribute = componentAttribute;
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
@@ -59,15 +58,15 @@ public class ButtonEvent {
         return state;
     }
 
-    public ComponentAttribute getComponentAttribute() {
-        return componentAttribute;
+    public String getAttribute() {
+        return attribute;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
     public ButtonEvent clone(){
-        return new ButtonEvent(this.componentIdToUpdate, this.state, this.componentAttribute, this.value);
+        return new ButtonEvent(this.componentIdToUpdate, this.state, this.attribute, this.value);
     }
 }

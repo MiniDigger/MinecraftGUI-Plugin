@@ -21,7 +21,8 @@ package djxy.models.component;
 public enum ComponentState {
     NORMAL,
     HOVER,
-    CLICK;
+    ACTIVE,
+    FOCUS;
 
     public static ComponentState getComponentState(String value){
         try{

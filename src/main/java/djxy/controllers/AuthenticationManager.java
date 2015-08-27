@@ -47,7 +47,7 @@ public class AuthenticationManager implements ComponentManager {
         playersAuthenticated = new HashMap<>();
         playersTrying = new HashMap<>();
         playersCode = new HashMap<>();
-        root = ComponentFactory.load(new File(MainController.PATH+"/Authentication/authComponents.xml"), new File(MainController.PATH+"/Authentication/authAttributes.css"));
+        root = null;//ComponentFactory.load(new File(MainController.PATH+"/Authentication/authComponents.xml"), CSSFactory.load(new File(MainController.PATH + "/Authentication/authAttributes.css")));
         resources = ResourceFactory.load(new File(MainController.PATH+"/Authentication/authResources.xml"));
     }
 

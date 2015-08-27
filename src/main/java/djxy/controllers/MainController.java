@@ -131,14 +131,6 @@ public final class MainController {
         }
     }
 
-    public Component loadComponents(File xml, File css){
-        return ComponentFactory.load(xml, css);
-    }
-
-    public ArrayList<Resource> loadResource(File resource){
-        return ResourceFactory.load(resource);
-    }
-
     public PluginInterface getPluginInterface() {
         return pluginInterface;
     }
@@ -214,7 +206,14 @@ public final class MainController {
         for(ComponentManager manager : componentManagers)
             manager.initPlayerGUI(playerConnection.getPlayerUUID());
 
-        pluginInterface.screenLoaded(playerConnection.getPlayerUUID());
+        try {
+            sendResource(playerConnection.getPlayerUUID(), ResourceFactory.load(new File("mods/testRes.xml")).get(0));
+            sendComponentCreate(playerConnection.getPlayerUUID(), ComponentFactory.load(new File("mods/test.xml"), CSSFactory.load(new File("mods/test.css"))));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //pluginInterface.screenLoaded(playerConnection.getPlayerUUID());
     }
     
     private void callReceiveInputFormEvent(PlayerConnection playerConnection, JSONObject object){

@@ -66,5 +66,8 @@ public class Side {
     public void setBottom(boolean bottom) {
         this.bottom = bottom;
     }
-    
+
+    public String toString(){
+        return "Side[left="+left+",top="+top+",right="+right+",bottom="+bottom+"]";
+    }
 }

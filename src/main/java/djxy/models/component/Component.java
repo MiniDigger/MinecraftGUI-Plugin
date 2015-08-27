@@ -102,7 +102,7 @@ public class Component {
     private void initAttributesId(){
         setAttributeId(ComponentState.NORMAL, this.id+"NORMAL");
         setAttributeId(ComponentState.HOVER, this.id+"HOVER");
-        setAttributeId(ComponentState.CLICK, this.id + "CLICK");
+        setAttributeId(ComponentState.ACTIVE, this.id + "ACTIVE");
     }
 
     public void setAttributeId(ComponentState state, String id){
@@ -226,7 +226,7 @@ public class Component {
         clone.attributes = attributes.clone(clone.getId());
         clone.setAttributeId(ComponentState.NORMAL, clone.getId()+"NORMAL");
         clone.setAttributeId(ComponentState.HOVER, clone.getId()+"HOVER");
-        clone.setAttributeId(ComponentState.CLICK, clone.getId() + "CLICK");
+        clone.setAttributeId(ComponentState.ACTIVE, clone.getId() + "ACTIVE");
 
         for(Component copy : directChildren)
             clone(copy, clone, suffix);
@@ -240,7 +240,7 @@ public class Component {
         clone.attributes = original.attributes.clone(clone.getId());
         clone.setAttributeId(ComponentState.NORMAL, clone.getId()+"NORMAL");
         clone.setAttributeId(ComponentState.HOVER, clone.getId()+"HOVER");
-        clone.setAttributeId(ComponentState.CLICK, clone.getId()+"CLICK");
+        clone.setAttributeId(ComponentState.ACTIVE, clone.getId()+"ACTIVE");
 
         for(Component copy : original.directChildren)
             clone(copy, clone, suffix);

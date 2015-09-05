@@ -21,7 +21,6 @@ package djxy.models.component;
 import java.awt.*;
 
 public enum ComponentAttribute {
-    FOCUS,
     POSITION,
     LOCATION_FREEZE,
     VISIBILITY,
@@ -53,7 +52,7 @@ public enum ComponentAttribute {
     LIST_ORIGIN;
 
     public static boolean attributeHasState(ComponentAttribute attribute){
-        if(FOCUS == attribute || POSITION == attribute || LOCATION_FREEZE == attribute || VISIBILITY == attribute || X_RELATIVE == attribute || Y_RELATIVE == attribute || VALUE == attribute || MAX_TEXT_LINES == attribute || LIST_ORDER == attribute || LIST_ORIGIN == attribute || HINT  == attribute || URL  == attribute)
+        if(POSITION == attribute || LOCATION_FREEZE == attribute || VISIBILITY == attribute || X_RELATIVE == attribute || Y_RELATIVE == attribute || VALUE == attribute || MAX_TEXT_LINES == attribute || LIST_ORDER == attribute || LIST_ORIGIN == attribute || HINT  == attribute || URL  == attribute)
             return false;
         if(WIDTH == attribute || HEIGHT == attribute || PADDING_SIZE == attribute || PADDING_SIDE == attribute || BORDER_SIZE == attribute || BORDER_SIDE == attribute || BORDER_COLOR == attribute || MARGIN_LEFT == attribute || MARGIN_TOP == attribute || MARGIN_RIGHT == attribute || MARGIN_BOT == attribute || BACKGROUND == attribute || TEXT_ALIGNMENT == attribute || TEXT_COLOR == attribute || FONT == attribute || FONT_SIZE == attribute || IMAGE_TYPE == attribute || IMAGE_NAME == attribute)
             return true;
@@ -91,7 +90,7 @@ public enum ComponentAttribute {
             if(object instanceof ListOrigin)
                 return ((ListOrigin) object).name();
         }
-        else if(componentAttribute == IMAGE_NAME || componentAttribute == FONT_SIZE || componentAttribute == FONT || componentAttribute == VALUE || componentAttribute == HINT || componentAttribute == URL || componentAttribute == MAX_TEXT_LINES || componentAttribute == MARGIN_BOT || componentAttribute == MARGIN_LEFT || componentAttribute == MARGIN_RIGHT || componentAttribute == MARGIN_TOP || componentAttribute == LOCATION_FREEZE || componentAttribute == FOCUS || componentAttribute == VISIBILITY || componentAttribute == LOCATION_FREEZE || componentAttribute == LOCATION_FREEZE || componentAttribute == PADDING_SIZE || componentAttribute == BORDER_SIZE){
+        else if(componentAttribute == IMAGE_NAME || componentAttribute == FONT_SIZE || componentAttribute == FONT || componentAttribute == VALUE || componentAttribute == HINT || componentAttribute == URL || componentAttribute == MAX_TEXT_LINES || componentAttribute == MARGIN_BOT || componentAttribute == MARGIN_LEFT || componentAttribute == MARGIN_RIGHT || componentAttribute == MARGIN_TOP || componentAttribute == LOCATION_FREEZE || componentAttribute == VISIBILITY || componentAttribute == LOCATION_FREEZE || componentAttribute == LOCATION_FREEZE || componentAttribute == PADDING_SIZE || componentAttribute == BORDER_SIZE){
             return object.toString();
         }
         else if(componentAttribute == X_RELATIVE || componentAttribute == Y_RELATIVE || componentAttribute == WIDTH || componentAttribute == HEIGHT){

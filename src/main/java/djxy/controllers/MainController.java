@@ -206,13 +206,6 @@ public final class MainController {
         for(ComponentManager manager : componentManagers)
             manager.initPlayerGUI(playerConnection.getPlayerUUID());
 
-        try {
-            sendResource(playerConnection.getPlayerUUID(), ResourceFactory.load(new File("mods/testRes.xml")).get(0));
-            sendComponentCreate(playerConnection.getPlayerUUID(), ComponentFactory.load(new File("mods/test.xml"), CSSFactory.load(new File("mods/test.css"))));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
         //pluginInterface.screenLoaded(playerConnection.getPlayerUUID());
     }
     

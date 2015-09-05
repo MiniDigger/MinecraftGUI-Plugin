@@ -22,7 +22,7 @@ import djxy.api.MinecraftGuiService;
 import djxy.controllers.MainController;
 import djxy.models.PluginInterface;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;

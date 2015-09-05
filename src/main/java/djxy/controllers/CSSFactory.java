@@ -85,7 +85,7 @@ public class CSSFactory {
         HashMap<String, Object> attributes = new HashMap<>();
 
         for (String declaration : declarations) {
-            String attribute = declaration.substring(0, declaration.indexOf(":")).trim();
+            String attribute = declaration.substring(0, declaration.indexOf(":")).trim().replace("-", "_").toUpperCase();
             Object value = getObject(declaration.substring(declaration.indexOf(":") + 1).trim());
 
             attributes.put(attribute, value);

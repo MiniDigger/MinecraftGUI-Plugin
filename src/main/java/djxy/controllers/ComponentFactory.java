@@ -20,6 +20,7 @@ package djxy.controllers;
 
 import djxy.models.ButtonEvent;
 import djxy.models.component.Component;
+import djxy.models.component.ComponentAttribute;
 import djxy.models.component.ComponentState;
 import djxy.models.component.ComponentType;
 import org.jsoup.Jsoup;
@@ -47,7 +48,10 @@ public class ComponentFactory {
             for(Element child : root.children())
                 generateComponent(rootComponent, child, components);
 
-            setComponentAttributes(root, cssRules, components);
+            setComponentsAttributes(root, cssRules, components);
+            setComponentsAttribute("url", ComponentAttribute.URL.name(), root, components);
+            setComponentsAttribute("hint", ComponentAttribute.HINT.name(), root, components);
+            setComponentsValue(root, components);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,8 +60,28 @@ public class ComponentFactory {
         return rootComponent;
     }
 
+    private static void setComponentsValue(Element root, HashMap<Integer, Component> components){
+        for(Element element : root.select("*")){
+            String node = element.nodeName().toLowerCase();
 
-    private static void setComponentAttributes(Element root, ArrayList<CSSFactory.CSSRule> cssRules, HashMap<Integer, Component> components){
+            if(!node.equals("root") && !element.ownText().isEmpty()) {
+                Component component = components.get(Integer.parseInt(element.attr("fakeId")));
+
+                component.getAttributes().setAttribute(ComponentAttribute.VALUE.name(), element.ownText());
+            }
+        }
+    }
+
+    private static void setComponentsAttribute(String nodeAttribute, String attribute, Element root, HashMap<Integer, Component> components){
+        for(Element element : root.select("["+nodeAttribute+"]")){
+            Component component = components.get(Integer.parseInt(element.attr("fakeId")));
+
+            component.getAttributes().setAttribute(attribute, element.attr(nodeAttribute));
+        }
+    }
+
+
+    private static void setComponentsAttributes(Element root, ArrayList<CSSFactory.CSSRule> cssRules, HashMap<Integer, Component> components){
         for(CSSFactory.CSSRule cssRule : cssRules){
             Elements elements = root.select(cssRule.getSelector());
 
@@ -84,38 +108,57 @@ public class ComponentFactory {
             parent.getAttributes().addButtonEvent(new ButtonEvent(element.attr("componentId"), ComponentState.getComponentState(element.attr("state")), element.attr("attribute"), CSSFactory.getObject(element.attr("value"))));
             element.remove();
         }
-        else if(nodeName.equals("input") && parent != null) {
-            parent.getAttributes().addInput(element.attr("componentId"));
+        else if(nodeName.equals("inputtosend") && parent != null) {
+            parent.getAttributes().addInput(element.attr("id"));
             element.remove();
         }
         else{
+            String inputType;
             String id = element.attr("id");
             ComponentType type = null;
 
             switch (nodeName){
                 case "button":
-                    type = ComponentType.BUTTON;
-                    break;
-                case "buttonurl":
-                    type = ComponentType.BUTTON_URL;
+                    inputType = element.attr("type").toLowerCase();
+
+                    switch (inputType){
+                        case "":
+                            type = ComponentType.BUTTON;
+                            break;
+                        case "normal":
+                            type = ComponentType.BUTTON;
+                            break;
+                        case "url":
+                            type = ComponentType.BUTTON_URL;
+                            break;
+                    }
                     break;
                 case "image":
                     type = ComponentType.IMAGE;
                     break;
-                case "inputtext":
-                    type = ComponentType.INPUT_TEXT;
-                    break;
-                case "inputpassword":
-                    type = ComponentType.INPUT_PASSWORD;
-                    break;
-                case "inputdecimal":
-                    type = ComponentType.INPUT_DECIMAL;
-                    break;
-                case "inputinteger":
-                    type = ComponentType.INPUT_INTEGER;
-                    break;
-                case "inputinvisible":
-                    type = ComponentType.INPUT_INVISIBLE;
+                case "input":
+                    inputType = element.attr("type").toLowerCase();
+
+                    switch (inputType){
+                        case "":
+                            type = ComponentType.INPUT_TEXT;
+                            break;
+                        case "text":
+                            type = ComponentType.INPUT_TEXT;
+                            break;
+                        case "password":
+                            type = ComponentType.INPUT_PASSWORD;
+                            break;
+                        case "decimal":
+                            type = ComponentType.INPUT_DECIMAL;
+                            break;
+                        case "integer":
+                            type = ComponentType.INPUT_INTEGER;
+                            break;
+                        case "invisible":
+                            type = ComponentType.INPUT_INVISIBLE;
+                            break;
+                    }
                     break;
                 case "panel":
                     type = ComponentType.PANEL;

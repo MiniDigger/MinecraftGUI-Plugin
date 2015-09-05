@@ -212,6 +212,11 @@ public class Attributes {
 
             update.put("Value", color.getRed()+","+color.getGreen()+","+color.getBlue()+","+color.getAlpha());
         }
+        else if(value instanceof Enum){
+            Enum e = (Enum) value;
+
+            update.put("Value", e.name());
+        }
         
         return update;
     }

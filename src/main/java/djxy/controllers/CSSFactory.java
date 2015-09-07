@@ -86,7 +86,7 @@ public class CSSFactory {
 
         for (String declaration : declarations) {
             String attribute = declaration.substring(0, declaration.indexOf(":")).trim().replace("-", "_").toUpperCase();
-            Object value = getObject(declaration.substring(declaration.indexOf(":") + 1).trim());
+            Object value = convertStringToObject(declaration.substring(declaration.indexOf(":") + 1).trim());
 
             attributes.put(attribute, value);
         }
@@ -128,7 +128,7 @@ public class CSSFactory {
         return cssRules;
     }
 
-    public static Object getObject(String value){
+    public static Object convertStringToObject(String value){
         Object object;
 
         if((object = getColor(value)) != null) return object;
@@ -138,6 +138,41 @@ public class CSSFactory {
         if((object = getInteger(value)) != null) return object;
 
         return value;
+    }
+
+    public static String convertObjectToString(Object value){
+        if(value instanceof String)
+            return (String) value;
+        else if(value instanceof Side){
+            Side side = (Side) value;
+            return side.isLeft()+","+side.isTop()+","+side.isRight()+","+side.isBottom();
+        }
+        else if(value instanceof Integer){
+            Integer i = (Integer) value;
+            return i+"";
+        }
+        else if(value instanceof Float){
+            Float f = (Float) value;
+
+            return f*100+"%";
+        }
+        else if(value instanceof Boolean){
+            Boolean bool = (Boolean) value;
+
+            return bool+"";
+        }
+        else if(value instanceof Color){
+            Color color = (Color) value;
+
+            return color.getRed()+","+color.getGreen()+","+color.getBlue()+","+color.getAlpha();
+        }
+        else if(value instanceof Enum){
+            Enum e = (Enum) value;
+
+            return e.name();
+        }
+
+        return "";
     }
 
     public static Integer getInteger(String integer){

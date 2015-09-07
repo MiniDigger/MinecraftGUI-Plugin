@@ -108,7 +108,7 @@ public class ComponentFactory {
         Component component = null;
 
         if(nodeName.equals("buttonevent") && parent != null) {
-            parent.getAttributes().addButtonEvent(new ButtonEvent(element.attr("componentId"), ComponentState.getComponentState(element.attr("state")), element.attr("attribute"), CSSFactory.getObject(element.attr("value"))));
+            parent.getAttributes().addButtonEvent(new ButtonEvent(element.attr("componentId"), ComponentState.getComponentState(element.attr("state")), element.attr("attribute"), CSSFactory.convertStringToObject(element.attr("value"))));
             element.remove();
         }
         else if(nodeName.equals("inputtosend") && parent != null) {

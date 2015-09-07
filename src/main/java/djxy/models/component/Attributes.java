@@ -18,11 +18,11 @@
 
 package djxy.models.component;
 
+import djxy.controllers.CSSFactory;
 import djxy.models.ButtonEvent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -173,7 +173,7 @@ public class Attributes {
         jsonObject.put("ComponentId", buttonEvent.getComponentIdToUpdate());
         jsonObject.put("State", buttonEvent.getState().name());
         jsonObject.put("Attribute", buttonEvent.getAttribute());
-        jsonObject.put("Value", buttonEvent.getValue());
+        jsonObject.put("Value", CSSFactory.convertObjectToString(buttonEvent.getValue()));
 
         return jsonObject;
     }
@@ -185,38 +185,7 @@ public class Attributes {
         update.put("ComponentId", id);
         update.put("State", state.name());
         update.put("Attribute", attribute.toUpperCase());
-
-        if(value instanceof String){
-            update.put("Value", value);
-        }
-        else if(value instanceof Side){
-            Side side = (Side) value;
-            update.put("Value", side.isLeft()+","+side.isTop()+","+side.isRight()+","+side.isBottom());
-        }
-        else if(value instanceof Integer){
-            Integer i = (Integer) value;
-            update.put("Value", i+"");
-        }
-        else if(value instanceof Float){
-            Float f = (Float) value;
-
-            update.put("Value", f*100+"%");
-        }
-        else if(value instanceof Boolean){
-            Boolean bool = (Boolean) value;
-
-            update.put("Value", bool+"");
-        }
-        else if(value instanceof Color){
-            Color color = (Color) value;
-
-            update.put("Value", color.getRed()+","+color.getGreen()+","+color.getBlue()+","+color.getAlpha());
-        }
-        else if(value instanceof Enum){
-            Enum e = (Enum) value;
-
-            update.put("Value", e.name());
-        }
+        update.put("Value", CSSFactory.convertObjectToString(value));
         
         return update;
     }

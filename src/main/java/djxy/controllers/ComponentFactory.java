@@ -51,6 +51,7 @@ public class ComponentFactory {
             setComponentsAttributes(root, cssRules, components);
             setComponentsAttribute("url", ComponentAttribute.URL.name(), root, components);
             setComponentsAttribute("hint", ComponentAttribute.HINT.name(), root, components);
+            setComponentsAttribute("value", ComponentAttribute.VALUE.name(), root, components);
             setComponentsValue(root, components);
 
         } catch (Exception e) {
@@ -66,6 +67,8 @@ public class ComponentFactory {
 
             if(!node.equals("root") && !element.ownText().isEmpty()) {
                 Component component = components.get(Integer.parseInt(element.attr("fakeId")));
+
+                System.out.println(element.ownText()+" "+component.getType());
 
                 component.getAttributes().setAttribute(ComponentAttribute.VALUE.name(), element.ownText());
             }

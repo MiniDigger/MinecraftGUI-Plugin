@@ -90,6 +90,7 @@ public class ComponentFactory {
 
             for(Element element : elements){
                 if(!element.nodeName().equals("root")) {
+                    System.out.println(element.nodeName());
                     Component component = components.get(Integer.parseInt(element.attr("fakeId")));
 
                     for (Map.Entry pairs : cssRule.getDeclarations().entrySet()) {
@@ -137,6 +138,9 @@ public class ComponentFactory {
                     }
                     break;
                 case "image":
+                    type = ComponentType.IMAGE;
+                    break;
+                case "img":
                     type = ComponentType.IMAGE;
                     break;
                 case "input":

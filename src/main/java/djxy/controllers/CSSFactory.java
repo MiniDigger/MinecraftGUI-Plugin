@@ -178,7 +178,6 @@ public class CSSFactory {
     public static Integer getInteger(String integer){
         Matcher matcher = REGEX_INTEGER.matcher(integer);
 
-
         if(matcher.find()){
             return Integer.parseInt(integer);
         } else
@@ -187,7 +186,6 @@ public class CSSFactory {
 
     public static Float getPercentage(String percentage){
         Matcher matcher = REGEX_PERCENTAGE.matcher(percentage);
-
 
         if(matcher.find()){
             return Float.parseFloat(percentage.substring(0, percentage.indexOf("%")))/100;

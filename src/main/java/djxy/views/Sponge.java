@@ -22,13 +22,12 @@ import djxy.api.MinecraftGuiService;
 import djxy.controllers.MainController;
 import djxy.models.PluginInterface;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
-import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
-import org.spongepowered.api.event.state.PreInitializationEvent;
-import org.spongepowered.api.event.state.ServerStartingEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.ProviderExistsException;
 import org.spongepowered.api.text.Texts;
@@ -54,8 +53,8 @@ public class Sponge implements PluginInterface {
         } catch (Exception e) {}
     }
 
-    @Subscribe
-    protected void onPreInitializationEvent(PreInitializationEvent event) {
+    @Listener
+    protected void onPreInitializationEvent(GamePreInitializationEvent event) {
         game = event.getGame();
         new CommandGui(this, event.getGame());
         try {
@@ -66,24 +65,24 @@ public class Sponge implements PluginInterface {
         mainController.serverInit();
     }
 
-    @Subscribe
-    protected void onServerStartingEvent(ServerStartingEvent event) {
+    @Listener
+    protected void onServerStartingEvent(GameStartingServerEvent event) {
         mainController.serverIsStarting();
     }
 
-    @Subscribe
-    protected void onServerStoppingEvent(ServerStoppingEvent event) {
+    @Listener
+    protected void onServerStoppingEvent(GameStoppingServerEvent event) {
         mainController.serverIsStopping();
     }
 
-    @Subscribe
-    public void onPlayerJoinEvent(PlayerJoinEvent event){
-        mainController.playerJoin(event.getUser().getUniqueId().toString());
+    @Listener
+    public void onPlayerJoinEvent(ClientConnectionEvent.Login event){
+        mainController.playerJoin(event.getProfile().getUniqueId().toString());
     }
 
-    @Subscribe
-    public void onPlayerQuitEvent(PlayerQuitEvent event){
-        mainController.playerQuit(event.getUser().getUniqueId().toString());
+    @Listener
+    public void onPlayerQuitEvent(ClientConnectionEvent.Disconnect event){
+        mainController.playerQuit(event.getTargetEntity().getUniqueId().toString());
     }
 
     @Override

@@ -1,3 +1,5 @@
+#Don't use this version. This version is outdated and a new one will be uploaded in december.
+
 ## MinecraftGUI is a gui manager that allow you to create interface to ease the interaction with your plugins.
 
 https://www.youtube.com/watch?v=r3E62Ly7hjI

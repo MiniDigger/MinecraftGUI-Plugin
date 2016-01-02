@@ -1,4 +1,4 @@
-## MinecraftGUI is a pluginGUI manager that allow you to create interface to ease the interaction with your plugins.
+## MinecraftGUI is a gui manager that allow you to create interface to ease the interaction with your plugins.
 
 https://www.youtube.com/watch?v=r3E62Ly7hjI
 
@@ -13,9 +13,9 @@ https://www.youtube.com/watch?v=r3E62Ly7hjI
 
 #### Commands
 ```
-/pluginGUI change - Will allow the plugins to send or not components to you.
-/pluginGUI reset - Reset the position of every component.
-/pluginGUI reload - Reload your interface.
+/gui change - Will allow the plugins to send or not components to you.
+/gui reset - Reset the position of every component.
+/gui reload - Reload your interface.
 ```
 
 #### Build for the plugin version: https://github.com/djxy/MinecraftGUI-Plugin/releases

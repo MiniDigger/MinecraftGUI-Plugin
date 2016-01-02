@@ -18,25 +18,10 @@
 
 package djxy.controllers;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 public final class NetworkController {
-    
+    /*
     private final HashMap<String, Boolean> playersConnected;//List of all the player connected on the server and the boolean indicate if he is connected with the client
-    private final HashMap<String, PlayerConnection> playerConnections;
+    private final HashMap<String, UserConnection> playerConnections;
     private final ServerConnection serverConnection;
     private final MainController mainController;
 
@@ -52,7 +37,7 @@ public final class NetworkController {
     }
 
     public boolean changePlayerConnectionState(String playerUUID){
-        PlayerConnection playerConnection = getPlayerConnection(playerUUID);
+        UserConnection playerConnection = getPlayerConnection(playerUUID);
 
         if(playerConnection.canSendCommand == true){
             mainController.clearPlayerScreen(playerUUID);
@@ -70,18 +55,18 @@ public final class NetworkController {
         playersConnected.put(playerUUID, false);
     }
     
-    protected PlayerConnection getPlayerConnection(String playerUUID){
+    protected UserConnection getPlayerConnection(String playerUUID){
         return playerConnections.get(playerUUID);
     }
     
     protected void sendCommandTo(String playerUUID, JSONArray array){
-        PlayerConnection playerConnection = playerConnections.get(playerUUID);
+        UserConnection playerConnection = playerConnections.get(playerUUID);
         
         if(playerConnection != null && playerConnection.canSendCommand)
             playerConnection.sendCommand(array.toJSONString());
     }
     
-    private void addPlayerConnection(PlayerConnection playerConnection){
+    private void addPlayerConnection(UserConnection playerConnection){
         Boolean playerConnected = playersConnected.get(playerConnection.playerUUID);
 
         if(playerConnected != null && !playerConnected){
@@ -93,7 +78,7 @@ public final class NetworkController {
     }
     
     protected void closeServer(){
-        for(PlayerConnection playerConnection : playerConnections.values()){
+        for(UserConnection playerConnection : playerConnections.values()){
             playerConnection.close();
             playersConnected.remove(playerConnection.playerUUID);
         }
@@ -104,7 +89,7 @@ public final class NetworkController {
     }
     
     protected void closePlayer(String playerUUID){
-        PlayerConnection playerConnection = playerConnections.get(playerUUID);
+        UserConnection playerConnection = playerConnections.get(playerUUID);
         
         if(playerConnection != null){
             playerConnection.close();
@@ -115,7 +100,7 @@ public final class NetworkController {
     
     private class ServerConnection{
         
-        private final List<PlayerConnection> playerConnectionsWaitingUUID;
+        private final List<UserConnection> playerConnectionsWaitingUUID;
         private ServerSocket serverSocket;
         private int port;
         
@@ -138,7 +123,7 @@ public final class NetworkController {
                         startCleaningThread();
                         
                         while(true){
-                            PlayerConnection playerConnection = new PlayerConnection(serverSocket.accept());
+                            UserConnection playerConnection = new UserConnection(serverSocket.accept());
                             
                             playerConnectionsWaitingUUID.add(playerConnection);
                             
@@ -164,7 +149,7 @@ public final class NetworkController {
                     while(!serverSocket.isClosed()){
                         long time = System.currentTimeMillis();
                         
-                        for(PlayerConnection playerConnection : playerConnectionsWaitingUUID){
+                        for(UserConnection playerConnection : playerConnectionsWaitingUUID){
                             if(time - playerConnection.timeCreated > 5000){
                                 playerConnectionsWaitingUUID.remove(playerConnection);
 
@@ -186,7 +171,7 @@ public final class NetworkController {
         
     }
     
-    protected class PlayerConnection implements Runnable{
+    protected class UserConnection implements Runnable{
         
         private final long timeCreated;
         private final Socket socket;
@@ -195,7 +180,7 @@ public final class NetworkController {
         private DataOutputStream out;
         private String playerUUID = "";
 
-        public PlayerConnection(Socket socket) {
+        public UserConnection(Socket socket) {
             this.timeCreated = System.currentTimeMillis();
             this.socket = socket;
             try {
@@ -250,5 +235,5 @@ public final class NetworkController {
             } catch (IOException ex) {}
         }
         
-    }
+    }*/
 }

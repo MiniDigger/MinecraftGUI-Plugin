@@ -18,13 +18,8 @@
 
 package djxy.models;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.util.HashMap;
-
 public class Form {
-    
+    /*
     private final String buttonId;
     private final HashMap<String, String> inputs;
 
@@ -56,5 +51,5 @@ public class Form {
     public String toString(){
         return inputs.toString();
     }
-
+*/
 }

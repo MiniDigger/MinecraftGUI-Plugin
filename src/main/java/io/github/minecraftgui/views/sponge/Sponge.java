@@ -16,113 +16,99 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package djxy.views;
+package io.github.minecraftgui.views.sponge;
 
-import djxy.api.MinecraftGuiService;
-import djxy.controllers.MainController;
-import djxy.models.PluginInterface;
+import com.google.inject.Inject;
+import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.event.network.ChannelRegistrationEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.ProviderExistsException;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.args.CommandContext;
-import org.spongepowered.api.util.command.spec.CommandExecutor;
-import org.spongepowered.api.util.command.spec.CommandSpec;
 
-import java.util.UUID;
+@Plugin(id = "MinecraftGUIServer", name = "Minecraft GUI Server", version = "2.0")
+public class Sponge  {
 
-@Plugin(id = "MinecraftGUIServer", name = "Minecraft GUI Server", version = "1.0")
-public class Sponge implements PluginInterface {
-
-    private Game game;
-    private MainController mainController;
+    @Inject private Logger logger;
+    @Inject private Game game;
+    /*private MainController mainController;
 
     public Sponge() {
         try {
             this.mainController = new MainController(this);
         } catch (Exception e) {}
-    }
+    }*/
 
     @Listener
-    protected void onPreInitializationEvent(GamePreInitializationEvent event) {
-        game = event.getGame();
+    public void onPreInitializationEvent(GamePreInitializationEvent event) {
+        /*game = event.getGame();
         new CommandGui(this, event.getGame());
         try {
             game.getServiceManager().setProvider(this, MinecraftGuiService.class, mainController.getMinecraftGuiService());
         } catch (ProviderExistsException e) {
             e.printStackTrace();
-        }
-        mainController.serverInit();
+        }*/
+        //mainController.serverInit();
+        new SpongeNetwork(this, game);
+    }
+
+    @Listener
+    public void onChannel(ChannelRegistrationEvent event){
+        System.out.println(event.getChannel());
+    }
+
+    @Listener
+    public void onInitializationEvent(GameInitializationEvent event) {
+        /*game = event.getGame();
+        new CommandGui(this, event.getGame());
+        try {
+            game.getServiceManager().setProvider(this, MinecraftGuiService.class, mainController.getMinecraftGuiService());
+        } catch (ProviderExistsException e) {
+            e.printStackTrace();
+        }*/
+        //mainController.serverInit();
     }
 
     @Listener
     protected void onServerStartingEvent(GameStartingServerEvent event) {
-        mainController.serverIsStarting();
+        //mainController.serverIsStarting();
     }
 
     @Listener
     protected void onServerStoppingEvent(GameStoppingServerEvent event) {
-        mainController.serverIsStopping();
+        //mainController.serverIsStopping();
     }
 
     @Listener
-    public void onPlayerJoinEvent(ClientConnectionEvent.Login event){
-        mainController.playerJoin(event.getProfile().getUniqueId().toString());
+    public void onPlayerJoinEvent(ClientConnectionEvent.Join event){
+        //mainController.playerJoin(event.getProfile().getUniqueId().toString());
     }
 
     @Listener
     public void onPlayerQuitEvent(ClientConnectionEvent.Disconnect event){
-        mainController.playerQuit(event.getTargetEntity().getUniqueId().toString());
-    }
-
-    @Override
-    public void sendAuthenticationCode(String playerUUID, String code) {
-        try {
-            Player player = game.getServer().getPlayer(UUID.fromString(playerUUID)).get();
-
-            player.sendMessage(Texts.builder("Your authentication code: ").color(TextColors.GREEN).append(Texts.builder(code).color(TextColors.RED).append(Texts.builder(".").color(TextColors.GREEN).build()).build()).build());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void screenLoaded(String playerUUID) {
-        try {
-            Player player = game.getServer().getPlayer(UUID.fromString(playerUUID)).get();
-
-            player.sendMessage(Texts.builder("Your screen is loaded.").color(TextColors.GREEN).build());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        //mainController.playerQuit(event.getTargetEntity().getUniqueId().toString());
     }
 
     private class CommandGui {
 
-        private final CommandSpec command;
+        //private CommandSpec command;
 
         public CommandGui(Object plugin, Game game) {
-            command = CommandSpec.builder()
+            /*command = CommandSpec.builder()
                     .description(Texts.of("MinecraftGUI command"))
                     .child(new CommandGuiConnectionState().command, "change", "c")
                     .child(new CommandGuiResetLocation().command, "reset", "r")
                     .child(new CommandGuiReload().command, "reload")
                     .build();
 
-            game.getCommandDispatcher().register(plugin, command, "gui");
+            game.getCommandDispatcher().register(plugin, command, "gui");*/
         }
     }
-
+/*
     private class CommandGuiReload implements CommandExecutor{
 
         private final CommandSpec command;
@@ -198,5 +184,5 @@ public class Sponge implements PluginInterface {
             }
             return CommandResult.success();
         }
-    }
+    }*/
 }

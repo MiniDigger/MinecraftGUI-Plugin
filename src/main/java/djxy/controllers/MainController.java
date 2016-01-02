@@ -18,31 +18,10 @@
 
 package djxy.controllers;
 
-import djxy.api.MinecraftGuiService;
-import djxy.controllers.NetworkController.PlayerConnection;
-import djxy.models.ComponentManager;
-import djxy.models.Form;
-import djxy.models.PluginInterface;
-import djxy.models.component.Attributes;
-import djxy.models.component.Component;
-import djxy.models.resource.FontResource;
-import djxy.models.resource.ImageResource;
-import djxy.models.resource.Resource;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 public final class MainController {
-
+/*
     public static final String PATH = "mods/MinecraftGUI";
     private static MainController instance = null;
-
-    //**************************************************************************
-    //**************************************************************************
 
     private final CopyOnWriteArrayList<ComponentManager> componentManagers;
     private final ArrayList<Resource> resourcesToDownload;
@@ -155,7 +134,7 @@ public final class MainController {
         networkController.closePlayer(playerUUID);
     }
 
-    protected void newPlayerConnection(PlayerConnection playerConnection){
+    protected void newPlayerConnection(UserConnection playerConnection){
         authenticationManager.addPlayerToAuthenticate(playerConnection.getPlayerUUID());
 
         if(playerNeedAuthentication)
@@ -167,7 +146,7 @@ public final class MainController {
         }
     }
 
-    protected void receiveCommand(PlayerConnection playerConnection, JSONObject object){
+    protected void receiveCommand(UserConnection playerConnection, JSONObject object){
         String command[] = ((String) object.get("Command")).split(" ");
         String playerUUID = playerConnection.getPlayerUUID();
         
@@ -200,7 +179,7 @@ public final class MainController {
         componentLocationController.setComponentLocationRelative(playerUUID, componentId, x, y);
     }
 
-    protected void callInitPlayerGUIEvent(PlayerConnection playerConnection){
+    protected void callInitPlayerGUIEvent(UserConnection playerConnection){
         networkController.sendCommandTo(playerConnection.getPlayerUUID(), createCommandClearScreen());
 
         for(ComponentManager manager : componentManagers)
@@ -209,7 +188,7 @@ public final class MainController {
         //pluginInterface.screenLoaded(playerConnection.getPlayerUUID());
     }
     
-    private void callReceiveInputFormEvent(PlayerConnection playerConnection, JSONObject object){
+    private void callReceiveInputFormEvent(UserConnection playerConnection, JSONObject object){
         String buttonId = (String) object.get("ButtonId");
         ArrayList<ComponentManager> managers = componentManagersListeningButton.get(buttonId);
 
@@ -386,6 +365,6 @@ public final class MainController {
                 instance.sendResource(playerUUID, resource);
         }
 
-    }
+    }*/
 
 }

@@ -18,20 +18,8 @@
 
 package djxy.controllers;
 
-import djxy.models.component.Attributes;
-import djxy.models.component.ComponentAttribute;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.HashMap;
-import java.util.Map;
-
 public final class ComponentLocationController {
-    
+    /*
     private static final String FILE = "/LocationsRelative.json";
     private final HashMap<String, HashMap<String, LocationRelative>> playersComponentLocationRelatives;
 
@@ -129,6 +117,6 @@ public final class ComponentLocationController {
             this.xRelative = xRelative;
             this.yRelative = yRelative;
         }
-    }
+    }*/
     
 }

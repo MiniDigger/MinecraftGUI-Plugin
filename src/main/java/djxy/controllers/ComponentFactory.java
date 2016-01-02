@@ -18,23 +18,8 @@
 
 package djxy.controllers;
 
-import djxy.models.ButtonEvent;
-import djxy.models.component.Component;
-import djxy.models.component.ComponentAttribute;
-import djxy.models.component.ComponentState;
-import djxy.models.component.ComponentType;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class ComponentFactory {
-
+/*
     private static int idToReturn = 0;
 
     public static Component load(File xml, ArrayList<CSSFactory.CSSRule> cssRules){
@@ -197,5 +182,5 @@ public class ComponentFactory {
 
     private synchronized static int generateComponentFakeId(){
         return idToReturn++;
-    }
+    }*/
 }

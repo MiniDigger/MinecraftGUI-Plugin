@@ -18,18 +18,8 @@
 
 package djxy.controllers;
 
-import djxy.models.ComponentManager;
-import djxy.models.Form;
-import djxy.models.component.Component;
-import djxy.models.resource.Resource;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-public class AuthenticationManager implements ComponentManager {
-
+public class AuthenticationManager /*implements ComponentManager*/ {
+/*
     private final static int maxTry = 3;
     private final static String inputId = "authenticationInput";
     private final static String buttonSendCodeInChatId = "authenticationSendCode";
@@ -98,5 +88,5 @@ public class AuthenticationManager implements ComponentManager {
         playersTrying.put(playerUUID, 0);
         playersCode.put(playerUUID, code);
         sendPlayerCode(playerUUID);
-    }
+    }*/
 }

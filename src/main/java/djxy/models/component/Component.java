@@ -18,14 +18,8 @@
 
 package djxy.models.component;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class Component {
-
+/*
     public static String rootComponentId = "@ROOT";
 
     private String id;
@@ -245,5 +239,5 @@ public class Component {
         for(Component copy : original.directChildren)
             clone(copy, clone, suffix);
     }
-
+*/
 }

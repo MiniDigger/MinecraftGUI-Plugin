@@ -20,8 +20,8 @@ package djxy.models.component;
 
 import djxy.controllers.CSSFactory;
 import djxy.models.ButtonEvent;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,7 +133,7 @@ public class Attributes {
     }
     
     public JSONArray getCommands(){
-        JSONArray commands = new JSONArray();
+        /*JSONArray commands = new JSONArray();
         
         for(String inputId : inputs)
             commands.add(createAddInputCommand(inputId));
@@ -152,7 +152,8 @@ public class Attributes {
                 commands.add(createUpdateCommand((ComponentState) pairs2.getKey(), (String) pairs.getKey(), pairs2.getValue()));
         }
         
-        return commands;
+        return commands;*/
+        return null;
     }
     
     private JSONObject createAddInputCommand(String inputId){

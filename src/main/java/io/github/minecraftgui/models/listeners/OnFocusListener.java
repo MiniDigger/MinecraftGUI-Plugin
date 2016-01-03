@@ -25,8 +25,8 @@ import io.github.minecraftgui.models.components.Component;
 /**
  * Created by Samuel on 2015-11-21.
  */
-public abstract class OnFocusListener {
+public interface OnFocusListener {
 
-    public abstract void onFocus(Component component);
+    void onFocus(Component component);
 
 }

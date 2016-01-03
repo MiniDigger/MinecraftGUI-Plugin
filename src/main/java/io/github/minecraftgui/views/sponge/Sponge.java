@@ -19,170 +19,100 @@
 package io.github.minecraftgui.views.sponge;
 
 import com.google.inject.Inject;
+import io.github.minecraftgui.models.components.*;
+import io.github.minecraftgui.models.components.Cursor;
+import io.github.minecraftgui.models.listeners.OnGuiListener;
+import io.github.minecraftgui.models.shapes.PolygonColor;
+import io.github.minecraftgui.models.shapes.RectangleColor;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartingServerEvent;
-import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
-import org.spongepowered.api.event.network.ChannelRegistrationEvent;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
 
+import java.awt.*;
+
 @Plugin(id = "MinecraftGUIServer", name = "Minecraft GUI Server", version = "2.0")
-public class Sponge  {
+public class Sponge implements OnGuiListener {
 
     @Inject private Logger logger;
     @Inject private Game game;
-    /*private MainController mainController;
-
-    public Sponge() {
-        try {
-            this.mainController = new MainController(this);
-        } catch (Exception e) {}
-    }*/
+    private SpongeNetwork spongeNetwork;
+    private Div div;
 
     @Listener
     public void onPreInitializationEvent(GamePreInitializationEvent event) {
-        /*game = event.getGame();
-        new CommandGui(this, event.getGame());
-        try {
-            game.getServiceManager().setProvider(this, MinecraftGuiService.class, mainController.getMinecraftGuiService());
-        } catch (ProviderExistsException e) {
-            e.printStackTrace();
-        }*/
-        //mainController.serverInit();
-        new SpongeNetwork(this, game);
-    }
+        this.spongeNetwork = new SpongeNetwork(this, game);
+        this.spongeNetwork.addPlugin(this);
+        this.spongeNetwork.addPlugin(new OnGuiListener() {
+            Slider rect;
+            Div button;
 
-    @Listener
-    public void onChannel(ChannelRegistrationEvent event){
-        System.out.println(event.getChannel());
-    }
+            @Override
+            public void onGuiInit(UserGui userGui) {
+                button = new Div(RectangleColor.class);
+                rect = new Slider(Slider.Type.HORIZONTAL, RectangleColor.class, RectangleColor.class, button);
+                userGui.getRoot().add(rect);
+                rect.setXRelative(State.NORMAL, 100);
+                rect.setYRelative(State.NORMAL, 100);
 
-    @Listener
-    public void onInitializationEvent(GameInitializationEvent event) {
-        /*game = event.getGame();
-        new CommandGui(this, event.getGame());
-        try {
-            game.getServiceManager().setProvider(this, MinecraftGuiService.class, mainController.getMinecraftGuiService());
-        } catch (ProviderExistsException e) {
-            e.printStackTrace();
-        }*/
-        //mainController.serverInit();
-    }
+                rect.getShape().setWidth(State.NORMAL, 50);
+                rect.getShape().setHeight(State.NORMAL, 2);
+                rect.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 125));
+                rect.getShapeOnProgress().setBackground(State.NORMAL, new Color(231, 76, 60, 255));
+                rect.getShapeOnProgress().setWidth(State.NORMAL, rect.getShape(), AttributeDouble.WIDTH, 300, 1);
+                rect.setCursor(State.HOVER, Cursor.HAND);
 
-    @Listener
-    protected void onServerStartingEvent(GameStartingServerEvent event) {
-        //mainController.serverIsStarting();
-    }
+                button.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 255));
+                button.getShape().setWidth(State.NORMAL, 2);
+                button.getShape().setHeight(State.NORMAL, 6);
+                button.setCursor(State.HOVER, Cursor.HAND);
+                button.addXRelativeTo(button.getShape(), AttributeDouble.WIDTH, -0.5);
+                button.addYRelativeTo(rect.getShape(), AttributeDouble.HEIGHT, 0.5);
+                button.addYRelativeTo(button.getShape(), AttributeDouble.HEIGHT, -0.5);
 
-    @Listener
-    protected void onServerStoppingEvent(GameStoppingServerEvent event) {
-        //mainController.serverIsStopping();
-    }
-
-    @Listener
-    public void onPlayerJoinEvent(ClientConnectionEvent.Join event){
-        //mainController.playerJoin(event.getProfile().getUniqueId().toString());
-    }
-
-    @Listener
-    public void onPlayerQuitEvent(ClientConnectionEvent.Disconnect event){
-        //mainController.playerQuit(event.getTargetEntity().getUniqueId().toString());
-    }
-
-    private class CommandGui {
-
-        //private CommandSpec command;
-
-        public CommandGui(Object plugin, Game game) {
-            /*command = CommandSpec.builder()
-                    .description(Texts.of("MinecraftGUI command"))
-                    .child(new CommandGuiConnectionState().command, "change", "c")
-                    .child(new CommandGuiResetLocation().command, "reset", "r")
-                    .child(new CommandGuiReload().command, "reload")
-                    .build();
-
-            game.getCommandDispatcher().register(plugin, command, "gui");*/
-        }
-    }
-/*
-    private class CommandGuiReload implements CommandExecutor{
-
-        private final CommandSpec command;
-
-        public CommandGuiReload() {
-            command = CommandSpec.builder()
-                    .description(Texts.of("Reload the screen."))
-                    .executor(this)
-                    .build();
-        }
-
-        @Override
-        public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-            if(commandSource instanceof Player) {
-                Player player = (Player) commandSource;
-                String playerUUID = player.getUniqueId().toString();
-
-                if(mainController.isPlayerAuthenticated(playerUUID))
-                    mainController.reloadPlayerScreen(playerUUID);
             }
-            return CommandResult.success();
-        }
+
+            @Override
+            public void onGuiOpen(UserGui userGui) {
+                rect.setPercentage(0.2);
+            }
+
+            @Override
+            public void onGuiClose(UserGui userGui) {
+                rect.setPercentage(0.9);
+            }
+        });
     }
 
-    private class CommandGuiResetLocation implements CommandExecutor{
+    @Override
+    public void onGuiInit(UserGui userGui) {
+        div = new Div(PolygonColor.class);
+        userGui.getRoot().add(div);
 
-        private final CommandSpec command;
+        div.setVisibility(Visibility.INVISIBLE);
+        div.setXRelative(State.NORMAL, 50);
+        div.setYRelative(State.NORMAL, 50);
 
-        public CommandGuiResetLocation() {
-            command = CommandSpec.builder()
-                    .description(Texts.of("Reset to the default value all the location of your components."))
-                    .executor(this)
-                    .build();
-        }
-
-        @Override
-        public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-            if(commandSource instanceof Player) {
-                Player player = (Player) commandSource;
-                String playerUUID = player.getUniqueId().toString();
-
-                if(mainController.isPlayerAuthenticated(playerUUID)) {
-                    mainController.resetPlayerComponentLocation(playerUUID);
-                    commandSource.sendMessage(Texts.builder("Your screen has been reset.").color(TextColors.GREEN).build());
+        ((PolygonColor)div.getShape()).setPositions(new double[][]{
+                        {0, -10},
+                        {10, 10},
+                        {30, 10}
                 }
-            }
-            return CommandResult.success();
-        }
+        );
+
+        ((PolygonColor) div.getShape()).setBackground(State.NORMAL, Color.RED);
+        ((PolygonColor) div.getShape()).setBackground(State.HOVER, Color.BLUE);
     }
 
-    private class CommandGuiConnectionState implements CommandExecutor{
+    @Override
+    public void onGuiOpen(UserGui userGui) {
+        div.setVisibility(Visibility.VISIBLE);
+    }
 
-        private final CommandSpec command;
+    @Override
+    public void onGuiClose(UserGui userGui) {
+        div.setVisibility(Visibility.INVISIBLE);
+    }
 
-        public CommandGuiConnectionState() {
-            command = CommandSpec.builder()
-                    .description(Texts.of("Turn on/off the state of your connection."))
-                    .executor(this)
-                    .build();
-        }
-
-        @Override
-        public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-            if(commandSource instanceof Player) {
-                Player player = (Player) commandSource;
-                String playerUUID = player.getUniqueId().toString();
-
-                if(mainController.isPlayerAuthenticated(playerUUID)) {
-                    String connectionState = mainController.changePlayerConnectionState(playerUUID) == true ? "on" : "off";
-
-                    commandSource.sendMessage(Texts.builder("Connection state changed on ").color(TextColors.GREEN).append(Texts.builder(connectionState).color(TextColors.RED).append(Texts.builder(".").color(TextColors.GREEN).build()).build()).build());
-                }
-            }
-            return CommandResult.success();
-        }
-    }*/
 }

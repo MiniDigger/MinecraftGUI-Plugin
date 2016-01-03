@@ -20,11 +20,13 @@
 
 package io.github.minecraftgui.controllers;
 
+import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.network.UserConnection;
 import org.json.JSONObject;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Samuel on 2015-12-13.
@@ -50,6 +52,8 @@ public abstract class NetworkController {
     public static final int PACKET_EVENT_ON_BLUR = 106;
     public static final int PACKET_EVENT_ON_FOCUS = 107;
     public static final int PACKET_EVENT_ON_REMOVE = 108;
+    public static final int PACKET_EVENT_ON_GUI_OPEN = 109;
+    public static final int PACKET_EVENT_ON_GUI_CLOSE = 110;
 
     public static final int PACKET_SET_ATTRIBUTE_BACKGROUND_COLOR = 1000;
     public static final int PACKET_SET_ATTRIBUTE_WIDTH = 1001;
@@ -173,11 +177,21 @@ public abstract class NetworkController {
     public static final String RECTANGLE_IMAGE = "rectangleImage";
 
     private final ConcurrentHashMap<UUID, UserConnection> playerConnections;
+    private final CopyOnWriteArrayList<OnGuiListener> plugins;
 
     public abstract void sendPacktTo(UUID uuid, JSONObject jsonObject);
 
     public NetworkController() {
         this.playerConnections = new ConcurrentHashMap<>();
+        this.plugins = new CopyOnWriteArrayList<>();
+    }
+
+    public void addPlugin(OnGuiListener plugin){
+        plugins.add(plugin);
+    }
+
+    public CopyOnWriteArrayList<OnGuiListener> getPlugins() {
+        return plugins;
     }
 
     public final UserConnection getUserConnection(UUID uuid){
@@ -194,6 +208,13 @@ public abstract class NetworkController {
         playerConnections.put(uuid, userConnection);
 
         return userConnection;
+    }
+
+    public void reloadUser(UUID uuid){
+        UserConnection userConnection = playerConnections.get(uuid);
+
+        if(userConnection != null)
+            userConnection.reloadGui();
     }
 
 }

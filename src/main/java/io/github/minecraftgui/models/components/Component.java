@@ -34,7 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Component {
 
-    protected PluginGUI pluginGUI;
+    protected UserGui userGui;
     protected UserConnection userConnection;
     protected final String type;
     protected final UUID uuid;
@@ -95,8 +95,8 @@ public class Component {
         return id;
     }
 
-    public PluginGUI getPluginGUI() {
-        return pluginGUI;
+    public UserGui getUserGui() {
+        return userGui;
     }
 
     public UUID getUniqueId() {
@@ -136,33 +136,34 @@ public class Component {
     }
 
     public void add(Component component) {
-        add(component, this.pluginGUI);
+        add(component, this.userGui);
     }
 
-    public void add(Component component, PluginGUI pluginGUI) {
-        if(component.parent != null || component.userConnection != null || component.pluginGUI != null)
+    public void add(Component component, UserGui userGui) {
+        if(component.parent != null || component.userConnection != null || component.userGui != null)
             throw new ComponentException("Can't add a component that is already assigned.");
-        if(this.parent == null || this.userConnection == null || this.pluginGUI == null)
+        if(this.parent == null || this.userConnection == null || this.userGui == null)
             throw new ComponentException("You can't add a component to a component without parent.");
 
         component.parent = this;
-        component.pluginGUI = pluginGUI;
+        component.userGui = userGui;
         component.userConnection = this.userConnection;
         component.setShapeUserConnection();
-        pluginGUI.addComponent(component);
-        this.userConnection.addComponent(component);
+        userGui.addComponent(component);
 
-        if(!this.specialChildren.contains(component))
+        if(!this.specialChildren.contains(component)) {
             this.children.add(component);
+            this.userConnection.addComponent(component);
+        }
 
-        for(Component specialChild : specialChildren)
-            component.add(specialChild);
+        for(Component specialChild : component.specialChildren)
+            component.add(specialChild, userGui);
     }
 
     public void remove(){
         if(this.parent != null) {
             this.parent.children.remove(this);
-            pluginGUI.removeComponent(this);
+            userGui.removeComponent(this);
             userConnection.removeComponent(this);
         }
     }
@@ -171,8 +172,8 @@ public class Component {
         shape.setUserConnection(userConnection);
     }
 
-    protected void setPluginGUI(PluginGUI pluginGUI) {
-        this.pluginGUI = pluginGUI;
+    protected void setUserGui(UserGui userGui) {
+        this.userGui = userGui;
     }
 
     protected void setUserConnection(UserConnection userConnection) {

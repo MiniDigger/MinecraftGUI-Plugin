@@ -30,7 +30,7 @@ import io.github.minecraftgui.models.shapes.Shape;
  */
 public class Slider extends ComponentValuable<Double> {
 
-    enum Type{HORIZONTAL, VERTICAL}
+    public enum Type{HORIZONTAL, VERTICAL}
 
     private final Shape shapeOnProgress;
     private final Component button;

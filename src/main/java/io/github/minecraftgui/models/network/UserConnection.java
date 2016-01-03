@@ -24,13 +24,14 @@ import io.github.minecraftgui.controllers.NetworkController;
 import io.github.minecraftgui.models.components.*;
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.Cursor;
+import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.network.packets.*;
-import io.github.minecraftgui.models.shapes.PolygonColor;
 import io.github.minecraftgui.models.shapes.Shape;
 import org.json.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,6 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UserConnection {
 
+    private final ConcurrentHashMap<OnGuiListener, UserGui> userGuis;
     private final ConcurrentHashMap<UUID, Component> components;
     private final NetworkController networkController;
     private final UUID uuid;
@@ -48,6 +50,14 @@ public class UserConnection {
         this.networkController = networkController;
         this.uuid = uuid;
         this.components = new ConcurrentHashMap<>();
+        this.userGuis = new ConcurrentHashMap<>();
+
+        for(OnGuiListener plugin : networkController.getPlugins())
+            userGuis.put(plugin, new UserGui(this));
+    }
+
+    public void reloadGui(){
+        sendPacket(NetworkController.PACKET_INIT_INTERFACE, new PacketInitInterface());
     }
 
     public UUID getUuid() {
@@ -56,6 +66,10 @@ public class UserConnection {
 
     public final Component getComponent(UUID uuid){
         return components.get(uuid);
+    }
+
+    public UserGui getUserGui(OnGuiListener plugin){
+        return userGuis.get(plugin);
     }
 
     public void setPositions(Component component, Shape shape, double positions[][]){
@@ -200,27 +214,40 @@ public class UserConnection {
 
                 sendPacket(NetworkController.PACKET_INIT_CLIENT, new PacketInitClient(fonts, images, fontsGenerate));
                 break;
-            case NetworkController.PACKET_CLIENT_INITIATED: sendPacket(NetworkController.PACKET_INIT_INTERFACE, new PacketInitInterface());
-                break;
-            case NetworkController.PACKET_INTERFACE_INITIATED:
-                PluginGUI pluginGUI = new PluginGUI(this);
-                Div div = new Div(PolygonColor.class);
-                pluginGUI.getRoot().add(div);
+            case NetworkController.PACKET_CLIENT_INITIATED: sendPacket(NetworkController.PACKET_INIT_INTERFACE, new PacketInitInterface()); break;
+            case NetworkController.PACKET_INTERFACE_INITIATED: onGuiInit(); break;
+            case NetworkController.PACKET_EVENT_ON_GUI_CLOSE: onGuiClose(); break;
+            case NetworkController.PACKET_EVENT_ON_GUI_OPEN: onGuiOpen(); break;
+        }
+    }
 
-                div.setXRelative(State.NORMAL, 50);
-                div.setYRelative(State.NORMAL, 50);
+    private void onGuiInit(){
+        Enumeration<OnGuiListener> listeners = userGuis.keys();
 
-                ((PolygonColor)div.getShape()).setPositions(new double[][]{
-                                {0, -10},
-                                {10, 10},
-                                {30, 10}
-                        }
-                );
+        while(listeners.hasMoreElements()) {
+            OnGuiListener listener = listeners.nextElement();
 
-                ((PolygonColor) div.getShape()).setBackground(State.NORMAL, Color.RED);
-                ((PolygonColor) div.getShape()).setBackground(State.HOVER, Color.BLUE);
+            listener.onGuiInit(userGuis.get(listener));
+        }
+    }
 
-                break;
+    private void onGuiClose(){
+        Enumeration<OnGuiListener> listeners = userGuis.keys();
+
+        while(listeners.hasMoreElements()) {
+            OnGuiListener listener = listeners.nextElement();
+
+            listener.onGuiClose(userGuis.get(listener));
+        }
+    }
+
+    private void onGuiOpen(){
+        Enumeration<OnGuiListener> listeners = userGuis.keys();
+
+        while(listeners.hasMoreElements()) {
+            OnGuiListener listener = listeners.nextElement();
+
+            listener.onGuiOpen(userGuis.get(listener));
         }
     }
 

@@ -36,6 +36,7 @@ public final class PluginGUI {
     private final Root root;
 
     public PluginGUI(UserConnection userConnection) {
+        int i = 0;
         this.userConnection = userConnection;
         this.components = new ConcurrentHashMap<>();
         this.componentsWithId = new ConcurrentHashMap<>();

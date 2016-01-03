@@ -36,7 +36,6 @@ public final class UserGui {
     private final Root root;
 
     public UserGui(UserConnection userConnection) {
-        int j = 0;
         this.userConnection = userConnection;
         this.components = new ConcurrentHashMap<>();
         this.componentsWithId = new ConcurrentHashMap<>();

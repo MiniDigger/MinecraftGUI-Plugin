@@ -20,10 +20,7 @@
 
 package io.github.minecraftgui.models.components;
 
-import io.github.minecraftgui.controllers.NetworkController;
-import io.github.minecraftgui.models.exceptions.ComponentException;
 import io.github.minecraftgui.models.network.UserConnection;
-import io.github.minecraftgui.models.shapes.RectangleColor;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,16 +42,16 @@ public final class PluginGUI {
         this.root = new Root(this, userConnection);
     }
 
+    public UUID getPlayerUUID(){
+        return userConnection.getUuid();
+    }
+
     public Root getRoot() {
         return root;
     }
 
     public Component getComponent(String id){
         return componentsWithId.get(id);
-    }
-
-    protected final UserConnection getUserConnection() {
-        return userConnection;
     }
 
     protected final void addComponent(Component component){
@@ -69,39 +66,6 @@ public final class PluginGUI {
 
         if(component.getId() != null)
             componentsWithId.remove(component.getId());
-    }
-
-    public static class Root extends Component{
-
-        private Root(PluginGUI pluginGUI, UserConnection userConnection) {
-            super("", RectangleColor.class);
-            this.pluginGUI = pluginGUI;
-            this.userConnection = userConnection;
-        }
-
-        @Override
-        public UUID getUniqueId() {
-            return NetworkController.ROOT_ID;
-        }
-
-        @Override
-        public void add(Component component) {
-            if(component.parent != null || component.userConnection != null || component.pluginGUI != null)
-                throw new ComponentException("Can't add a component that is already assigned.");
-
-            component.parent = this;
-            component.pluginGUI = this.pluginGUI;
-            component.userConnection = this.userConnection;
-            component.setShapeUserConnection();
-            this.pluginGUI.addComponent(component);
-            this.userConnection.addComponent(component);
-
-            if(!this.specialChildren.contains(component))
-                this.children.add(component);
-
-            for(Component specialChild : specialChildren)
-                component.add(specialChild);
-        }
     }
 
 }

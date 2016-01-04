@@ -26,18 +26,23 @@ import io.github.minecraftgui.models.components.Paragraph;
 import io.github.minecraftgui.models.components.Visibility;
 import io.github.minecraftgui.models.listeners.OnClickListener;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Created by Samuel on 2016-01-04.
  */
 public class Dropdown implements Valuable<String> {
 
     private final Paragraph paragraphValueDisplayed;
+    private final ConcurrentHashMap<Component, String> values;
     private final List list;
     private boolean isListVisible = false;
+    private Component lastComponentClicked = null;
 
     public Dropdown(Paragraph paragraph, List list) {
         this.paragraphValueDisplayed = paragraph;
         this.list = list;
+        this.values = new ConcurrentHashMap<>();
 
         this.paragraphValueDisplayed.addOnClickListener(new OnClickListener() {
             @Override
@@ -52,19 +57,20 @@ public class Dropdown implements Valuable<String> {
         });
     }
 
-    public void init(String value){
+    public void init(String valueDisplayed){
         list.update();
         list.setVisibility(Visibility.INVISIBLE);
-        paragraphValueDisplayed.setText(value);
+        paragraphValueDisplayed.setText(valueDisplayed);
     }
 
     public void addValue(Paragraph paragraph, String value){
-        paragraph.setText(value);
+        values.put(paragraph, value);
 
         paragraph.addOnClickListener(new OnClickListener() {
             @Override
             public void onClick(Component component) {
                 Paragraph para = (Paragraph) component;
+                lastComponentClicked = component;
 
                 paragraphValueDisplayed.setText(para.getText());
                 list.setVisibility(Visibility.INVISIBLE);
@@ -75,7 +81,7 @@ public class Dropdown implements Valuable<String> {
 
     @Override
     public String getValue() {
-        return paragraphValueDisplayed.getText();
+        return values.get(lastComponentClicked);
     }
 
 }

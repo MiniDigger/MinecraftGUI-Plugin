@@ -137,8 +137,9 @@ public class Sponge implements OnGuiListener {
             paragraph1.setFontColor(State.NORMAL, Color.BLACK);
             paragraph1.setFont(State.NORMAL, "orange juice");
             paragraph1.setFontSize(State.NORMAL, 12);
+            paragraph1.setText("- "+i);
 
-            dropdown.addValue(paragraph1, "- "+i);
+            dropdown.addValue(paragraph1, ""+i);
         }
 
         dropdown.init("Test");

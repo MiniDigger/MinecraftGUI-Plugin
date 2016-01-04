@@ -56,6 +56,10 @@ public class TextArea extends ComponentEditableText {
         specialChildren.add(buttonLineAfter);
     }
 
+    public void setNbLineVisible(int nb){
+        userConnection.setTextNbLine(this, nb);
+    }
+
     public void setTextAlignement(TextAlignment alignement) {
         userConnection.setTextAlignment(this, alignement);
     }

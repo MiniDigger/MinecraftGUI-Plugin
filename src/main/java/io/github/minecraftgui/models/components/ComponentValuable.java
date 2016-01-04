@@ -20,6 +20,7 @@
 
 package io.github.minecraftgui.models.components;
 
+import io.github.minecraftgui.controllers.NetworkController;
 import io.github.minecraftgui.models.listeners.OnValueChangeListener;
 import io.github.minecraftgui.models.shapes.Shape;
 
@@ -44,10 +45,19 @@ public abstract class ComponentValuable<V> extends Component {
     }
 
     public final void addOnValueChangeListener(OnValueChangeListener listener){
+        if(listeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_VALUE_CHANGE_LISTENER);
+
         this.listeners.add(listener);
     }
 
-    protected final void valueChanged(){
+    public V getValue() {
+        return value;
+    }
+
+    public void setValue(V value){
+        this.value = value;
+
         for(OnValueChangeListener listener : listeners)
             listener.onValueChange(this);
     }

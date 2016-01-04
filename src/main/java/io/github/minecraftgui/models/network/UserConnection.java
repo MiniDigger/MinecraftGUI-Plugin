@@ -24,6 +24,7 @@ import io.github.minecraftgui.controllers.NetworkController;
 import io.github.minecraftgui.models.components.*;
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.Cursor;
+import io.github.minecraftgui.models.components.List;
 import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.network.packets.*;
 import io.github.minecraftgui.models.shapes.Shape;
@@ -70,6 +71,22 @@ public class UserConnection {
 
     public UserGui getUserGui(OnGuiListener plugin){
         return userGuis.get(plugin);
+    }
+
+    public void addEventListener(Component component, String event){
+        sendPacket(NetworkController.PACKET_ADD_EVENT, new PacketAddEventListener(component, event));
+    }
+
+    public void updateList(List list){
+        sendPacket(NetworkController.PACKET_UPDATE_LIST, new PacketSetAttribute(list));
+    }
+
+    public void setListNbComponent(Component component, int nb){
+        sendPacket(NetworkController.PACKET_SET_LIST_NB_COMPONENT, new PacketSetAttribute(component, nb));
+    }
+
+    public void setTextNbLine(Component component, int nb){
+        sendPacket(NetworkController.PACKET_SET_TEXT_NB_LINE, new PacketSetAttribute(component, nb));
     }
 
     public void setPositions(Component component, Shape shape, double positions[][]){
@@ -181,13 +198,14 @@ public class UserConnection {
         sendPacket(packetId, new PacketSetAttribute(component, shape, state, percentage, time, componentShapeRelativeTo.getComponent().getUniqueId().toString(), componentShapeAttributeRelativeTo.getName(), componentShapeRelativeTo.getComponentShape()));
     }
 
-    public final void addComponent(Component component){
+    public final void addComponent(Component component, boolean createComponent){
         components.put(component.getUniqueId(), component);
-        sendPacket(NetworkController.PACKET_CREATE_COMPONENT, new PacketCreateComponent(component));
+
+        if(createComponent)
+            sendPacket(NetworkController.PACKET_CREATE_COMPONENT, new PacketCreateComponent(component));
     }
 
     public final void removeComponent(Component component){
-        components.remove(component.getUniqueId());
         sendPacket(NetworkController.PACKET_DELETE_COMPONENT, new PacketDeleteComponent(component));
     }
 
@@ -202,7 +220,7 @@ public class UserConnection {
                 HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate = new HashMap<>();
                 HashMap<Color, ArrayList<Integer>> font = new HashMap<>();
 
-                /*fonts.add("http://www.1001freefonts.com/d/325/orange_juice.zip");
+                fonts.add("http://www.1001freefonts.com/d/325/orange_juice.zip");
 
                 images.put("http://media3.giphy.com/media/tp1U2lhRChsDC/200w.gif", "google.gif");
 
@@ -210,7 +228,7 @@ public class UserConnection {
                 font.put(Color.BLACK, sizes);
                 sizes.add(24);
 
-                fontsGenerate.put("orange juice", font);*/
+                fontsGenerate.put("orange juice", font);
 
                 sendPacket(NetworkController.PACKET_INIT_CLIENT, new PacketInitClient(fonts, images, fontsGenerate));
                 break;
@@ -218,6 +236,18 @@ public class UserConnection {
             case NetworkController.PACKET_INTERFACE_INITIATED: onGuiInit(); break;
             case NetworkController.PACKET_EVENT_ON_GUI_CLOSE: onGuiClose(); break;
             case NetworkController.PACKET_EVENT_ON_GUI_OPEN: onGuiOpen(); break;
+            case NetworkController.PACKET_EVENT_ON_CLICK: new PacketComponentEvent.OnClick(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_DOUBLE_CLICK: new PacketComponentEvent.OnDoubleClick(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_BLUR: new PacketComponentEvent.OnBlur(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_FOCUS: new PacketComponentEvent.OnFocus(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_INPUT: new PacketComponentEvent.OnInput(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_KEY_PRESSED: new PacketComponentEvent.OnKeyPressed(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_REMOVE:
+                PacketComponentEvent event = new PacketComponentEvent.OnRemove(this, content);
+                components.remove(event.getComponent().getUniqueId());
+                System.out.println(components.size());
+                break;
+            case NetworkController.PACKET_EVENT_ON_VALUE_CHANGED: new PacketComponentEvent.OnValueChange(this, content); break;
         }
     }
 

@@ -56,6 +56,14 @@ public class List extends Component {
         specialChildren.add(buttonListAfter);
     }
 
+    public void update(){
+        userConnection.updateList(this);
+    }
+
+    public void setNbComponentPerList(int nb){
+        userConnection.setListNbComponent(this, nb);
+    }
+
     public Component getButtonListBefore() {
         return buttonListBefore;
     }

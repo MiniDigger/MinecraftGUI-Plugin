@@ -50,6 +50,7 @@ public class Component {
     protected final CopyOnWriteArrayList<OnFocusListener> onFocusListeners;
     protected final CopyOnWriteArrayList<OnRemoveListener> onRemoveListeners;
     protected Component parent;
+    private boolean removed = false;
 
     public Component(String type, Class<? extends Shape> shape) {
         this.type = type;
@@ -153,15 +154,20 @@ public class Component {
 
         if(!this.specialChildren.contains(component)) {
             this.children.add(component);
-            this.userConnection.addComponent(component);
+            this.userConnection.addComponent(component, true);
         }
+        else
+            this.userConnection.addComponent(component, false);
+
+        userConnection.addEventListener(component, NetworkController.ON_REMOVE_LISTENER);
 
         for(Component specialChild : component.specialChildren)
             component.add(specialChild, userGui);
     }
 
     public void remove(){
-        if(this.parent != null) {
+        if(this.parent != null && !removed) {
+            this.removed = true;
             this.parent.children.remove(this);
             userGui.removeComponent(this);
             userConnection.removeComponent(this);
@@ -181,6 +187,9 @@ public class Component {
     }
 
     public final void addOnClickListener(OnClickListener listener){
+        if(onClickListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_CLICK_LISTENER);
+
         onClickListeners.add(listener);
     }
 
@@ -189,23 +198,73 @@ public class Component {
     }
 
     public void addOnDoubleClickListener(OnDoubleClickListener listener){
+        if(onDoubleClickListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_DOUBLE_CLICK_LISTENER);
+
         onDoubleClickListeners.add(listener);
     }
 
     public void addOnKeyPressedListener(OnKeyPressedListener listener){
+        if(onKeyPressedListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_KEY_PRESSED_LISTENER);
+
         onKeyPressedListeners.add(listener);
     }
 
     public void addOnInputListener(OnInputListener listener){
+        if(onInputListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_INPUT_LISTENER);
+
         onInputListeners.add(listener);
     }
 
     public void addOnBlurListener(OnBlurListener listener){
+        if(onBlurListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_BLUR_LISTENER);
+
         onBlurListeners.add(listener);
     }
 
     public void addOnFocusListener(OnFocusListener listener){
+        if(onFocusListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_FOCUS_LISTENER);
+
         onFocusListeners.add(listener);
+    }
+
+    public void onRemove(){
+        for(OnRemoveListener listener : onRemoveListeners)
+            listener.onRemove(this);
+    }
+
+    public void onBlur(){
+        for(OnBlurListener listener : onBlurListeners)
+            listener.onBlur(this);
+    }
+
+    public void onFocus(){
+        for(OnFocusListener listener : onFocusListeners)
+            listener.onFocus(this);
+    }
+
+    public void onClick(){
+        for(OnClickListener listener : onClickListeners)
+            listener.onClick(this);
+    }
+
+    public void onDoubleClick(){
+        for(OnDoubleClickListener listener : onDoubleClickListeners)
+            listener.onDoubleClick(this);
+    }
+
+    public void onInput(char input){
+        for(OnInputListener listener : onInputListeners)
+            listener.onInput(this, input);
+    }
+
+    public void onKeyPressed(int keyCode){
+        for(OnKeyPressedListener listener : onKeyPressedListeners)
+            listener.onKeyPressed(this, keyCode);
     }
 
     protected Shape getShapeByClass(Class<? extends Shape> shape, String componentShape){

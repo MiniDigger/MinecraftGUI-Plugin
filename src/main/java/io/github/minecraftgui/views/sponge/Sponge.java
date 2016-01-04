@@ -20,9 +20,9 @@ package io.github.minecraftgui.views.sponge;
 
 import com.google.inject.Inject;
 import io.github.minecraftgui.models.components.*;
-import io.github.minecraftgui.models.components.Cursor;
-import io.github.minecraftgui.models.listeners.OnGuiListener;
-import io.github.minecraftgui.models.shapes.PolygonColor;
+import io.github.minecraftgui.models.components.Component;
+import io.github.minecraftgui.models.components.TextArea;
+import io.github.minecraftgui.models.listeners.*;
 import io.github.minecraftgui.models.shapes.RectangleColor;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -38,81 +38,101 @@ public class Sponge implements OnGuiListener {
     @Inject private Logger logger;
     @Inject private Game game;
     private SpongeNetwork spongeNetwork;
-    private Div div;
 
     @Listener
     public void onPreInitializationEvent(GamePreInitializationEvent event) {
         this.spongeNetwork = new SpongeNetwork(this, game);
         this.spongeNetwork.addPlugin(this);
-        this.spongeNetwork.addPlugin(new OnGuiListener() {
-            Slider rect;
-            Div button;
-
-            @Override
-            public void onGuiInit(UserGui userGui) {
-                button = new Div(RectangleColor.class);
-                rect = new Slider(Slider.Type.HORIZONTAL, RectangleColor.class, RectangleColor.class, button);
-                userGui.getRoot().add(rect);
-                rect.setXRelative(State.NORMAL, 100);
-                rect.setYRelative(State.NORMAL, 100);
-
-                rect.getShape().setWidth(State.NORMAL, 50);
-                rect.getShape().setHeight(State.NORMAL, 2);
-                rect.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 125));
-                rect.getShapeOnProgress().setBackground(State.NORMAL, new Color(231, 76, 60, 255));
-                rect.getShapeOnProgress().setWidth(State.NORMAL, rect.getShape(), AttributeDouble.WIDTH, 300, 1);
-                rect.setCursor(State.HOVER, Cursor.HAND);
-
-                button.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 255));
-                button.getShape().setWidth(State.NORMAL, 2);
-                button.getShape().setHeight(State.NORMAL, 6);
-                button.setCursor(State.HOVER, Cursor.HAND);
-                button.addXRelativeTo(button.getShape(), AttributeDouble.WIDTH, -0.5);
-                button.addYRelativeTo(rect.getShape(), AttributeDouble.HEIGHT, 0.5);
-                button.addYRelativeTo(button.getShape(), AttributeDouble.HEIGHT, -0.5);
-
-            }
-
-            @Override
-            public void onGuiOpen(UserGui userGui) {
-                rect.setPercentage(0.2);
-            }
-
-            @Override
-            public void onGuiClose(UserGui userGui) {
-                rect.setPercentage(0.9);
-            }
-        });
     }
 
     @Override
     public void onGuiInit(UserGui userGui) {
-        div = new Div(PolygonColor.class);
-        userGui.getRoot().add(div);
+        Root root = userGui.getRoot();
 
-        div.setVisibility(Visibility.INVISIBLE);
-        div.setXRelative(State.NORMAL, 50);
-        div.setYRelative(State.NORMAL, 50);
+        TextArea textArea = new TextArea(RectangleColor.class, "Paragraph", new Div(RectangleColor.class), new Div(RectangleColor.class));
+        root.add(textArea);
+        textArea.setXRelative(State.NORMAL, 200);
+        textArea.setYRelative(State.NORMAL, 50);
+        textArea.getShape().setHeight(State.NORMAL, 50);
+        textArea.getShape().setWidth(State.NORMAL, 100);
+        textArea.setNbLineVisible(4);
 
-        ((PolygonColor)div.getShape()).setPositions(new double[][]{
-                        {0, -10},
-                        {10, 10},
-                        {30, 10}
-                }
-        );
+        textArea.setFontColor(State.NORMAL, Color.BLACK);
+        textArea.setFont(State.NORMAL, "orange juice");
+        textArea.setFontSize(State.NORMAL, 24);
+        textArea.setCursorColor(State.NORMAL, Color.WHITE);
 
-        ((PolygonColor) div.getShape()).setBackground(State.NORMAL, Color.RED);
-        ((PolygonColor) div.getShape()).setBackground(State.HOVER, Color.BLUE);
+        textArea.getButtonLineBefore().getShape().setWidth(State.NORMAL, 50);
+        textArea.getButtonLineBefore().getShape().setHeight(State.NORMAL, 15);
+        textArea.getButtonLineBefore().getShape().setBackground(State.NORMAL, Color.green);
+        textArea.getButtonLineBefore().addYRelativeTo(textArea.getShape(), AttributeDouble.HEIGHT, 1);
+
+        textArea.getButtonLineAfter().getShape().setWidth(State.NORMAL, 50);
+        textArea.getButtonLineAfter().getShape().setHeight(State.NORMAL, 15);
+        textArea.getButtonLineAfter().getShape().setBackground(State.NORMAL, Color.YELLOW);
+        textArea.getButtonLineAfter().addYRelativeTo(textArea.getShape(), AttributeDouble.HEIGHT, 1);
+        textArea.getButtonLineAfter().addXRelativeTo(textArea.getShape(), AttributeDouble.WIDTH, 0.5);
+
+        textArea.addOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public void onValueChange(ComponentValuable component) {
+                System.out.println(component.getValue());
+            }
+        });
+        textArea.addOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(Component component) {
+                System.out.println("Click");
+            }
+        });
+        textArea.addOnDoubleClickListener(new OnDoubleClickListener() {
+            @Override
+            public void onDoubleClick(Component component) {
+                System.out.println("DoubleClick");
+            }
+        });
+        textArea.addOnBlurListener(new OnBlurListener() {
+            @Override
+            public void onBlur(Component component) {
+                System.out.println("Blur");
+            }
+        });
+        textArea.addOnFocusListener(new OnFocusListener() {
+            @Override
+            public void onFocus(Component component) {
+                System.out.println("Focus");
+            }
+        });
+        textArea.addOnInputListener(new OnInputListener() {
+            @Override
+            public void onInput(Component component, char input) {
+                System.out.println("Input: "+input);
+            }
+        });
+        textArea.addOnKeyPressedListener(new OnKeyPressedListener() {
+            @Override
+            public void onKeyPressed(Component component, int keyCode) {
+                System.out.println("Key pressed: "+keyCode);
+            }
+        });
+        textArea.addOnRemoveListener(new OnRemoveListener() {
+            @Override
+            public void onRemove(Component component) {
+                System.out.println("Remove");
+            }
+        });
+
+        textArea.setText("Bonjour");
     }
 
     @Override
     public void onGuiOpen(UserGui userGui) {
-        div.setVisibility(Visibility.VISIBLE);
+
     }
 
     @Override
     public void onGuiClose(UserGui userGui) {
-        div.setVisibility(Visibility.INVISIBLE);
+        userGui.getComponent("Paragraph").remove();
     }
 
 }

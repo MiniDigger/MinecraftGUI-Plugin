@@ -43,6 +43,7 @@ public abstract class NetworkController {
     public static final int PACKET_INTERFACE_INITIATED = 4;
     public static final int PACKET_CREATE_COMPONENT = 5;
     public static final int PACKET_DELETE_COMPONENT = 6;
+    public static final int PACKET_ADD_EVENT = 7;
 
     public static final int PACKET_EVENT_ON_CLICK = 100;
     public static final int PACKET_EVENT_ON_DOUBLE_CLICK = 102;
@@ -88,6 +89,9 @@ public abstract class NetworkController {
     public static final int PACKET_SET_VALUE = 1030;
     public static final int PACKET_SET_TEXT_ALIGNMEMT = 1031;
     public static final int PACKET_SET_POSITIONS = 1032;
+    public static final int PACKET_SET_LIST_NB_COMPONENT = 1033;
+    public static final int PACKET_SET_TEXT_NB_LINE = 1034;
+    public static final int PACKET_UPDATE_LIST = 1035;
 
     public static final String CONTENT = "content";
     public static final String PACKET_ID = "packetId";

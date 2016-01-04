@@ -44,6 +44,15 @@ public class PacketSetAttribute extends PacketOut {
     private String componentAttributeToLink;
     private String componentShapeToLink;
 
+    public PacketSetAttribute(Component component) {
+        this.component = component;
+        this.shape = component.getShape();
+        this.state = State.NORMAL;
+        this.percentage = 1;
+        this.time = 0;
+        this.value = "";
+    }
+
     public PacketSetAttribute(Component component, Object value) {
         this.component = component;
         this.shape = component.getShape();

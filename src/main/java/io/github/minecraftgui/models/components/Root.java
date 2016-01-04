@@ -44,6 +44,10 @@ public final class Root extends Component{
     }
 
     @Override
+    public void remove() {
+    }
+
+    @Override
     public void add(Component component) {
         if(component.parent != null || component.userConnection != null || component.userGui != null)
             throw new ComponentException("Can't add a component that is already assigned.");
@@ -53,8 +57,9 @@ public final class Root extends Component{
         component.userConnection = this.userConnection;
         component.setShapeUserConnection();
         this.userGui.addComponent(component);
-        this.userConnection.addComponent(component);
+        this.userConnection.addComponent(component, true);
         this.children.add(component);
+        userConnection.addEventListener(component, NetworkController.ON_REMOVE_LISTENER);
 
         for(Component specialChild : component.specialChildren)
             component.add(specialChild);

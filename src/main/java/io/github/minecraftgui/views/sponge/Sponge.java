@@ -20,8 +20,8 @@ package io.github.minecraftgui.views.sponge;
 
 import com.google.inject.Inject;
 import io.github.minecraftgui.models.components.*;
-import io.github.minecraftgui.models.components.Cursor;
-import io.github.minecraftgui.models.components.TextArea;
+import io.github.minecraftgui.models.components.List;
+import io.github.minecraftgui.models.forms.Dropdown;
 import io.github.minecraftgui.models.forms.Form;
 import io.github.minecraftgui.models.forms.RadioButtonGroup;
 import io.github.minecraftgui.models.listeners.OnFormSendListener;
@@ -30,7 +30,8 @@ import io.github.minecraftgui.models.shapes.RectangleColor;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 import java.awt.*;
@@ -43,16 +44,20 @@ public class Sponge implements OnGuiListener {
     private SpongeNetwork spongeNetwork;
 
     @Listener
-    public void onPreInitializationEvent(GamePreInitializationEvent event) {
+    public void onInitializationEvent(GameInitializationEvent event) {
         this.spongeNetwork = new SpongeNetwork(this, game);
-        this.spongeNetwork.addPlugin(this);
+        this.spongeNetwork.addPlugin(this, "Tes");
+    }
+
+    @Listener
+    public void onStartingEvent(GameStartingServerEvent event) {
+        this.spongeNetwork.sortPlugins();
     }
 
     @Override
     public void onGuiPreInit(UserGui userGui) {
         userGui.addFont("http://www.1001freefonts.com/d/325/orange_juice.zip");
-        userGui.addImage("http://media3.giphy.com/media/tp1U2lhRChsDC/200w.gif", "google.gif");
-        userGui.addFontToGenerate("orange juice", 24, Color.BLACK);
+        userGui.addFontToGenerate("orange juice", 12, Color.BLACK);
     }
 
     @Override
@@ -67,7 +72,6 @@ public class Sponge implements OnGuiListener {
         div.getShape().setWidth(State.NORMAL, 50);
         div.getShape().setHeight(State.NORMAL, 20);
         div.getShape().setBackground(State.NORMAL, Color.BLUE);
-
 
         for(int i = 0; i < 5; i++){
             CheckBox checkBox = new CheckBox(RectangleColor.class, RectangleColor.class);
@@ -85,61 +89,68 @@ public class Sponge implements OnGuiListener {
             group.addCheckBox(checkBox);
         }
 
-        TextArea textArea = new TextArea(RectangleColor.class, "Paragraph", new Div(RectangleColor.class), new Div(RectangleColor.class));
-        root.add(textArea);
-        textArea.setXRelative(State.NORMAL, 200);
-        textArea.setYRelative(State.NORMAL, 50);
-        textArea.getShape().setHeight(State.NORMAL, 50);
-        textArea.getShape().setWidth(State.NORMAL, 100);
-        textArea.setNbLineVisible(4);
 
-        textArea.setFontColor(State.NORMAL, Color.BLACK);
-        textArea.setFont(State.NORMAL, "orange juice");
-        textArea.setFontSize(State.NORMAL, 24);
-        textArea.setCursorColor(State.NORMAL, Color.WHITE);
+        List list = new List(RectangleColor.class, new Div(RectangleColor.class), new Div(RectangleColor.class));
+        Paragraph paragraph = new Paragraph(RectangleColor.class, new Div(RectangleColor.class), new Div(RectangleColor.class));
+        root.add(list);
+        root.add(paragraph);
 
-        textArea.getButtonLineBefore().getShape().setWidth(State.NORMAL, 50);
-        textArea.getButtonLineBefore().getShape().setHeight(State.NORMAL, 15);
-        textArea.getButtonLineBefore().getShape().setBackground(State.NORMAL, Color.green);
-        textArea.getButtonLineBefore().addYRelativeTo(textArea.getShape(), AttributeDouble.HEIGHT, 1);
+        list.setYRelative(State.NORMAL, 150);
+        list.setXRelative(State.NORMAL, 30);
+        list.getShape().setWidth(State.NORMAL, 100);
+        list.getShape().setHeight(State.NORMAL, 100);
+        list.getShape().setBackground(State.NORMAL, Color.GRAY);
+        list.setNbComponentPerList(5);
 
-        textArea.getButtonLineAfter().getShape().setWidth(State.NORMAL, 50);
-        textArea.getButtonLineAfter().getShape().setHeight(State.NORMAL, 15);
-        textArea.getButtonLineAfter().getShape().setBackground(State.NORMAL, Color.YELLOW);
-        textArea.getButtonLineAfter().addYRelativeTo(textArea.getShape(), AttributeDouble.HEIGHT, 1);
-        textArea.getButtonLineAfter().addXRelativeTo(textArea.getShape(), AttributeDouble.WIDTH, 0.5);
+        list.getButtonListBefore().getShape().setWidth(State.NORMAL, 50);
+        list.getButtonListBefore().getShape().setHeight(State.NORMAL, 15);
+        list.getButtonListBefore().getShape().setBackground(State.NORMAL, Color.green);
+        list.getButtonListBefore().addYRelativeTo(list.getShape(), AttributeDouble.HEIGHT, 1);
 
-        Div button = new Div(RectangleColor.class);
-        Slider slider = new Slider(Slider.Type.HORIZONTAL, RectangleColor.class, RectangleColor.class, button);
-        userGui.getRoot().add(slider);
-        slider.setXRelative(State.NORMAL, 100);
-        slider.setYRelative(State.NORMAL, 100);
+        list.getButtonListAfter().getShape().setWidth(State.NORMAL, 50);
+        list.getButtonListAfter().getShape().setHeight(State.NORMAL, 15);
+        list.getButtonListAfter().getShape().setBackground(State.NORMAL, Color.YELLOW);
+        list.getButtonListAfter().addYRelativeTo(list.getShape(), AttributeDouble.HEIGHT, 1);
+        list.getButtonListAfter().addXRelativeTo(list.getShape(), AttributeDouble.WIDTH, 0.5);
 
-        slider.getShape().setWidth(State.NORMAL, 50);
-        slider.getShape().setHeight(State.NORMAL, 2);
-        slider.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 125));
-        slider.getShapeOnProgress().setBackground(State.NORMAL, new Color(231, 76, 60, 255));
-        slider.getShapeOnProgress().setWidth(State.NORMAL, slider.getShape(), AttributeDouble.WIDTH, 300, 1);
-        slider.setCursor(State.HOVER, Cursor.HAND);
+        paragraph.setYRelative(State.NORMAL, 130);
+        paragraph.setXRelative(State.NORMAL, 30);
+        paragraph.getShape().setHeight(State.NORMAL, 20);
+        paragraph.getShape().setWidth(State.NORMAL, 100);
+        paragraph.getShape().setBackground(State.NORMAL, Color.WHITE);
+        paragraph.getShape().setBackground(State.HOVER, Color.LIGHT_GRAY);
 
-        button.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 255));
-        button.getShape().setWidth(State.NORMAL, 2);
-        button.getShape().setHeight(State.NORMAL, 6);
-        button.setCursor(State.HOVER, Cursor.HAND);
-        button.addXRelativeTo(button.getShape(), AttributeDouble.WIDTH, -0.5);
-        button.addYRelativeTo(slider.getShape(), AttributeDouble.HEIGHT, 0.5);
-        button.addYRelativeTo(button.getShape(), AttributeDouble.HEIGHT, -0.5);
+        paragraph.setFontColor(State.NORMAL, Color.BLACK);
+        paragraph.setFont(State.NORMAL, "orange juice");
+        paragraph.setFontSize(State.NORMAL, 12);
+
+        Dropdown dropdown = new Dropdown(paragraph, list);
+
+        for(int i = 0; i < 15; i++){
+            Paragraph paragraph1 = new Paragraph(RectangleColor.class, new Div(RectangleColor.class), new Div(RectangleColor.class));
+            list.add(paragraph1);
+            paragraph1.getShape().setHeight(State.NORMAL, 20);
+            paragraph1.getShape().setWidth(State.NORMAL, 100);
+            paragraph1.getShape().setBackground(State.NORMAL, Color.WHITE);
+            paragraph1.getShape().setBackground(State.HOVER, Color.LIGHT_GRAY);
+
+            paragraph1.setFontColor(State.NORMAL, Color.BLACK);
+            paragraph1.setFont(State.NORMAL, "orange juice");
+            paragraph1.setFontSize(State.NORMAL, 12);
+
+            dropdown.addValue(paragraph1, "- "+i);
+        }
+
+        dropdown.init("Test");
 
         Form form = new Form(div);
-        form.addValuable("text", textArea);
         form.addValuable("list", group);
-        form.addValuable("slider", slider);
+        form.addValuable("drop", dropdown);
         form.addOnFormSendListener(new OnFormSendListener() {
             @Override
             public void onFormSend(Form form) {
                 System.out.println(form.getValuable("list").getValue());
-                System.out.println(form.getValuable("text").getValue());
-                System.out.println(form.getValuable("slider").getValue());
+                System.out.println(form.getValuable("drop").getValue());
             }
         });
     }

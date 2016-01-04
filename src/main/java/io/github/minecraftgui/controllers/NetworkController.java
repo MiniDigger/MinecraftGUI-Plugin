@@ -24,9 +24,10 @@ import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.network.UserConnection;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Samuel on 2015-12-13.
@@ -181,20 +182,69 @@ public abstract class NetworkController {
     public static final String RECTANGLE_IMAGE = "rectangleImage";
 
     private final ConcurrentHashMap<UUID, UserConnection> playerConnections;
-    private final CopyOnWriteArrayList<OnGuiListener> plugins;
+    private final ArrayList<PluginInfo> pluginsInfo;
+    private final ArrayList<OnGuiListener> plugins;
 
     public abstract void sendPacktTo(UUID uuid, JSONObject jsonObject);
 
     public NetworkController() {
         this.playerConnections = new ConcurrentHashMap<>();
-        this.plugins = new CopyOnWriteArrayList<>();
+        this.plugins = new ArrayList<>();
+        this.pluginsInfo = new ArrayList<>();
     }
 
-    public void addPlugin(OnGuiListener plugin){
-        plugins.add(plugin);
+    public void addPlugin(OnGuiListener plugin, String pluginName){
+        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<String>()));
     }
 
-    public CopyOnWriteArrayList<OnGuiListener> getPlugins() {
+    public void addPlugin(OnGuiListener plugin, String pluginName, String... dependencies){
+        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<String>(Arrays.asList(dependencies))));
+    }
+
+    public void sortPlugins(){
+        ArrayList<PluginInfo> pluginsToRemove = new ArrayList<>();
+        ArrayList<PluginInfo> pluginsAdded = new ArrayList<>();
+        int i,j;
+
+        while(pluginsInfo.size() != 0){
+            for(i = 0; i < pluginsInfo.size(); i++){
+                PluginInfo pluginInfo = pluginsInfo.get(i);
+
+                if(pluginInfo.dependencies.size() == 0){
+                    pluginsAdded.add(pluginInfo);
+                    pluginsToRemove.add(pluginInfo);
+                }
+                else {
+                    int nbDependenciesToFind = pluginInfo.dependencies.size();
+
+                    for(j = 0; j < pluginsAdded.size(); j++){
+                        PluginInfo pluginInfoAdded = pluginsAdded.get(j);
+
+                        if(pluginInfo.dependencies.contains(pluginInfoAdded.name))
+                            nbDependenciesToFind--;
+                    }
+
+                    if(nbDependenciesToFind == 0){
+                        pluginsAdded.add(pluginInfo);
+                        pluginsToRemove.add(pluginInfo);
+                    }
+                }
+            }
+
+            if(pluginsToRemove.size() == 0)
+                pluginsInfo.clear();
+            else
+                pluginsInfo.removeAll(pluginsToRemove);
+
+            pluginsToRemove.clear();
+        }
+
+
+        for(PluginInfo pluginInfo : pluginsAdded)
+            plugins.add(pluginInfo.onGuiListener);
+    }
+
+    public ArrayList<OnGuiListener> getPlugins() {
         return plugins;
     }
 
@@ -219,6 +269,19 @@ public abstract class NetworkController {
 
         if(userConnection != null)
             userConnection.reloadGui();
+    }
+
+    private class PluginInfo{
+
+        private final String name;
+        private final OnGuiListener onGuiListener;
+        private final ArrayList<String> dependencies;
+
+        public PluginInfo(String name, OnGuiListener onGuiListener, ArrayList<String> dependencies) {
+            this.name = name;
+            this.onGuiListener = onGuiListener;
+            this.dependencies = dependencies;
+        }
     }
 
 }

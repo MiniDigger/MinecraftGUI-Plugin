@@ -37,6 +37,10 @@ public abstract class ComponentText extends ComponentValuable<String> {
         super(type, shape, id);
     }
 
+    public String getText(){
+        return this.value;
+    }
+
     public void setText(String text){
         userConnection.setValue(this, text);
     }

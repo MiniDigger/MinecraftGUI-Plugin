@@ -18,18 +18,13 @@
  *
  */
 
-package io.github.minecraftgui.models.listeners;
-
-import io.github.minecraftgui.models.components.UserGui;
+package io.github.minecraftgui.models.forms;
 
 /**
- * Created by Samuel on 2016-01-02.
+ * Created by Samuel on 2016-01-04.
  */
-public interface OnGuiListener {
+public interface Valuable<V> {
 
-    void onGuiPreInit(UserGui userGui);
-    void onGuiInit(UserGui userGui);
-    void onGuiOpen(UserGui userGui);
-    void onGuiClose(UserGui userGui);
+    V getValue();
 
 }

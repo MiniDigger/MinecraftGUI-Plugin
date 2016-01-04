@@ -149,7 +149,6 @@ public class Component {
         component.parent = this;
         component.userGui = userGui;
         component.userConnection = this.userConnection;
-        component.setShapeUserConnection();
         userGui.addComponent(component);
 
         if(!this.specialChildren.contains(component)) {
@@ -159,10 +158,15 @@ public class Component {
         else
             this.userConnection.addComponent(component, false);
 
+        component.init();
         userConnection.addEventListener(component, NetworkController.ON_REMOVE_LISTENER);
 
         for(Component specialChild : component.specialChildren)
             component.add(specialChild, userGui);
+    }
+
+    protected void init(){
+        shape.setUserConnection(userConnection);
     }
 
     public void remove(){
@@ -172,14 +176,6 @@ public class Component {
             userGui.removeComponent(this);
             userConnection.removeComponent(this);
         }
-    }
-
-    protected void setShapeUserConnection(){
-        shape.setUserConnection(userConnection);
-    }
-
-    protected void setUserGui(UserGui userGui) {
-        this.userGui = userGui;
     }
 
     protected void setUserConnection(UserConnection userConnection) {

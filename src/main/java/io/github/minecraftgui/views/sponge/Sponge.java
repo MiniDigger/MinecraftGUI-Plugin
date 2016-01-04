@@ -20,9 +20,12 @@ package io.github.minecraftgui.views.sponge;
 
 import com.google.inject.Inject;
 import io.github.minecraftgui.models.components.*;
-import io.github.minecraftgui.models.components.Component;
+import io.github.minecraftgui.models.components.Cursor;
 import io.github.minecraftgui.models.components.TextArea;
-import io.github.minecraftgui.models.listeners.*;
+import io.github.minecraftgui.models.forms.Form;
+import io.github.minecraftgui.models.forms.RadioButtonGroup;
+import io.github.minecraftgui.models.listeners.OnFormSendListener;
+import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.shapes.RectangleColor;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -46,8 +49,41 @@ public class Sponge implements OnGuiListener {
     }
 
     @Override
+    public void onGuiPreInit(UserGui userGui) {
+        userGui.addFont("http://www.1001freefonts.com/d/325/orange_juice.zip");
+        userGui.addImage("http://media3.giphy.com/media/tp1U2lhRChsDC/200w.gif", "google.gif");
+        userGui.addFontToGenerate("orange juice", 24, Color.BLACK);
+    }
+
+    @Override
     public void onGuiInit(UserGui userGui) {
         Root root = userGui.getRoot();
+        RadioButtonGroup group = new RadioButtonGroup();
+        Div div = new Div(RectangleColor.class);
+        root.add(div);
+
+        div.setYRelative(State.NORMAL, 50);
+        div.setXRelative(State.NORMAL, 30);
+        div.getShape().setWidth(State.NORMAL, 50);
+        div.getShape().setHeight(State.NORMAL, 20);
+        div.getShape().setBackground(State.NORMAL, Color.BLUE);
+
+
+        for(int i = 0; i < 5; i++){
+            CheckBox checkBox = new CheckBox(RectangleColor.class, RectangleColor.class);
+            root.add(checkBox);
+
+            checkBox.setYRelative(State.NORMAL, 30);
+            checkBox.setXRelative(State.NORMAL, 30 + 40 * i);
+            checkBox.getShapeOnValueTrue().setWidth(State.NORMAL, 10);
+            checkBox.getShapeOnValueTrue().setHeight(State.NORMAL, 10);
+            checkBox.getShapeOnValueTrue().setBackground(State.NORMAL, Color.GREEN);
+            checkBox.getShapeOnValueFalse().setWidth(State.NORMAL, 10);
+            checkBox.getShapeOnValueFalse().setHeight(State.NORMAL, 10);
+            checkBox.getShapeOnValueFalse().setBackground(State.NORMAL, Color.RED);
+
+            group.addCheckBox(checkBox);
+        }
 
         TextArea textArea = new TextArea(RectangleColor.class, "Paragraph", new Div(RectangleColor.class), new Div(RectangleColor.class));
         root.add(textArea);
@@ -73,56 +109,39 @@ public class Sponge implements OnGuiListener {
         textArea.getButtonLineAfter().addYRelativeTo(textArea.getShape(), AttributeDouble.HEIGHT, 1);
         textArea.getButtonLineAfter().addXRelativeTo(textArea.getShape(), AttributeDouble.WIDTH, 0.5);
 
-        textArea.addOnValueChangeListener(new OnValueChangeListener() {
-            @Override
-            public void onValueChange(ComponentValuable component) {
-                System.out.println(component.getValue());
-            }
-        });
-        textArea.addOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(Component component) {
-                System.out.println("Click");
-            }
-        });
-        textArea.addOnDoubleClickListener(new OnDoubleClickListener() {
-            @Override
-            public void onDoubleClick(Component component) {
-                System.out.println("DoubleClick");
-            }
-        });
-        textArea.addOnBlurListener(new OnBlurListener() {
-            @Override
-            public void onBlur(Component component) {
-                System.out.println("Blur");
-            }
-        });
-        textArea.addOnFocusListener(new OnFocusListener() {
-            @Override
-            public void onFocus(Component component) {
-                System.out.println("Focus");
-            }
-        });
-        textArea.addOnInputListener(new OnInputListener() {
-            @Override
-            public void onInput(Component component, char input) {
-                System.out.println("Input: "+input);
-            }
-        });
-        textArea.addOnKeyPressedListener(new OnKeyPressedListener() {
-            @Override
-            public void onKeyPressed(Component component, int keyCode) {
-                System.out.println("Key pressed: "+keyCode);
-            }
-        });
-        textArea.addOnRemoveListener(new OnRemoveListener() {
-            @Override
-            public void onRemove(Component component) {
-                System.out.println("Remove");
-            }
-        });
+        Div button = new Div(RectangleColor.class);
+        Slider slider = new Slider(Slider.Type.HORIZONTAL, RectangleColor.class, RectangleColor.class, button);
+        userGui.getRoot().add(slider);
+        slider.setXRelative(State.NORMAL, 100);
+        slider.setYRelative(State.NORMAL, 100);
 
-        textArea.setText("Bonjour");
+        slider.getShape().setWidth(State.NORMAL, 50);
+        slider.getShape().setHeight(State.NORMAL, 2);
+        slider.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 125));
+        slider.getShapeOnProgress().setBackground(State.NORMAL, new Color(231, 76, 60, 255));
+        slider.getShapeOnProgress().setWidth(State.NORMAL, slider.getShape(), AttributeDouble.WIDTH, 300, 1);
+        slider.setCursor(State.HOVER, Cursor.HAND);
+
+        button.getShape().setBackground(State.NORMAL, new Color(236, 240, 241, 255));
+        button.getShape().setWidth(State.NORMAL, 2);
+        button.getShape().setHeight(State.NORMAL, 6);
+        button.setCursor(State.HOVER, Cursor.HAND);
+        button.addXRelativeTo(button.getShape(), AttributeDouble.WIDTH, -0.5);
+        button.addYRelativeTo(slider.getShape(), AttributeDouble.HEIGHT, 0.5);
+        button.addYRelativeTo(button.getShape(), AttributeDouble.HEIGHT, -0.5);
+
+        Form form = new Form(div);
+        form.addValuable("text", textArea);
+        form.addValuable("list", group);
+        form.addValuable("slider", slider);
+        form.addOnFormSendListener(new OnFormSendListener() {
+            @Override
+            public void onFormSend(Form form) {
+                System.out.println(form.getValuable("list").getValue());
+                System.out.println(form.getValuable("text").getValue());
+                System.out.println(form.getValuable("slider").getValue());
+            }
+        });
     }
 
     @Override
@@ -132,7 +151,6 @@ public class Sponge implements OnGuiListener {
 
     @Override
     public void onGuiClose(UserGui userGui) {
-        userGui.getComponent("Paragraph").remove();
     }
 
 }

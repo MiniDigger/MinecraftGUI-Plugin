@@ -22,6 +22,7 @@ package io.github.minecraftgui.models.components;
 
 import io.github.minecraftgui.models.network.UserConnection;
 
+import java.awt.*;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,6 +53,18 @@ public final class UserGui {
 
     public Component getComponent(String id){
         return componentsWithId.get(id);
+    }
+
+    public void addImage(String url, String name){
+        userConnection.addImage(url, name);
+    }
+
+    public void addFont(String url){
+        userConnection.addFont(url);
+    }
+
+    public void addFontToGenerate(String name, int size, Color color){
+        userConnection.addFontToGenerate(name, size, color);
     }
 
     protected final void addComponent(Component component){

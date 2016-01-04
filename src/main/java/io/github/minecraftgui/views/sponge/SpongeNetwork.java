@@ -25,6 +25,8 @@ import io.github.minecraftgui.models.network.UserConnection;
 import org.json.JSONObject;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Platform;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.network.*;
 
 import java.util.UUID;
@@ -41,6 +43,12 @@ public class SpongeNetwork extends NetworkController implements MessageHandler<S
         this.game = game;
         indexedMessageChannel = game.getChannelRegistrar().createChannel(plugin, NetworkController.MINECRAFT_GUI_CHANNEL);
         indexedMessageChannel.registerMessage(SpongeNetwork.Packet.class, 0, this);
+        game.getEventManager().registerListeners(plugin, this);
+    }
+
+    @Listener
+    public void playerDisconnect(ClientConnectionEvent.Disconnect event){
+        removeUserConnection(event.getTargetEntity().getUniqueId());
     }
 
     @Override

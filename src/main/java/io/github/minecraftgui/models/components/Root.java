@@ -55,14 +55,16 @@ public final class Root extends Component{
         component.parent = this;
         component.userGui = this.userGui;
         component.userConnection = this.userConnection;
-        component.setShapeUserConnection();
         this.userGui.addComponent(component);
         this.userConnection.addComponent(component, true);
         this.children.add(component);
+
+        component.init();
         userConnection.addEventListener(component, NetworkController.ON_REMOVE_LISTENER);
 
         for(Component specialChild : component.specialChildren)
             component.add(specialChild);
+
     }
 
 }

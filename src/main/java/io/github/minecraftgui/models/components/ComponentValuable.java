@@ -21,6 +21,7 @@
 package io.github.minecraftgui.models.components;
 
 import io.github.minecraftgui.controllers.NetworkController;
+import io.github.minecraftgui.models.forms.Valuable;
 import io.github.minecraftgui.models.listeners.OnValueChangeListener;
 import io.github.minecraftgui.models.shapes.Shape;
 
@@ -29,7 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by Samuel on 2015-12-30.
  */
-public abstract class ComponentValuable<V> extends Component {
+public abstract class ComponentValuable<V> extends Component implements Valuable {
 
     private final CopyOnWriteArrayList<OnValueChangeListener> listeners;
     protected V value;
@@ -44,10 +45,13 @@ public abstract class ComponentValuable<V> extends Component {
         this.listeners = new CopyOnWriteArrayList<>();
     }
 
-    public final void addOnValueChangeListener(OnValueChangeListener listener){
-        if(listeners.size() == 0)
-            userConnection.addEventListener(this, NetworkController.ON_VALUE_CHANGE_LISTENER);
+    @Override
+    protected void init() {
+        super.init();
+        userConnection.addEventListener(this, NetworkController.ON_VALUE_CHANGE_LISTENER);
+    }
 
+    public final void addOnValueChangeListener(OnValueChangeListener listener){
         this.listeners.add(listener);
     }
 

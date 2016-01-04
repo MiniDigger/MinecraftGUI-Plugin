@@ -45,6 +45,9 @@ public class UserConnection {
     private final ConcurrentHashMap<OnGuiListener, UserGui> userGuis;
     private final ConcurrentHashMap<UUID, Component> components;
     private final NetworkController networkController;
+    private final ArrayList<String> fonts;
+    private final HashMap<String, String> images;
+    private final HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate;
     private final UUID uuid;
 
     public UserConnection(NetworkController networkController, UUID uuid) {
@@ -52,6 +55,9 @@ public class UserConnection {
         this.uuid = uuid;
         this.components = new ConcurrentHashMap<>();
         this.userGuis = new ConcurrentHashMap<>();
+        this.fontsGenerate = new HashMap<>();
+        this.fonts = new ArrayList<>();
+        this.images = new HashMap<>();
 
         for(OnGuiListener plugin : networkController.getPlugins())
             userGuis.put(plugin, new UserGui(this));
@@ -209,29 +215,40 @@ public class UserConnection {
         sendPacket(NetworkController.PACKET_DELETE_COMPONENT, new PacketDeleteComponent(component));
     }
 
+    public void addImage(String url, String name){
+        images.put(url, name);
+    }
+
+    public void addFont(String url){
+        if(!fonts.contains(url))
+            fonts.add(url);
+    }
+
+    public void addFontToGenerate(String name, int size, Color color){
+        HashMap<Color, ArrayList<Integer>> font = fontsGenerate.get(name);
+        ArrayList<Integer> sizes;
+
+        if(font == null){
+            font = new HashMap<>();
+            fontsGenerate.put(name, font);
+        }
+
+        sizes = font.get(color);
+
+        if(sizes == null){
+            sizes = new ArrayList<>();
+            font.put(color, sizes);
+        }
+
+        sizes.add(size);
+    }
+
     public void receivePacket(JSONObject jsonObject){
         int packetId = jsonObject.getInt(NetworkController.PACKET_ID);
         JSONObject content = jsonObject.getJSONObject(NetworkController.CONTENT);
 
         switch (packetId){
-            case NetworkController.PACKET_INIT_CONNECTION:
-                ArrayList<String> fonts = new ArrayList<>();
-                HashMap<String, String> images = new HashMap<>();
-                HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate = new HashMap<>();
-                HashMap<Color, ArrayList<Integer>> font = new HashMap<>();
-
-                fonts.add("http://www.1001freefonts.com/d/325/orange_juice.zip");
-
-                images.put("http://media3.giphy.com/media/tp1U2lhRChsDC/200w.gif", "google.gif");
-
-                ArrayList<Integer> sizes = new ArrayList<>();
-                font.put(Color.BLACK, sizes);
-                sizes.add(24);
-
-                fontsGenerate.put("orange juice", font);
-
-                sendPacket(NetworkController.PACKET_INIT_CLIENT, new PacketInitClient(fonts, images, fontsGenerate));
-                break;
+            case NetworkController.PACKET_INIT_CONNECTION: onGuiPreInit(); break;
             case NetworkController.PACKET_CLIENT_INITIATED: sendPacket(NetworkController.PACKET_INIT_INTERFACE, new PacketInitInterface()); break;
             case NetworkController.PACKET_INTERFACE_INITIATED: onGuiInit(); break;
             case NetworkController.PACKET_EVENT_ON_GUI_CLOSE: onGuiClose(); break;
@@ -242,13 +259,26 @@ public class UserConnection {
             case NetworkController.PACKET_EVENT_ON_FOCUS: new PacketComponentEvent.OnFocus(this, content); break;
             case NetworkController.PACKET_EVENT_ON_INPUT: new PacketComponentEvent.OnInput(this, content); break;
             case NetworkController.PACKET_EVENT_ON_KEY_PRESSED: new PacketComponentEvent.OnKeyPressed(this, content); break;
-            case NetworkController.PACKET_EVENT_ON_REMOVE:
-                PacketComponentEvent event = new PacketComponentEvent.OnRemove(this, content);
-                components.remove(event.getComponent().getUniqueId());
-                System.out.println(components.size());
-                break;
+            case NetworkController.PACKET_EVENT_ON_REMOVE: onRemove(content);break;
             case NetworkController.PACKET_EVENT_ON_VALUE_CHANGED: new PacketComponentEvent.OnValueChange(this, content); break;
         }
+    }
+
+    private void onRemove(JSONObject content){
+        PacketComponentEvent event = new PacketComponentEvent.OnRemove(this, content);
+        components.remove(event.getComponent().getUniqueId());
+    }
+
+    private void onGuiPreInit(){
+        Enumeration<OnGuiListener> listeners = userGuis.keys();
+
+        while(listeners.hasMoreElements()) {
+            OnGuiListener listener = listeners.nextElement();
+
+            listener.onGuiPreInit(userGuis.get(listener));
+        }
+
+        sendPacket(NetworkController.PACKET_INIT_CLIENT, new PacketInitClient(fonts, images, fontsGenerate));
     }
 
     private void onGuiInit(){

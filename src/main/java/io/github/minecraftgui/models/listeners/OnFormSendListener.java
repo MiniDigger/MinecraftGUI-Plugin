@@ -20,16 +20,13 @@
 
 package io.github.minecraftgui.models.listeners;
 
-import io.github.minecraftgui.models.components.UserGui;
+import io.github.minecraftgui.models.forms.Form;
 
 /**
- * Created by Samuel on 2016-01-02.
+ * Created by Samuel on 2016-01-04.
  */
-public interface OnGuiListener {
+public interface OnFormSendListener {
 
-    void onGuiPreInit(UserGui userGui);
-    void onGuiInit(UserGui userGui);
-    void onGuiOpen(UserGui userGui);
-    void onGuiClose(UserGui userGui);
+    void onFormSend(Form form);
 
 }

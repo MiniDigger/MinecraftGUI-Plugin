@@ -36,7 +36,7 @@ public class CheckBox extends ComponentValuable<Boolean>{
         super(NetworkController.CHECKBOX, RectangleColor.class);
         this.value = false;
         this.shapeOnValueTrue = getShapeByClass(shapeOnValueTrue, NetworkController.SHAPE_ON_VALUE_TRUE);
-        this.shapeOnValueFalse = getShapeByClass(shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_TRUE);
+        this.shapeOnValueFalse = getShapeByClass(shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_FALSE);
         this.shape = this.shapeOnValueTrue;
     }
 
@@ -44,7 +44,7 @@ public class CheckBox extends ComponentValuable<Boolean>{
         super(NetworkController.CHECKBOX, RectangleColor.class, id);
         this.value = false;
         this.shapeOnValueTrue = getShapeByClass(shapeOnValueTrue, NetworkController.SHAPE_ON_VALUE_TRUE);
-        this.shapeOnValueFalse = getShapeByClass(shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_TRUE);
+        this.shapeOnValueFalse = getShapeByClass(shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_FALSE);
         this.shape = this.shapeOnValueTrue;
     }
 
@@ -53,8 +53,8 @@ public class CheckBox extends ComponentValuable<Boolean>{
     }
 
     @Override
-    protected void setShapeUserConnection() {
-        super.setShapeUserConnection();
+    protected void init() {
+        super.init();
         this.shapeOnValueTrue.setUserConnection(userConnection);
         this.shapeOnValueFalse.setUserConnection(userConnection);
     }

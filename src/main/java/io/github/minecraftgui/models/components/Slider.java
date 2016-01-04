@@ -62,8 +62,8 @@ public class Slider extends ComponentValuable<Double> {
     }
 
     @Override
-    protected void setShapeUserConnection() {
-        super.setShapeUserConnection();
+    protected void init() {
+        super.init();
         this.shapeOnProgress.setUserConnection(userConnection);
     }
 

@@ -24,23 +24,24 @@ import io.github.minecraftgui.models.components.CheckBox;
 import io.github.minecraftgui.models.components.ComponentValuable;
 import io.github.minecraftgui.models.listeners.OnValueChangeListener;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Enumeration;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Samuel on 2016-01-04.
  */
-public class RadioButtonGroup implements Valuable<Integer> {
+public class RadioButtonGroup implements Valuable<String> {
 
-    private final CopyOnWriteArrayList<CheckBox> checkBoxes;
+    private final ConcurrentHashMap<CheckBox, String> checkBoxes;
     private CheckBox current = null;
     private boolean skipNextEvent = false;
 
     public RadioButtonGroup(){
-        this.checkBoxes = new CopyOnWriteArrayList<>();
+        this.checkBoxes = new ConcurrentHashMap<>();
     }
 
-    public void addCheckBox(CheckBox checkBox){
-        this.checkBoxes.add(checkBox);
+    public void addCheckBox(CheckBox checkBox, String value){
+        this.checkBoxes.put(checkBox, value);
 
         checkBox.addOnValueChangeListener(new OnValueChangeListener() {
             @Override
@@ -51,11 +52,15 @@ public class RadioButtonGroup implements Valuable<Integer> {
 
                 if(current != box) {
                     if (box.getValue().booleanValue()) {
+                        Enumeration<CheckBox> checks = checkBoxes.keys();
                         current = box;
 
-                        for (CheckBox check : checkBoxes)
+                        while(checks.hasMoreElements()) {
+                            CheckBox check = checks.nextElement();
+
                             if (check != box)
                                 check.setChecked(false);
+                        }
                     }
                 }
                 else if(!skipNextEvent) {
@@ -69,8 +74,8 @@ public class RadioButtonGroup implements Valuable<Integer> {
     }
 
     @Override
-    public Integer getValue() {
-        return checkBoxes.indexOf(current);
+    public String getValue() {
+        return checkBoxes.get(current);
     }
 
 }

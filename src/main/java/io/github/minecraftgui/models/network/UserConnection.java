@@ -87,10 +87,6 @@ public class UserConnection {
         sendPacket(NetworkController.PACKET_UPDATE_LIST, new PacketSetAttribute(list));
     }
 
-    public void setListNbComponent(Component component, int nb){
-        sendPacket(NetworkController.PACKET_SET_LIST_NB_COMPONENT, new PacketSetAttribute(component, nb));
-    }
-
     public void setTextNbLine(Component component, int nb){
         sendPacket(NetworkController.PACKET_SET_TEXT_NB_LINE, new PacketSetAttribute(component, nb));
     }
@@ -261,6 +257,8 @@ public class UserConnection {
             case NetworkController.PACKET_EVENT_ON_KEY_PRESSED: new PacketComponentEvent.OnKeyPressed(this, content); break;
             case NetworkController.PACKET_EVENT_ON_REMOVE: onRemove(content);break;
             case NetworkController.PACKET_EVENT_ON_VALUE_CHANGED: new PacketComponentEvent.OnValueChange(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_MOUSE_ENTER: new PacketComponentEvent.OnMouseEnter(this, content); break;
+            case NetworkController.PACKET_EVENT_ON_MOUSE_LEAVE: new PacketComponentEvent.OnMouseLeave(this, content); break;
         }
     }
 

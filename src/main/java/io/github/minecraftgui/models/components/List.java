@@ -60,10 +60,6 @@ public class List extends Component {
         userConnection.updateList(this);
     }
 
-    public void setNbComponentPerList(int nb){
-        userConnection.setListNbComponent(this, nb);
-    }
-
     public Component getButtonListBefore() {
         return buttonListBefore;
     }

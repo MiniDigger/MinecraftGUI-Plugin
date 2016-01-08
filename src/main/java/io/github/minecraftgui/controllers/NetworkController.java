@@ -56,6 +56,8 @@ public abstract class NetworkController {
     public static final int PACKET_EVENT_ON_REMOVE = 108;
     public static final int PACKET_EVENT_ON_GUI_OPEN = 109;
     public static final int PACKET_EVENT_ON_GUI_CLOSE = 110;
+    public static final int PACKET_EVENT_ON_MOUSE_ENTER = 111;
+    public static final int PACKET_EVENT_ON_MOUSE_LEAVE = 112;
 
     public static final int PACKET_SET_ATTRIBUTE_BACKGROUND_COLOR = 1000;
     public static final int PACKET_SET_ATTRIBUTE_WIDTH = 1001;
@@ -90,7 +92,6 @@ public abstract class NetworkController {
     public static final int PACKET_SET_VALUE = 1030;
     public static final int PACKET_SET_TEXT_ALIGNMEMT = 1031;
     public static final int PACKET_SET_POSITIONS = 1032;
-    public static final int PACKET_SET_LIST_NB_COMPONENT = 1033;
     public static final int PACKET_SET_TEXT_NB_LINE = 1034;
     public static final int PACKET_UPDATE_LIST = 1035;
 
@@ -106,6 +107,8 @@ public abstract class NetworkController {
     public static final String ON_KEY_PRESSED_LISTENER = "onKeyPressedListener";
     public static final String ON_REMOVE_LISTENER = "onRemoveListener";
     public static final String ON_VALUE_CHANGE_LISTENER = "onValueChangeListener";
+    public static final String ON_MOUSE_ENTER_LISTENER = "onMouseEnterListener";
+    public static final String ON_MOUSE_LEAVE_LISTENER = "onMouseLeaveListener";
 
     public static final String X = "x";
     public static final String Y = "y";
@@ -153,6 +156,7 @@ public abstract class NetworkController {
     public static final String SHAPE_ON_VALUE_TRUE = "shapeOnValueTrue";
     public static final String SHAPE_ON_VALUE_FALSE = "shapeOnValueFalse";
     public static final String SHAPE_ON_PROGRESS = "shapeOnProgress";
+    public static final String TEXT = "text";
     public static final String WIDTH = "WIDTH";
     public static final String HEIGHT = "HEIGHT";
     public static final String BORDER_TOP = "BORDER_TOP";

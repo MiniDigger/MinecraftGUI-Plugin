@@ -81,7 +81,7 @@ public class Dropdown implements Valuable<String> {
 
     @Override
     public String getValue() {
-        return values.get(lastComponentClicked);
+        return lastComponentClicked == null?null:values.get(lastComponentClicked);
     }
 
 }

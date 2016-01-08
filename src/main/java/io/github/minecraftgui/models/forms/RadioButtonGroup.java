@@ -75,7 +75,7 @@ public class RadioButtonGroup implements Valuable<String> {
 
     @Override
     public String getValue() {
-        return checkBoxes.get(current);
+        return current == null?null:checkBoxes.get(current);
     }
 
 }

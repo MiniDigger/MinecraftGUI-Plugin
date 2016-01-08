@@ -26,6 +26,7 @@ import io.github.minecraftgui.models.listeners.*;
 import io.github.minecraftgui.models.network.UserConnection;
 import io.github.minecraftgui.models.shapes.*;
 
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -40,6 +41,7 @@ public class Component {
     protected final UUID uuid;
     protected final String id;
     protected Shape shape;
+    protected final HashMap<String, Object> objects;
     protected final CopyOnWriteArrayList<Component> specialChildren;
     protected final CopyOnWriteArrayList<Component> children;
     protected final CopyOnWriteArrayList<OnClickListener> onClickListeners;
@@ -70,6 +72,7 @@ public class Component {
         this.onRemoveListeners = new CopyOnWriteArrayList<>();
         this.onMouseEnterListeners = new CopyOnWriteArrayList<>();
         this.onMouseLeaveListeners = new CopyOnWriteArrayList<>();
+        this.objects = new HashMap<>();
     }
 
     public Component(String type, Class<? extends Shape> shape, String id) {
@@ -88,6 +91,15 @@ public class Component {
         this.onRemoveListeners = new CopyOnWriteArrayList<>();
         this.onMouseEnterListeners = new CopyOnWriteArrayList<>();
         this.onMouseLeaveListeners = new CopyOnWriteArrayList<>();
+        this.objects = new HashMap<>();
+    }
+
+    public void addObject(String tag, Object object){
+        objects.put(tag.toLowerCase(), object);
+    }
+
+    public Object getObject(String tag){
+        return objects.get(tag.toLowerCase());
     }
 
     public String getType() {

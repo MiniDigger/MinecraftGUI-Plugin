@@ -41,6 +41,7 @@ public class AttributeDouble extends Attribute {
     public static final AttributeDouble MARGIN_LEFT = new AttributeDouble(NetworkController.MARGIN_LEFT);
     public static final AttributeDouble MARGIN_RIGHT = new AttributeDouble(NetworkController.MARGIN_RIGHT);
     public static final AttributeDouble MARGIN_BOTTOM = new AttributeDouble(NetworkController.MARGIN_BOTTOM);
+    public static final AttributeDouble TEXT = new AttributeDouble(NetworkController.TEXT);
 
     private AttributeDouble(String name) {
         super(name);

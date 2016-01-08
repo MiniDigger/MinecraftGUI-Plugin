@@ -107,6 +107,24 @@ public abstract class PacketComponentEvent extends PacketIn {
         }
     }
 
+    public static class OnMouseEnter extends PacketComponentEvent {
+
+        public OnMouseEnter(UserConnection userConnection, JSONObject jsonObject) {
+            super(userConnection, jsonObject);
+
+            component.onMouseEnter();
+        }
+    }
+
+    public static class OnMouseLeave extends PacketComponentEvent {
+
+        public OnMouseLeave(UserConnection userConnection, JSONObject jsonObject) {
+            super(userConnection, jsonObject);
+
+            component.onMouseLeave();
+        }
+    }
+
     public static class OnValueChange extends PacketComponentEvent {
 
         public OnValueChange(UserConnection userConnection, JSONObject jsonObject) {

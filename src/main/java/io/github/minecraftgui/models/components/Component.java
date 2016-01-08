@@ -49,6 +49,8 @@ public class Component {
     protected final CopyOnWriteArrayList<OnBlurListener> onBlurListeners;
     protected final CopyOnWriteArrayList<OnFocusListener> onFocusListeners;
     protected final CopyOnWriteArrayList<OnRemoveListener> onRemoveListeners;
+    protected final CopyOnWriteArrayList<OnMouseEnterListener> onMouseEnterListeners;
+    protected final CopyOnWriteArrayList<OnMouseLeaveListener> onMouseLeaveListeners;
     protected Component parent;
     private boolean removed = false;
 
@@ -66,6 +68,8 @@ public class Component {
         this.onBlurListeners = new CopyOnWriteArrayList<>();
         this.onFocusListeners = new CopyOnWriteArrayList<>();
         this.onRemoveListeners = new CopyOnWriteArrayList<>();
+        this.onMouseEnterListeners = new CopyOnWriteArrayList<>();
+        this.onMouseLeaveListeners = new CopyOnWriteArrayList<>();
     }
 
     public Component(String type, Class<? extends Shape> shape, String id) {
@@ -82,6 +86,8 @@ public class Component {
         this.onBlurListeners = new CopyOnWriteArrayList<>();
         this.onFocusListeners = new CopyOnWriteArrayList<>();
         this.onRemoveListeners = new CopyOnWriteArrayList<>();
+        this.onMouseEnterListeners = new CopyOnWriteArrayList<>();
+        this.onMouseLeaveListeners = new CopyOnWriteArrayList<>();
     }
 
     public String getType() {
@@ -193,6 +199,20 @@ public class Component {
         onRemoveListeners.add(listener);
     }
 
+    public void addOnMouseLeaveListener(OnMouseLeaveListener listener){
+        if(onMouseLeaveListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_MOUSE_LEAVE_LISTENER);
+
+        onMouseLeaveListeners.add(listener);
+    }
+
+    public void addOnMouseEnterListener(OnMouseEnterListener listener){
+        if(onMouseEnterListeners.size() == 0)
+            userConnection.addEventListener(this, NetworkController.ON_MOUSE_ENTER_LISTENER);
+
+        onMouseEnterListeners.add(listener);
+    }
+
     public void addOnDoubleClickListener(OnDoubleClickListener listener){
         if(onDoubleClickListeners.size() == 0)
             userConnection.addEventListener(this, NetworkController.ON_DOUBLE_CLICK_LISTENER);
@@ -226,6 +246,16 @@ public class Component {
             userConnection.addEventListener(this, NetworkController.ON_FOCUS_LISTENER);
 
         onFocusListeners.add(listener);
+    }
+
+    public void onMouseEnter(){
+        for(OnMouseEnterListener listener : onMouseEnterListeners)
+            listener.onMouseEnter(this);
+    }
+
+    public void onMouseLeave(){
+        for(OnMouseLeaveListener listener : onMouseLeaveListeners)
+            listener.onMouseLeave(this);
     }
 
     public void onRemove(){

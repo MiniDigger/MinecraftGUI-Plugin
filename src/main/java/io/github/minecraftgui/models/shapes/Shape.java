@@ -110,6 +110,13 @@ public abstract class Shape<V> {
         userConnection.setAttribute(m, component, this, state, 1, time, value);
     }
 
+    public void setPadding(State state, double value){
+        userConnection.setAttribute(NetworkController.PADDING_BOTTOM, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.PADDING_TOP, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.PADDING_LEFT, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.PADDING_RIGHT, component, this, state, 1, 0, value);
+    }
+
     public void setPadding(State state, Padding padding, double value) {
         String p = "";
         switch (padding){
@@ -134,6 +141,13 @@ public abstract class Shape<V> {
         userConnection.setAttribute(p, component, this, state, 1, time, value);
     }
 
+    public void setBorder(State state, double value){
+        userConnection.setAttribute(NetworkController.BORDER_BOTTOM, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.BORDER_TOP, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.BORDER_LEFT, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.BORDER_RIGHT, component, this, state, 1, 0, value);
+    }
+
     public void setBorder(State state, Border border, double value) {
         String b = "";
         switch (border){
@@ -156,6 +170,13 @@ public abstract class Shape<V> {
         }
 
         userConnection.setAttribute(b, component, this, state, 1, time, value);
+    }
+
+    public void setBorderColor(State state, Color value){
+        userConnection.setAttribute(NetworkController.BORDER_BOTTOM_COLOR, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.BORDER_TOP_COLOR, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.BORDER_LEFT_COLOR, component, this, state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.BORDER_RIGHT_COLOR, component, this, state, 1, 0, value);
     }
 
     public void setBorderColor(State state, Border border, Color value) {

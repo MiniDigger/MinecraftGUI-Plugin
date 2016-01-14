@@ -67,4 +67,9 @@ public final class Root extends Component{
 
     }
 
+    @Override
+    public void add(Component component, UserGui gui) {
+        this.add(component);
+    }
+
 }

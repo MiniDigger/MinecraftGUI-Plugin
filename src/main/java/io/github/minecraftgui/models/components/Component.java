@@ -79,7 +79,7 @@ public class Component {
         this.type = type;
         this.shape = getShapeByClass(shape, NetworkController.SHAPE_NORMAL);
         this.uuid = UUID.randomUUID();
-        this.id = id;
+        this.id = id == null ||id.equals("")?null:id;
         this.specialChildren = new CopyOnWriteArrayList<>();
         this.children = new CopyOnWriteArrayList<>();
         this.onClickListeners = new CopyOnWriteArrayList<>();

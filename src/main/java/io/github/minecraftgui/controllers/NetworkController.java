@@ -187,13 +187,11 @@ public abstract class NetworkController {
 
     private final ConcurrentHashMap<UUID, UserConnection> playerConnections;
     private final ArrayList<PluginInfo> pluginsInfo;
-    private final ArrayList<OnGuiListener> plugins;
 
     public abstract void sendPacktTo(UUID uuid, JSONObject jsonObject);
 
     public NetworkController() {
         this.playerConnections = new ConcurrentHashMap<>();
-        this.plugins = new ArrayList<>();
         this.pluginsInfo = new ArrayList<>();
     }
 
@@ -243,25 +241,22 @@ public abstract class NetworkController {
             pluginsToRemove.clear();
         }
 
+        pluginsInfo.clear();
 
         for(PluginInfo pluginInfo : pluginsAdded)
-            plugins.add(pluginInfo.onGuiListener);
+            pluginsInfo.add(pluginInfo);
     }
 
-    public ArrayList<OnGuiListener> getPlugins() {
-        return plugins;
-    }
-
-    public final UserConnection getUserConnection(UUID uuid){
+    public UserConnection getUserConnection(UUID uuid){
         return playerConnections.get(uuid);
     }
 
-    public final void removeUserConnection(UUID uuid){
+    public void removeUserConnection(UUID uuid){
         playerConnections.remove(uuid);
     }
 
-    public final UserConnection createUserConnection(UUID uuid){
-        UserConnection userConnection = new UserConnection(this, uuid);
+    public UserConnection createUserConnection(UUID uuid){
+        UserConnection userConnection = new UserConnection(this, (ArrayList<PluginInfo>) pluginsInfo.clone(), uuid);
 
         playerConnections.put(uuid, userConnection);
 
@@ -275,16 +270,24 @@ public abstract class NetworkController {
             userConnection.reloadGui();
     }
 
-    private class PluginInfo{
+    public static class PluginInfo{
 
         private final String name;
         private final OnGuiListener onGuiListener;
         private final ArrayList<String> dependencies;
 
-        public PluginInfo(String name, OnGuiListener onGuiListener, ArrayList<String> dependencies) {
+        private PluginInfo(String name, OnGuiListener onGuiListener, ArrayList<String> dependencies) {
             this.name = name;
             this.onGuiListener = onGuiListener;
             this.dependencies = dependencies;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public OnGuiListener getOnGuiListener() {
+            return onGuiListener;
         }
     }
 

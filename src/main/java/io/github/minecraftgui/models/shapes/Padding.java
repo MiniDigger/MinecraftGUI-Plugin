@@ -25,6 +25,5 @@ public enum Padding {
     TOP,
     BOTTOM,
     RIGHT,
-    LEFT,
-    ALL
+    LEFT
 }

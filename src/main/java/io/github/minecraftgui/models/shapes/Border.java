@@ -25,6 +25,5 @@ public enum Border {
     TOP,
     BOTTOM,
     RIGHT,
-    LEFT,
-    ALL
+    LEFT
 }

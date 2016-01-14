@@ -25,6 +25,5 @@ public enum Margin {
     TOP,
     BOTTOM,
     RIGHT,
-    LEFT,
-    ALL
+    LEFT
 }

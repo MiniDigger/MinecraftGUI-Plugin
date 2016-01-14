@@ -154,6 +154,14 @@ public class Component {
         userConnection.setAttribute(NetworkController.RELATIVE_Y, this, getShape(), state, 1, 0, value);
     }
 
+    public void setXRelative(State state, double value, long time){
+        userConnection.setAttribute(NetworkController.RELATIVE_X, this, getShape(), state, 1, time, value);
+    }
+
+    public void setYRelative(State state, double value, long time){
+        userConnection.setAttribute(NetworkController.RELATIVE_Y, this, getShape(), state, 1, time, value);
+    }
+
     public void add(Component component) {
         add(component, this.userGui);
     }

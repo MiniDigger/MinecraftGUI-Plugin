@@ -20,12 +20,19 @@
 
 package io.github.minecraftgui.views;
 
-/**
- * Created by Samuel on 2015-12-30.
- */
-public class Main {
+import io.github.minecraftgui.models.components.UserGui;
 
-    public static void main(String[] args){
-    }
+import java.util.UUID;
+
+/**
+ * Created by Samuel on 2016-01-11.
+ */
+public interface MinecraftGuiService {
+
+    boolean isPlayerConnectedWithClient(UUID player);
+
+    UserGui getUserGui(String plugin, UUID user);
+
+    String getPlayerName(UUID uuid);
 
 }

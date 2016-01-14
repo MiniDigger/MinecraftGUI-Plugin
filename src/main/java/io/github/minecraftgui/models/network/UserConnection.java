@@ -25,14 +25,12 @@ import io.github.minecraftgui.models.components.*;
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.Cursor;
 import io.github.minecraftgui.models.components.List;
-import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.network.packets.*;
 import io.github.minecraftgui.models.shapes.Shape;
 import org.json.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,7 +40,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UserConnection {
 
-    private final ConcurrentHashMap<OnGuiListener, UserGui> userGuis;
+    private final ArrayList<NetworkController.PluginInfo> pluginInfos;
+    private final ConcurrentHashMap<String, UserGui> userGuis;
     private final ConcurrentHashMap<UUID, Component> components;
     private final NetworkController networkController;
     private final ArrayList<String> fonts;
@@ -50,7 +49,7 @@ public class UserConnection {
     private final HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate;
     private final UUID uuid;
 
-    public UserConnection(NetworkController networkController, UUID uuid) {
+    public UserConnection(NetworkController networkController, ArrayList<NetworkController.PluginInfo> pluginInfos, UUID uuid) {
         this.networkController = networkController;
         this.uuid = uuid;
         this.components = new ConcurrentHashMap<>();
@@ -58,24 +57,25 @@ public class UserConnection {
         this.fontsGenerate = new HashMap<>();
         this.fonts = new ArrayList<>();
         this.images = new HashMap<>();
+        this.pluginInfos = pluginInfos;
 
-        for(OnGuiListener plugin : networkController.getPlugins())
-            userGuis.put(plugin, new UserGui(this));
+        for(NetworkController.PluginInfo plugin : pluginInfos)
+            userGuis.put(plugin.getName(), new UserGui(this));
     }
 
     public void reloadGui(){
         sendPacket(NetworkController.PACKET_INIT_INTERFACE, new PacketInitInterface());
     }
 
-    public UUID getUuid() {
+    public UUID getUserUuid() {
         return uuid;
     }
 
-    public final Component getComponent(UUID uuid){
+    public Component getComponent(UUID uuid){
         return components.get(uuid);
     }
 
-    public UserGui getUserGui(OnGuiListener plugin){
+    public UserGui getUserGui(String plugin){
         return userGuis.get(plugin);
     }
 
@@ -268,45 +268,25 @@ public class UserConnection {
     }
 
     private void onGuiPreInit(){
-        Enumeration<OnGuiListener> listeners = userGuis.keys();
-
-        while(listeners.hasMoreElements()) {
-            OnGuiListener listener = listeners.nextElement();
-
-            listener.onGuiPreInit(userGuis.get(listener));
-        }
+        for(NetworkController.PluginInfo pluginInfo : pluginInfos)
+            pluginInfo.getOnGuiListener().onGuiPreInit(userGuis.get(pluginInfo.getName()));
 
         sendPacket(NetworkController.PACKET_INIT_CLIENT, new PacketInitClient(fonts, images, fontsGenerate));
     }
 
     private void onGuiInit(){
-        Enumeration<OnGuiListener> listeners = userGuis.keys();
-
-        while(listeners.hasMoreElements()) {
-            OnGuiListener listener = listeners.nextElement();
-
-            listener.onGuiInit(userGuis.get(listener));
-        }
+        for(NetworkController.PluginInfo pluginInfo : pluginInfos)
+            pluginInfo.getOnGuiListener().onGuiInit(userGuis.get(pluginInfo.getName()));
     }
 
     private void onGuiClose(){
-        Enumeration<OnGuiListener> listeners = userGuis.keys();
-
-        while(listeners.hasMoreElements()) {
-            OnGuiListener listener = listeners.nextElement();
-
-            listener.onGuiClose(userGuis.get(listener));
-        }
+        for(NetworkController.PluginInfo pluginInfo : pluginInfos)
+            pluginInfo.getOnGuiListener().onGuiClose(userGuis.get(pluginInfo.getName()));
     }
 
     private void onGuiOpen(){
-        Enumeration<OnGuiListener> listeners = userGuis.keys();
-
-        while(listeners.hasMoreElements()) {
-            OnGuiListener listener = listeners.nextElement();
-
-            listener.onGuiOpen(userGuis.get(listener));
-        }
+        for(NetworkController.PluginInfo pluginInfo : pluginInfos)
+            pluginInfo.getOnGuiListener().onGuiOpen(userGuis.get(pluginInfo.getName()));
     }
 
     private void sendPacket(int packetId, PacketOut packetOut){

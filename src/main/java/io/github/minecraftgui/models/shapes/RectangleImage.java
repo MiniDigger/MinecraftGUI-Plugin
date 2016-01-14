@@ -38,4 +38,7 @@ public class RectangleImage extends Rectangle<String> {
         userConnection.setBackgroundImage(component, this, state, value);
     }
 
+    @Override
+    public void setBackground(State state, String value, long time) {}
+
 }

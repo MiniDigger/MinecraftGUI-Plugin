@@ -37,7 +37,11 @@ public class RectangleColor extends Rectangle<Color> {
 
     @Override
     public void setBackground(State state, Color value) {
-        userConnection.setAttribute(NetworkController.BACKGROUND_COLOR, component, this,  state, 1, 0, value);
+        userConnection.setAttribute(NetworkController.BACKGROUND_COLOR, component, this, state, 1, 0, value);
+    }
+
+    public void setBackground(State state, Color value, long time) {
+        userConnection.setAttribute(NetworkController.BACKGROUND_COLOR, component, this, state, 1, time, value);
     }
 
 }

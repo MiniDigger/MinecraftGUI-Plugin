@@ -39,6 +39,7 @@ public abstract class Shape<V> {
     protected UserConnection userConnection;
 
     public abstract void setBackground(State state, V value);
+    public abstract void setBackground(State state, V value, long time);
 
     public Shape(String type, String componentShape, Component component) {
         this.type = type;
@@ -90,9 +91,9 @@ public abstract class Shape<V> {
         String m = "";
         switch (margin){
             case BOTTOM: m = NetworkController.MARGIN_BOTTOM; break;
-            case TOP:  m = NetworkController.MARGIN_TOP; break;
-            case LEFT:  m = NetworkController.MARGIN_LEFT; break;
-            case RIGHT:  m = NetworkController.MARGIN_RIGHT; break;
+            case TOP: m = NetworkController.MARGIN_TOP; break;
+            case LEFT: m = NetworkController.MARGIN_LEFT; break;
+            case RIGHT: m = NetworkController.MARGIN_RIGHT; break;
         }
 
         userConnection.setAttribute(m, component, this, state, 1, 0, value);

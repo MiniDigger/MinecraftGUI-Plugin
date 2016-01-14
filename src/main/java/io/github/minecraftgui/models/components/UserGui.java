@@ -44,7 +44,7 @@ public final class UserGui {
     }
 
     public UUID getPlayerUUID(){
-        return userConnection.getUuid();
+        return userConnection.getUserUuid();
     }
 
     public Root getRoot() {

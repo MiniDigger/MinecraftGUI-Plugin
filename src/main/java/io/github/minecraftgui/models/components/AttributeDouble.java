@@ -46,4 +46,32 @@ public class AttributeDouble extends Attribute {
     private AttributeDouble(String name) {
         super(name);
     }
+
+    @Override
+    public String toString(){
+        return getName();
+    }
+
+    public static AttributeDouble valueOf(String name){
+        name = name.replaceAll("-", "_");
+        switch (name.toUpperCase()){
+            case "WIDTH": return WIDTH;
+            case "HEIGHT": return HEIGHT;
+            case "BORDER_TOP": return BORDER_TOP;
+            case "BORDER_LEFT": return BORDER_LEFT;
+            case "BORDER_RIGHT": return BORDER_RIGHT;
+            case "BORDER_BOTTOM": return BORDER_BOTTOM;
+            case "PADDING_TOP": return PADDING_TOP;
+            case "PADDING_LEFT": return PADDING_LEFT;
+            case "PADDING_RIGHT": return PADDING_RIGHT;
+            case "PADDING_BOTTOM": return PADDING_BOTTOM;
+            case "MARGIN_TOP": return MARGIN_TOP;
+            case "MARGIN_LEFT": return MARGIN_LEFT;
+            case "MARGIN_RIGHT": return MARGIN_RIGHT;
+            case "MARGIN_BOTTOM": return MARGIN_BOTTOM;
+            case "TEXT": return TEXT;
+        }
+
+        return null;
+    }
 }

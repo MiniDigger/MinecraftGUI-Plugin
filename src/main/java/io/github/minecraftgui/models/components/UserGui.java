@@ -20,6 +20,9 @@
 
 package io.github.minecraftgui.models.components;
 
+import io.github.minecraftgui.models.forms.Dropdown;
+import io.github.minecraftgui.models.forms.Form;
+import io.github.minecraftgui.models.forms.RadioButtonGroup;
 import io.github.minecraftgui.models.network.UserConnection;
 
 import java.awt.*;
@@ -32,6 +35,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class UserGui {
 
     private final UserConnection userConnection;
+    private final ConcurrentHashMap<String, Form> forms;
+    private final ConcurrentHashMap<String, Dropdown> dropdowns;
+    private final ConcurrentHashMap<String, RadioButtonGroup> radioButtonGroups;
     private final ConcurrentHashMap<UUID, Component> components;
     private final ConcurrentHashMap<String, Component> componentsWithId;
     private final Root root;
@@ -39,8 +45,53 @@ public final class UserGui {
     public UserGui(UserConnection userConnection) {
         this.userConnection = userConnection;
         this.components = new ConcurrentHashMap<>();
+        this.dropdowns = new ConcurrentHashMap<>();
+        this.forms = new ConcurrentHashMap<>();
+        this.radioButtonGroups = new ConcurrentHashMap<>();
         this.componentsWithId = new ConcurrentHashMap<>();
         this.root = new Root(this, userConnection);
+    }
+
+    public Form getForm(String name){
+        Form form = forms.get(name.toLowerCase());
+
+        if(form != null)
+            return forms.get(name.toLowerCase());
+        else{
+            form = new Form();
+
+            forms.put(name.toLowerCase(), form);
+
+            return form;
+        }
+    }
+
+    public Dropdown getDropdown(String name){
+        Dropdown dropdown = dropdowns.get(name.toLowerCase());
+
+        if(dropdown != null)
+            return dropdown;
+        else {
+            dropdown = new Dropdown();
+
+            dropdowns.put(name.toLowerCase(), dropdown);
+
+            return dropdown;
+        }
+    }
+
+    public RadioButtonGroup getRadioButtonGroup(String name){
+        RadioButtonGroup radioButtonGroup = radioButtonGroups.get(name.toLowerCase());
+
+        if(radioButtonGroup != null)
+            return radioButtonGroup;
+        else{
+            radioButtonGroup = new RadioButtonGroup();
+
+            radioButtonGroups.put(name.toLowerCase(), radioButtonGroup);
+
+            return radioButtonGroup;
+        }
     }
 
     public UUID getPlayerUUID(){

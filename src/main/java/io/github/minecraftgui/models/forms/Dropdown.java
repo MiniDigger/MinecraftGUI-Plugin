@@ -20,9 +20,11 @@
 
 package io.github.minecraftgui.models.forms;
 
-import io.github.minecraftgui.models.components.*;
+import io.github.minecraftgui.models.components.Component;
+import io.github.minecraftgui.models.components.List;
+import io.github.minecraftgui.models.components.Paragraph;
+import io.github.minecraftgui.models.components.Visibility;
 import io.github.minecraftgui.models.listeners.OnClickListener;
-import io.github.minecraftgui.models.shapes.RectangleColor;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -79,11 +81,8 @@ public class Dropdown implements Valuable<String> {
         paragraphValueDisplayed.setText(valueDisplayed);
     }
 
-    public Paragraph addValue(String value){
+    public void addValue(Paragraph paragraph, String value){
         if(list != null) {
-            Paragraph paragraph = new Paragraph(RectangleColor.class, new Div(RectangleColor.class), new Div(RectangleColor.class));
-            list.add(paragraph);
-
             values.put(paragraph, value);
 
             paragraph.addOnClickListener(new OnClickListener() {
@@ -97,11 +96,7 @@ public class Dropdown implements Valuable<String> {
                     isListVisible = false;
                 }
             });
-
-            return paragraph;
         }
-
-        return null;
     }
 
     @Override

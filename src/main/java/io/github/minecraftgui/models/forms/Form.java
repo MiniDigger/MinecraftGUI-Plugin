@@ -32,31 +32,40 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Form {
 
-    private final Component button;
+    private Component button = null;
     private final ConcurrentHashMap<String, Valuable> valuables;
     private final CopyOnWriteArrayList<OnFormSendListener> listeners;
+    private final OnClickListener onClickListener;
 
-    public Form(Component button) {
-        this.button = button;
+    public Form() {
         this.valuables = new ConcurrentHashMap<>();
         this.listeners = new CopyOnWriteArrayList<>();
 
         Form form = this;
-        this.button.addOnClickListener(new OnClickListener() {
+
+        this.onClickListener = new OnClickListener() {
             @Override
             public void onClick(Component component) {
                 for (OnFormSendListener listener : listeners)
                     listener.onFormSend(form);
             }
-        });
+        };
     }
 
     public Component getButton() {
         return button;
     }
 
-    public int getNbValuables() {
-        return valuables.size();
+    public void setButton(Component button){
+        if(this.button != null)
+            this.button.removeOnClickListener(onClickListener);
+
+        this.button = button;
+        this.button.addOnClickListener(onClickListener);
+    }
+
+    public void addValuable(String name, Valuable valuable){
+        valuables.put(name.toLowerCase(), valuable);
     }
 
     public Valuable getValuable(String name){
@@ -67,7 +76,7 @@ public class Form {
         listeners.add(listener);
     }
 
-    public void addValuable(String name, Valuable valuable){
-        valuables.put(name.toLowerCase(), valuable);
+    public void removeOnFormSendListener(OnFormSendListener listener){
+        listeners.remove(listener);
     }
 }

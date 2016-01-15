@@ -20,11 +20,9 @@
 
 package io.github.minecraftgui.models.forms;
 
-import io.github.minecraftgui.models.components.Component;
-import io.github.minecraftgui.models.components.List;
-import io.github.minecraftgui.models.components.Paragraph;
-import io.github.minecraftgui.models.components.Visibility;
+import io.github.minecraftgui.models.components.*;
 import io.github.minecraftgui.models.listeners.OnClickListener;
+import io.github.minecraftgui.models.shapes.RectangleColor;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,28 +31,46 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Dropdown implements Valuable<String> {
 
-    private final Paragraph paragraphValueDisplayed;
+    private Paragraph paragraphValueDisplayed;
     private final ConcurrentHashMap<Component, String> values;
-    private final List list;
+    private List list;
     private boolean isListVisible = false;
     private Component lastComponentClicked = null;
+    private OnClickListener onClickListener;
 
-    public Dropdown(Paragraph paragraph, List list) {
-        this.paragraphValueDisplayed = paragraph;
-        this.list = list;
+    public Dropdown() {
         this.values = new ConcurrentHashMap<>();
-
-        this.paragraphValueDisplayed.addOnClickListener(new OnClickListener() {
+        this.onClickListener = new OnClickListener() {
             @Override
             public void onClick(Component component) {
                 if(isListVisible)
-                    list.setVisibility(Visibility.INVISIBLE);
+                    setListVisibility(Visibility.INVISIBLE);
                 else
-                    list.setVisibility(Visibility.VISIBLE);
+                    setListVisibility(Visibility.VISIBLE);
 
                 isListVisible = !isListVisible;
             }
-        });
+        };
+    }
+
+    public void setParagraphValueDisplayed(Paragraph paragraphValueDisplayed) {
+        if(this.paragraphValueDisplayed != null)
+            this.paragraphValueDisplayed.removeOnClickListener(onClickListener);
+
+        this.paragraphValueDisplayed = paragraphValueDisplayed;
+        this.paragraphValueDisplayed.addOnClickListener(onClickListener);
+    }
+
+    public void setList(List list) {
+        this.list = list;
+    }
+
+    public List getList() {
+        return list;
+    }
+
+    public Paragraph getParagraphValueDisplayed() {
+        return paragraphValueDisplayed;
     }
 
     public void init(String valueDisplayed){
@@ -63,25 +79,39 @@ public class Dropdown implements Valuable<String> {
         paragraphValueDisplayed.setText(valueDisplayed);
     }
 
-    public void addValue(Paragraph paragraph, String value){
-        values.put(paragraph, value);
+    public Paragraph addValue(String value){
+        if(list != null) {
+            Paragraph paragraph = new Paragraph(RectangleColor.class, new Div(RectangleColor.class), new Div(RectangleColor.class));
+            list.add(paragraph);
 
-        paragraph.addOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(Component component) {
-                Paragraph para = (Paragraph) component;
-                lastComponentClicked = component;
+            values.put(paragraph, value);
 
-                paragraphValueDisplayed.setText(para.getText());
-                list.setVisibility(Visibility.INVISIBLE);
-                isListVisible = false;
-            }
-        });
+            paragraph.addOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(Component component) {
+                    Paragraph para = (Paragraph) component;
+                    lastComponentClicked = component;
+
+                    paragraphValueDisplayed.setText(para.getText());
+                    list.setVisibility(Visibility.INVISIBLE);
+                    isListVisible = false;
+                }
+            });
+
+            return paragraph;
+        }
+
+        return null;
     }
 
     @Override
     public String getValue() {
         return lastComponentClicked == null?null:values.get(lastComponentClicked);
+    }
+
+    private void setListVisibility(Visibility visibility){
+        if(list != null)
+            list.setVisibility(visibility);
     }
 
 }

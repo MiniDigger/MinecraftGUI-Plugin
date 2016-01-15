@@ -48,8 +48,6 @@ public class RadioButtonGroup implements Valuable<String> {
             public void onValueChange(ComponentValuable component) {
                 CheckBox box = (CheckBox) component;
 
-                System.out.println(((CheckBox) component).getValue());
-
                 if(current != box) {
                     if (box.getValue().booleanValue()) {
                         Enumeration<CheckBox> checks = checkBoxes.keys();

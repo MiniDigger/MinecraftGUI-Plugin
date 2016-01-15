@@ -215,8 +215,16 @@ public class Component {
         onClickListeners.add(listener);
     }
 
+    public final void removeOnClickListener(OnClickListener listener){
+        this.onClickListeners.remove(listener);
+    }
+
     public void addOnRemoveListener(OnRemoveListener listener){
         onRemoveListeners.add(listener);
+    }
+
+    public final void remove(OnRemoveListener listener){
+        this.onRemoveListeners.remove(listener);
     }
 
     public void addOnMouseLeaveListener(OnMouseLeaveListener listener){
@@ -226,11 +234,19 @@ public class Component {
         onMouseLeaveListeners.add(listener);
     }
 
+    public final void removeOnMouseLeaveListener(OnMouseLeaveListener listener){
+        this.onMouseLeaveListeners.remove(listener);
+    }
+
     public void addOnMouseEnterListener(OnMouseEnterListener listener){
         if(onMouseEnterListeners.size() == 0)
             userConnection.addEventListener(this, NetworkController.ON_MOUSE_ENTER_LISTENER);
 
         onMouseEnterListeners.add(listener);
+    }
+
+    public final void removeOnMouseEnterListener(OnMouseEnterListener listener){
+        this.onMouseEnterListeners.remove(listener);
     }
 
     public void addOnDoubleClickListener(OnDoubleClickListener listener){
@@ -240,11 +256,19 @@ public class Component {
         onDoubleClickListeners.add(listener);
     }
 
+    public final void removeOnDoubleClickListener(OnDoubleClickListener listener){
+        this.onDoubleClickListeners.remove(listener);
+    }
+
     public void addOnKeyPressedListener(OnKeyPressedListener listener){
         if(onKeyPressedListeners.size() == 0)
             userConnection.addEventListener(this, NetworkController.ON_KEY_PRESSED_LISTENER);
 
         onKeyPressedListeners.add(listener);
+    }
+
+    public final void removeOnKeyPressedListener(OnKeyPressedListener listener){
+        this.onKeyPressedListeners.remove(listener);
     }
 
     public void addOnInputListener(OnInputListener listener){
@@ -254,6 +278,10 @@ public class Component {
         onInputListeners.add(listener);
     }
 
+    public final void removeOnInputListener(OnInputListener listener){
+        this.onInputListeners.remove(listener);
+    }
+
     public void addOnBlurListener(OnBlurListener listener){
         if(onBlurListeners.size() == 0)
             userConnection.addEventListener(this, NetworkController.ON_BLUR_LISTENER);
@@ -261,11 +289,19 @@ public class Component {
         onBlurListeners.add(listener);
     }
 
+    public final void removeOnBlurListener(OnBlurListener listener){
+        this.onBlurListeners.remove(listener);
+    }
+
     public void addOnFocusListener(OnFocusListener listener){
         if(onFocusListeners.size() == 0)
             userConnection.addEventListener(this, NetworkController.ON_FOCUS_LISTENER);
 
         onFocusListeners.add(listener);
+    }
+
+    public final void removeOnFocusListener(OnFocusListener listener){
+        this.onFocusListeners.remove(listener);
     }
 
     public void onMouseEnter(){

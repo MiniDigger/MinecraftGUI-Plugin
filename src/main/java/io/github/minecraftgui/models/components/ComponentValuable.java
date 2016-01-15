@@ -55,6 +55,10 @@ public abstract class ComponentValuable<V> extends Component implements Valuable
         this.listeners.add(listener);
     }
 
+    public final void removeOnValueChangeListener(OnValueChangeListener listener){
+        this.listeners.remove(listener);
+    }
+
     public V getValue() {
         return value;
     }

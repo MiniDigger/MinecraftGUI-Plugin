@@ -24,6 +24,8 @@ import io.github.minecraftgui.controllers.NetworkController;
 import io.github.minecraftgui.models.exceptions.ComponentException;
 import io.github.minecraftgui.models.shapes.Rectangle;
 
+import java.util.UUID;
+
 /**
  * Created by Samuel on 2015-12-30.
  */
@@ -31,6 +33,7 @@ public class List extends Component {
 
     private final Component buttonListBefore;
     private final Component buttonListAfter;
+    private UUID lastComponentAdded = UUID.randomUUID();
 
     public List(Class<? extends Rectangle> shape, Component buttonListBefore, Component buttonListAfter) {
         super(NetworkController.LIST, shape);
@@ -56,8 +59,20 @@ public class List extends Component {
         specialChildren.add(buttonListAfter);
     }
 
+    @Override
+    public void add(Component component) {
+        super.add(component);
+        lastComponentAdded = component.getUniqueId();
+    }
+
+    @Override
+    public void add(Component component, UserGui userGui) {
+        super.add(component, userGui);
+        lastComponentAdded = component.getUniqueId();
+    }
+
     public void update(){
-        userConnection.updateList(this);
+        userConnection.updateList(this, lastComponentAdded);
     }
 
     public Component getButtonListBefore() {

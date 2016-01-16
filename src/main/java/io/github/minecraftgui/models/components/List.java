@@ -72,7 +72,7 @@ public class List extends Component {
     }
 
     public void update(){
-        userConnection.updateList(this, lastComponentAdded);
+        userConnection.updateList(this);
     }
 
     public Component getButtonListBefore() {

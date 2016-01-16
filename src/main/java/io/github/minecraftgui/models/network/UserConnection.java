@@ -83,8 +83,8 @@ public class UserConnection {
         sendPacket(NetworkController.PACKET_ADD_EVENT, new PacketAddEventListener(component, event));
     }
 
-    public void updateList(List list, UUID updateAfterComponent){
-        sendPacket(NetworkController.PACKET_UPDATE_LIST, new PacketUpdateList(list, updateAfterComponent));
+    public void updateList(List list){
+        sendPacket(NetworkController.PACKET_UPDATE_LIST, new PacketUpdateList(list));
     }
 
     public void setTextNbLine(Component component, int nb){

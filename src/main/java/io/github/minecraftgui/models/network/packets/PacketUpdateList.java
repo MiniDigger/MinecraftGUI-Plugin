@@ -24,26 +24,20 @@ import io.github.minecraftgui.controllers.NetworkController;
 import io.github.minecraftgui.models.components.List;
 import org.json.JSONObject;
 
-import java.util.UUID;
-
 /**
  * Created by Samuel on 2016-01-16.
  */
 public class PacketUpdateList extends PacketOut {
 
     private final List list;
-    private final UUID updateAfterComponent;
 
-    public PacketUpdateList(List list, UUID updateAfterComponent) {
+    public PacketUpdateList(List list) {
         this.list = list;
-        this.updateAfterComponent = updateAfterComponent;
     }
 
     @Override
     public JSONObject toJSON() {
-        return new JSONObject()
-                .put(NetworkController.COMPONENT_ID, list.getUniqueId().toString())
-                .put(NetworkController.AFTER_COMPONENT_ID, updateAfterComponent.toString());
+        return new JSONObject().put(NetworkController.COMPONENT_ID, list.getUniqueId().toString());
     }
 
 }

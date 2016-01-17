@@ -20,12 +20,11 @@
 
 package io.github.minecraftgui.models.factories;
 
-import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.State;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.models.css.CssRule;
 import io.github.minecraftgui.models.factories.models.xml.*;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -37,15 +36,11 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 /**
  * Created by Samuel on 2016-01-05.
  */
 public class GuiFactory {
-
-    private static Pattern CLASS_SELECTOR = Pattern.compile("\\.\\w*");
-    private static Pattern ID_SELECTOR = Pattern.compile("#\\w*");
 
     public static GuiModel createGuiModel(File file){
         GuiModel guiModel = new GuiModel();
@@ -56,8 +51,21 @@ public class GuiFactory {
 
         loadCssFiles(guiModel, file);
         setCssRules(guiModel);
+        setDependencies(guiModel);
 
         return guiModel;
+    }
+
+    private static void setDependencies(GuiModel model){
+        ArrayList<Tag> tags = model.tags.get(DependencyTag.class);
+
+        if(tags != null) {
+            for (Tag tag : tags){
+                DependencyTag dependencyTag = (DependencyTag) tag;
+
+                model.dependencies.add(dependencyTag.getPlugin());
+            }
+        }
     }
 
     private static void setCssRules(GuiModel model){
@@ -72,6 +80,7 @@ public class GuiFactory {
                     ((ComponentTag) tag).addCssRule(rule);
             }catch(Exception e){
                 System.err.println("The css rule "+rule.getSelectors().toString()+" is not valid.");
+                e.printStackTrace();
             }
         }
     }
@@ -80,20 +89,21 @@ public class GuiFactory {
         ArrayList<Tag> tags = new ArrayList<>();
 
         if(list == null){
-            if(selector.startsWith("#"))
+            if(selector.startsWith("#") && model.ids.get(selector.substring(1)) != null)
                 tags.add(model.ids.get(selector.substring(1)));
-            else if(selector.startsWith("."))
+            else if(selector.startsWith(".") && model.classses.get(selector.substring(1)) != null)
                 tags.addAll(model.classses.get(selector.substring(1)));
             else{
                 Class<? extends ComponentTag> tag = (Class<? extends ComponentTag>) Tag.getTagClass(selector);
 
-                tags.addAll(model.tags.get(tag));
+                if(model.tags.get(tag) != null)
+                    tags.addAll(model.tags.get(tag));
             }
         }
         else{
-            if(selector.startsWith("#") && list.contains(model.ids.get(selector.substring(1)).getParent()))
+            if(selector.startsWith("#") && model.ids.get(selector.substring(1)) != null && list.contains(model.ids.get(selector.substring(1)).getParent()))
                 tags.add(model.ids.get(selector.substring(1)));
-            else if(selector.startsWith(".")){
+            else if(selector.startsWith(".") && model.classses.get(selector.substring(1)) != null){
                 for(ComponentTag tag : model.classses.get(selector.substring(1)))
                     if(list.contains(tag.getParent()))
                         tags.add(tag);
@@ -148,7 +158,7 @@ public class GuiFactory {
 
     private static CssRule createCssRule(String rule){
         CssRule cssRule = new CssRule();
-        String selector = rule.substring(0, rule.indexOf("{")).trim().toLowerCase();
+        String selector = rule.substring(0, rule.indexOf("{")).trim();
         String declarations[] = rule.substring(rule.indexOf("{") + 1).split(";");
 
         if(selector.endsWith(":hover"))
@@ -221,6 +231,7 @@ public class GuiFactory {
         private final HashMap<String, ComponentTag> ids;
         private final HashMap<String, ArrayList<ComponentTag>> classses;
         private final ArrayList<CssRule> cssRules;
+        private final ArrayList<String> dependencies;
         private HeadTag header;
         private ComponentTag body;
 
@@ -229,34 +240,49 @@ public class GuiFactory {
             ids = new HashMap<>();
             classses = new HashMap<>();
             cssRules = new ArrayList<>();
+            dependencies = new ArrayList<>();
         }
 
-        public Component getBody(MinecraftGuiService service, UserGui userGui){
-            return body.getComponent(service, userGui);
+        public ArrayList<String> getDependencies() {
+            return dependencies;
         }
 
-        public void printHead(){
-            printTag(header, "");
+        public void preInitGui(PluginInterface service, UserGui gui){
+            ArrayList<Tag> tags = this.tags.get(DownloadTag.class);
+
+            if(tags != null) {
+                for (Tag tag : tags){
+                    DownloadTag downloadTag = (DownloadTag) tag;
+
+                    if(downloadTag.getType() == DownloadTag.Type.FONT)
+                        gui.addFont(downloadTag.getUrl(service, gui));
+                    else
+                        gui.addImage(downloadTag.getUrl(service, gui), downloadTag.getName());
+                }
+            }
+
+            tags = this.tags.get(GenerateTag.class);
+
+            if(tags != null) {
+                for (Tag tag : tags){
+                    GenerateTag generateTag = (GenerateTag) tag;
+                    gui.addFontToGenerate(generateTag.getName(), generateTag.getSize(), generateTag.getColor());
+                }
+            }
         }
 
-        public void printBody(){
-            printTag(body, "");
+        public void initGui(PluginInterface plugin, UserGui gui){
+            body.getComponent(plugin, gui);
+
+            ArrayList<Tag> tags = this.tags.get(OnFormSendTag.class);
+
+            if(tags != null)
+                for(Tag tag : tags)
+                    ((OnFormSendTag) tag).addEvent(plugin, gui);
         }
 
         private ArrayList<Tag> getCssFiles(){
             return tags.get(LinkTag.class);
-        }
-
-        private void printTag(Tag tag, String indentation){
-            System.out.println(indentation+tag.getClass().getSimpleName());
-
-            if(tag instanceof ComponentTag)
-                for(CssRule rule : ((ComponentTag) tag).getRules())
-                    System.out.println(indentation+"- "+rule.getSelectors().toString());
-
-            for(int i = 0; i < tag.getChildren().size(); i++){
-                printTag(tag.getChildren().get(i), indentation+"    ");
-            }
         }
 
         public void addTag(Tag tag){

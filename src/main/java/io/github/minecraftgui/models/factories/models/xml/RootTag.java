@@ -23,7 +23,7 @@ package io.github.minecraftgui.models.factories.models.xml;
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -36,7 +36,7 @@ public class RootTag extends ComponentTag {
     }
 
     @Override
-    protected Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    protected Component createComponent(PluginInterface service, UserGui userGui) {
         return userGui.getRoot();
     }
 

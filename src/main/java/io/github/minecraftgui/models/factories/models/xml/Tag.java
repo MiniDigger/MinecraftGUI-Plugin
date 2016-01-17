@@ -20,7 +20,9 @@
 
 package io.github.minecraftgui.models.factories.models.xml;
 
+import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -28,6 +30,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -57,6 +60,9 @@ public abstract class Tag {
         xmlTags.put("generate", GenerateTag.class);
         xmlTags.put("img", ImageTag.class);
         xmlTags.put("link", LinkTag.class);
+        xmlTags.put("option", OptionTag.class);
+        xmlTags.put("onformsend", OnFormSendTag.class);
+        xmlTags.put("playerworld", PlayerWorldTag.class);
     }
 
     private static Tag createXmlTag(Element element, GuiFactory.GuiModel model){
@@ -82,12 +88,17 @@ public abstract class Tag {
     private final Element element;
     private final HashMap<Class<? extends Tag>, ArrayList<Tag>> childrenIndexed;
     private final ArrayList<Tag> children;
+    private String text;
 
     public Tag(Element element, GuiFactory.GuiModel model) {
         children = new ArrayList<>();
         childrenIndexed = new HashMap<>();
         this.guiModel = model;
         this.element = element;
+        this.text = "";
+
+        for(int i = 0; i < element.getChildNodes().getLength(); i++)
+            text = text.equals("") && element.getChildNodes().item(i).getNodeName().equals("#text")?element.getChildNodes().item(i).getTextContent().trim():text;
     }
 
     public Tag getParent() {
@@ -107,6 +118,10 @@ public abstract class Tag {
         return childrenIndexed.get(clazz);
     }
 
+    protected String getText(){
+        return text;
+    }
+
     private void addIndexedTag(Tag tag){
         ArrayList<Tag> models = childrenIndexed.get(tag.getClass());
 
@@ -116,6 +131,19 @@ public abstract class Tag {
         }
 
         models.add(tag);
+    }
+
+    protected String convertString(PluginInterface service, UserGui userGui, String text){
+        StringBuilder str = new StringBuilder(text);
+        Matcher matcher;
+
+        while((matcher = PATTERN_PLAYER_UUID.matcher(str)).find())
+            str.replace(matcher.start(), matcher.end(), userGui.getPlayerUUID().toString());
+
+        while((matcher = PATTERN_PLAYER_NAME.matcher(str)).find())
+            str.replace(matcher.start(), matcher.end(), service.getPlayerName(userGui.getPlayerUUID()));
+
+        return str.toString();
     }
 
     protected Tag getXmlTagSetAs(Element element, String as){

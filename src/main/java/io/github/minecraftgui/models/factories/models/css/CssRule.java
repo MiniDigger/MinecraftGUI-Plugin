@@ -22,6 +22,7 @@ package io.github.minecraftgui.models.factories.models.css;
 
 import io.github.minecraftgui.models.components.*;
 import io.github.minecraftgui.models.components.Component;
+import io.github.minecraftgui.models.components.TextArea;
 import io.github.minecraftgui.models.shapes.PolygonColor;
 import io.github.minecraftgui.models.shapes.Shape;
 
@@ -40,8 +41,8 @@ public class CssRule {
     private static final String SHAPE_ON_VALUE_FALSE = "on-value-false";
     private static final Pattern VALUE_DOUBLE = Pattern.compile("^-?\\d+(\\.\\d)?$");
     private static final Pattern VALUE_DOUBLE_TIME = Pattern.compile("^\\d+(\\.\\d)? \\d+$");
-    private static final Pattern VALUE_DOUBLE_RELATIVE = Pattern.compile("^\\d+% \\d+$");
-    private static final Pattern VALUE_DOUBLE_RELATIVE_SPECIFIC = Pattern.compile("^\\d+% \\w+ \\d+$");
+    private static final Pattern VALUE_DOUBLE_RELATIVE = Pattern.compile("^\\d+%( \\d+)?$");
+    private static final Pattern VALUE_DOUBLE_RELATIVE_SPECIFIC = Pattern.compile("^\\d+% \\w+( \\d+)$");
     private static final Pattern VALUE_COLOR = Pattern.compile("^(\\d{1,3},){3}\\d{1,3}$");
     private static final Pattern VALUE_COLOR_TIME = Pattern.compile("^(\\d{1,3},){3}\\d{1,3} \\d+$");
     private static final Pattern VALUE_POSITIONS = Pattern.compile("^-?\\d+(\\.\\d)?,-?\\d+(\\.\\d)?( -?\\d+(\\.\\d)?,-?\\d+(\\.\\d)?){2,}$");
@@ -75,19 +76,25 @@ public class CssRule {
         String shape = "";
 
         if(attribute.startsWith(SHAPE_ON_PROGRESS)) {
-            attribute = attribute.substring(SHAPE_ON_PROGRESS.length());
+            attribute = attribute.substring(SHAPE_ON_PROGRESS.length()+1);
             shape = SHAPE_ON_PROGRESS;
         }
         else if(attribute.startsWith(SHAPE_ON_VALUE_FALSE)) {
-            attribute = attribute.substring(SHAPE_ON_VALUE_FALSE.length());
+            attribute = attribute.substring(SHAPE_ON_VALUE_FALSE.length()+1);
             shape = SHAPE_ON_VALUE_FALSE;
         }
         else if(attribute.startsWith(SHAPE_ON_VALUE_TRUE)) {
-            attribute = attribute.substring(SHAPE_ON_VALUE_TRUE.length());
+            attribute = attribute.substring(SHAPE_ON_VALUE_TRUE.length()+1);
             shape = SHAPE_ON_VALUE_TRUE;
         }
 
         switch (attribute){
+            case "text-cursor-color": declarations.add(new TextCursorColor(shape, state, split[1].trim())); break;
+            case "text-nb-line": declarations.add(new TextNbLine(shape, state, split[1].trim())); break;
+            case "text-alignment": declarations.add(new TextAlignment(shape, state, split[1].trim())); break;
+            case "font": declarations.add(new Font(shape, state, split[1].trim())); break;
+            case "font-color": declarations.add(new FontColor(shape, state, split[1].trim())); break;
+            case "font-size": declarations.add(new FontSize(shape, state, split[1].trim())); break;
             case "width": declarations.add(new Width(shape, state, split[1].trim())); break;
             case "height": declarations.add(new Height(shape, state, split[1].trim())); break;
             case "x-relative": declarations.add(new XRelative(shape, state, split[1].trim())); break;
@@ -144,6 +151,110 @@ public class CssRule {
 
     public void addSelector(String selector){
         selectors.add(selector);
+    }
+
+    private static class TextNbLine extends DoubleDeclaration{
+
+        public TextNbLine(String shape, State state, String value) {
+            super(shape, state, value);
+        }
+
+        @Override
+        public void applyOnComponent(Component component) {
+            if(component instanceof TextArea){
+                TextArea text = (TextArea) component;
+                text.setNbLineVisible(value.intValue());
+            }
+            else if(component instanceof Paragraph){
+                Paragraph text = (Paragraph) component;
+                text.setNbLineVisible(value.intValue());
+            }
+        }
+    }
+
+    private static class TextAlignment extends CssDeclaration{
+
+        private final io.github.minecraftgui.models.components.TextAlignment value;
+
+        public TextAlignment(String shape, State state, String value) {
+            super(shape, state);
+            this.value = io.github.minecraftgui.models.components.TextAlignment.valueOf(value.trim().toUpperCase());
+        }
+
+        @Override
+        public void applyOnComponent(Component component) {
+            if(component instanceof Paragraph){
+                Paragraph paragraph = (Paragraph) component;
+                paragraph.setTextAlignement(value);
+            }
+            else if(component instanceof TextArea){
+                TextArea textArea = (TextArea) component;
+                textArea.setTextAlignement(value);
+            }
+        }
+    }
+
+    private static class TextCursorColor extends ColorDeclaration{
+
+        public TextCursorColor(String shape, State state, String value) {
+            super(shape, state, value);
+        }
+
+        @Override
+        public void applyOnComponent(Component component) {
+            if(component instanceof ComponentEditableText){
+                ComponentEditableText text = (ComponentEditableText) component;
+                text.setCursorColor(state, value);
+            }
+        }
+    }
+
+    private static class FontSize extends DoubleDeclaration{
+
+        public FontSize(String shape, State state, String value) {
+            super(shape, state, value);
+        }
+
+        @Override
+        public void applyOnComponent(Component component) {
+            if(component instanceof ComponentText){
+                ComponentText text = (ComponentText) component;
+                text.setFontSize(state, value.intValue());
+            }
+        }
+    }
+
+    private static class FontColor extends ColorDeclaration{
+
+        public FontColor(String shape, State state, String value) {
+            super(shape, state, value);
+        }
+
+        @Override
+        public void applyOnComponent(Component component) {
+            if(component instanceof ComponentText){
+                ComponentText text = (ComponentText) component;
+                text.setFontColor(state, value);
+            }
+        }
+    }
+
+    private static class Font extends CssDeclaration{
+
+        private final String value;
+
+        public Font(String shape, State state, String value) {
+            super(shape, state);
+            this.value = value.trim();
+        }
+
+        @Override
+        public void applyOnComponent(Component component) {
+            if(component instanceof ComponentText){
+                ComponentText text = (ComponentText) component;
+                text.setFont(state, value);
+            }
+        }
     }
 
     private static class PositionY extends PositionDeclaration{
@@ -320,7 +431,7 @@ public class CssRule {
 
         public BackgroundImage(String shape, State state, String value) {
             super(shape, state);
-            this.value = value;
+            this.value = value.trim();
         }
 
         @Override
@@ -340,7 +451,7 @@ public class CssRule {
         }
     }
 
-    private static class BackgroundColor extends ColorDeclaration{
+    private static class BackgroundColor extends ColorTimeDeclaration{
 
         public BackgroundColor(String shape, State state, String value) {
             super(shape, state, value);
@@ -363,7 +474,7 @@ public class CssRule {
         }
     }
 
-    private static class BorderColor extends ColorDeclaration{
+    private static class BorderColor extends ColorTimeDeclaration{
 
         private final io.github.minecraftgui.models.shapes.Border border;
 
@@ -506,10 +617,8 @@ public class CssRule {
                 else{
                     if(isRelative)
                         shape.setWidth(state, component.getParent().getShape(), attributeRelativeTo, time, value);
-                    else {
-                        System.out.println(state+" "+value+" "+time);
+                    else
                         shape.setWidth(state, value, time);
-                    }
                 }
             }
         }
@@ -552,10 +661,8 @@ public class CssRule {
                 else{
                     if(isRelative)
                         shape.setHeight(state, component.getParent().getShape(), attributeRelativeTo, time, value);
-                    else{
-                        System.out.println(state+" "+value+" "+time);
+                    else
                         shape.setHeight(state, value, time);
-                    }
                 }
             }
         }
@@ -565,7 +672,6 @@ public class CssRule {
     private static abstract class ColorDeclaration extends CssDeclaration{
 
         protected Color value = null;
-        protected long time = 0;
 
         public ColorDeclaration(String shape, State state, String value) {
             super(shape, state);
@@ -581,9 +687,19 @@ public class CssRule {
 
                 this.value = new Color(r,g,b,a);
             }
+        }
+
+    }
+
+    private static abstract class ColorTimeDeclaration extends ColorDeclaration{
+
+        protected long time = 0;
+
+        public ColorTimeDeclaration(String shape, State state, String value) {
+            super(shape, state, value);
 
             if(this.value == null){
-                matcher = VALUE_COLOR_TIME.matcher(value);
+                Matcher matcher = VALUE_COLOR_TIME.matcher(value);
 
                 if(matcher.find()) {
                     String values[] = value.split(" ");
@@ -651,7 +767,7 @@ public class CssRule {
                     String values[] = value.split(" ");
 
                     this.value = Double.parseDouble(values[0].substring(0, values[0].length()-1))/100;
-                    this.time = Long.parseLong(values[2]);
+                    this.time = values.length  == 3?Long.parseLong(values[2]):0;
                     this.attributeRelativeTo = AttributeDouble.valueOf(values[1]);
                 }
 
@@ -662,7 +778,7 @@ public class CssRule {
                     String values[] = value.split(" ");
 
                     this.value = Double.parseDouble(values[0].substring(0, values[0].length()-1))/100;
-                    this.time = Long.parseLong(values[1]);
+                    this.time = values.length  == 2?Long.parseLong(values[1]):0;
                 }
 
                 if(isRelative && attributeRelativeTo == null)
@@ -692,7 +808,7 @@ public class CssRule {
                     break;
                 case SHAPE_ON_VALUE_FALSE:
                     if(component instanceof CheckBox)
-                        return ((CheckBox) component).getShapeOnValueTrue();
+                        return ((CheckBox) component).getShapeOnValueFalse();
                     break;
                 case SHAPE_ON_PROGRESS:
                     if(component instanceof ProgressBar)

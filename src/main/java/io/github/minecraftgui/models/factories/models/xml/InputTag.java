@@ -25,7 +25,7 @@ import io.github.minecraftgui.models.components.Input;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.shapes.Rectangle;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -38,8 +38,14 @@ public class InputTag extends ComponentTag {
     }
 
     @Override
-    public Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    public Component createComponent(PluginInterface service, UserGui userGui) {
         return new Input((Class<? extends Rectangle>) shape, id);
     }
 
+    @Override
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
+        super.setAttributes(plugin, userGui, component);
+
+        ((Input) component).setText(convertString(plugin, userGui, getText()));
+    }
 }

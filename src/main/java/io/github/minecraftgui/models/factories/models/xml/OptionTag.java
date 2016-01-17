@@ -21,38 +21,42 @@
 package io.github.minecraftgui.models.factories.models.xml;
 
 import io.github.minecraftgui.models.components.Component;
-import io.github.minecraftgui.models.components.ProgressBar;
+import io.github.minecraftgui.models.components.Div;
+import io.github.minecraftgui.models.components.Paragraph;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.shapes.Rectangle;
+import io.github.minecraftgui.models.shapes.RectangleColor;
 import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
- * Created by Samuel on 2016-01-05.
+ * Created by Samuel on 2016-01-15.
  */
-public class ProgressBarTag extends ComponentTag {
+public class OptionTag extends ComponentTag {
 
-    private final Class<? extends Rectangle> shapeProgress;
-    private final ProgressBar.Type type;
-    private final double percentage;
+    protected final String value;
+    private final String dropdown;
 
-    public ProgressBarTag(Element element, GuiFactory.GuiModel model) {
+    public OptionTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
-        shapeProgress = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeProgress"));
-        type = element.hasAttribute("type")?ProgressBar.Type.valueOf(element.getAttribute("type").toUpperCase()): ProgressBar.Type.HORIZONTAL;
-        percentage = element.hasAttribute("percentage")?Double.parseDouble(element.getAttribute("percentage")):0;
+        dropdown = element.getAttribute("dropdown");
+        value = element.getAttribute("value");
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        return new ProgressBar(type, (Class<? extends Rectangle>) shape, shapeProgress, id);
+    protected Component createComponent(PluginInterface service, UserGui userGui) {
+        return new Paragraph((Class<? extends Rectangle>) shape, id, new Div(RectangleColor.class), new Div(RectangleColor.class));
     }
 
     @Override
     protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
         super.setAttributes(plugin, userGui, component);
+        Paragraph paragraph = (Paragraph) component;
 
-        ((ProgressBar) component).setPercentage(percentage);
+        paragraph.setText(convertString(plugin, userGui, getText()));
+
+        if(!dropdown.equals(""))
+            userGui.getDropdown(this.dropdown).addValue(paragraph, getText());
     }
 }

@@ -24,8 +24,9 @@ import io.github.minecraftgui.models.components.CheckBox;
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
+import io.github.minecraftgui.models.forms.RadioButtonGroup;
 import io.github.minecraftgui.models.shapes.Rectangle;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -35,21 +36,34 @@ public class CheckBoxTag extends ComponentTag {
 
     private final Class<? extends Rectangle> shapeValueOnTrue;
     private final Class<? extends Rectangle> shapeValueOnFalse;
+    private final boolean checked;
+    private final String group;
+    private final String value;
 
     public CheckBoxTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
         shapeValueOnTrue = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeValueOnTrue"));
         shapeValueOnFalse = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeValueOnFalse"));
+        checked = element.hasAttribute("checked")?Boolean.parseBoolean(element.getAttribute("checked")) : false;
+        group = element.getAttribute("group");
+        value = element.getAttribute("value");
     }
 
     @Override
-    public Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    public Component createComponent(PluginInterface service, UserGui userGui) {
        return new CheckBox(shapeValueOnTrue, shapeValueOnFalse, id);
     }
 
     @Override
-    protected void setAttributes(Component component) {
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
+        super.setAttributes(plugin, userGui, component);
+        ((CheckBox) component).setChecked(checked);
 
+        if(!form.equals("") && !group.equals("")) {
+            RadioButtonGroup radioButtonGroup = userGui.getRadioButtonGroup(group);
+            userGui.getForm(form).addValuable(group, radioButtonGroup);
+            radioButtonGroup.addCheckBox((CheckBox) component, value);
+        }
     }
 
 }

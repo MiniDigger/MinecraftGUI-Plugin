@@ -25,9 +25,10 @@ import io.github.minecraftgui.models.components.Div;
 import io.github.minecraftgui.models.components.Paragraph;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
+import io.github.minecraftgui.models.forms.Dropdown;
 import io.github.minecraftgui.models.shapes.Rectangle;
 import io.github.minecraftgui.models.shapes.RectangleColor;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -35,13 +36,17 @@ import org.w3c.dom.Element;
  */
 public class ParagraphTag extends ComponentTag {
 
-    private final ComponentTag buttonLineBefore;
-    private final ComponentTag buttonLineAfter;
+    protected final ComponentTag buttonLineBefore;
+    protected final ComponentTag buttonLineAfter;
+    protected final String text;
+    private final String dropdown;
 
     public ParagraphTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
-        buttonLineAfter = (ComponentTag) getXmlTagSetAs(element, "buttonLineAfter");
-        buttonLineBefore = (ComponentTag) getXmlTagSetAs(element, "buttonLineBefore");
+        text = element.getTextContent().trim();
+        dropdown = element.getAttribute("dropdown");
+        buttonLineAfter = (ComponentTag) getXmlTagSetAs(element, "after");
+        buttonLineBefore = (ComponentTag) getXmlTagSetAs(element, "before");
 
         if(buttonLineAfter != null)
             model.addTag(buttonLineAfter);
@@ -50,7 +55,7 @@ public class ParagraphTag extends ComponentTag {
     }
 
     @Override
-    public Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    public Component createComponent(PluginInterface service, UserGui userGui) {
         Component blb = buttonLineBefore == null?new Div(RectangleColor.class):buttonLineBefore.createComponent(service, userGui);
         Component bla = buttonLineAfter == null?new Div(RectangleColor.class):buttonLineAfter.createComponent(service, userGui);
 
@@ -58,14 +63,30 @@ public class ParagraphTag extends ComponentTag {
     }
 
     @Override
-    protected void setAttributes(Component component) {
-        super.setAttributes(component);
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
+        super.setAttributes(plugin, userGui, component);
         Paragraph paragraph = (Paragraph) component;
 
         if(buttonLineAfter != null)
-            buttonLineAfter.setAttributes(paragraph.getButtonLineAfter());
+            buttonLineAfter.setAttributes(plugin, userGui, paragraph.getButtonLineAfter());
 
         if(buttonLineBefore != null)
-            buttonLineBefore.setAttributes(paragraph.getButtonLineBefore());
+            buttonLineBefore.setAttributes(plugin, userGui, paragraph.getButtonLineBefore());
+
+        paragraph.setText(convertString(plugin, userGui, getText()));
+
+        if(!form.equals("") && !dropdown.equals("")){
+            Dropdown dropdown = userGui.getDropdown(this.dropdown);
+            userGui.getForm(form).addValuable(this.dropdown, dropdown);
+            dropdown.setParagraphValueDisplayed(paragraph);
+        }
+    }
+
+    @Override
+    protected void initAfterChildrenCreated(PluginInterface service, UserGui userGui, Component component) {
+        super.initAfterChildrenCreated(service, userGui, component);
+
+        if(!form.equals("") && !dropdown.equals(""))
+            userGui.getDropdown(this.dropdown).init();
     }
 }

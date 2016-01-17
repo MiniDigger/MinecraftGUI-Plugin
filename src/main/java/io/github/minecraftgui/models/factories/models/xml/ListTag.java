@@ -27,7 +27,7 @@ import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.shapes.Rectangle;
 import io.github.minecraftgui.models.shapes.RectangleColor;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -37,11 +37,13 @@ public class ListTag extends ComponentTag {
 
     private final ComponentTag buttonListBefore;
     private final ComponentTag buttonListAfter;
+    private final String dropdown;
 
     public ListTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
-        buttonListBefore = (ComponentTag) getXmlTagSetAs(element, "buttonListBefore");
-        buttonListAfter = (ComponentTag) getXmlTagSetAs(element, "buttonListAfter");
+        dropdown = element.getAttribute("dropdown");
+        buttonListBefore = (ComponentTag) getXmlTagSetAs(element, "before");
+        buttonListAfter = (ComponentTag) getXmlTagSetAs(element, "after");
 
         if(buttonListBefore != null)
             model.addTag(buttonListBefore);
@@ -50,7 +52,7 @@ public class ListTag extends ComponentTag {
     }
 
     @Override
-    public Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    public Component createComponent(PluginInterface service, UserGui userGui) {
         Component blb = buttonListBefore == null?new Div(RectangleColor.class):buttonListBefore.createComponent(service, userGui);
         Component bla = buttonListAfter == null?new Div(RectangleColor.class):buttonListAfter.createComponent(service, userGui);
 
@@ -58,14 +60,23 @@ public class ListTag extends ComponentTag {
     }
 
     @Override
-    protected void setAttributes(Component component) {
-        super.setAttributes(component);
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
+        super.setAttributes(plugin, userGui, component);
         List list = (List) component;
 
         if(buttonListAfter != null)
-            buttonListAfter.setAttributes(list.getButtonListAfter());
+            buttonListAfter.setAttributes(plugin, userGui, list.getButtonListAfter());
 
         if(buttonListBefore !=  null)
-            buttonListBefore.setAttributes(list.getButtonListBefore());
+            buttonListBefore.setAttributes(plugin, userGui, list.getButtonListBefore());
+
+        if(!dropdown.equals(""))
+            userGui.getDropdown(this.dropdown).setList(list);
+    }
+
+    @Override
+    protected void initAfterChildrenCreated(PluginInterface service, UserGui userGui, Component component) {
+        super.initAfterChildrenCreated(service, userGui, component);
+        ((List) component).update();
     }
 }

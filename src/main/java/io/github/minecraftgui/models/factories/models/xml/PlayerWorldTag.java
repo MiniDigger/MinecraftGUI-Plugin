@@ -21,38 +21,24 @@
 package io.github.minecraftgui.models.factories.models.xml;
 
 import io.github.minecraftgui.models.components.Component;
-import io.github.minecraftgui.models.components.ProgressBar;
+import io.github.minecraftgui.models.components.Paragraph;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
-import io.github.minecraftgui.models.shapes.Rectangle;
 import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
- * Created by Samuel on 2016-01-05.
+ * Created by Samuel on 2016-01-15.
  */
-public class ProgressBarTag extends ComponentTag {
+public class PlayerWorldTag extends ParagraphTag {
 
-    private final Class<? extends Rectangle> shapeProgress;
-    private final ProgressBar.Type type;
-    private final double percentage;
-
-    public ProgressBarTag(Element element, GuiFactory.GuiModel model) {
+    public PlayerWorldTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
-        shapeProgress = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeProgress"));
-        type = element.hasAttribute("type")?ProgressBar.Type.valueOf(element.getAttribute("type").toUpperCase()): ProgressBar.Type.HORIZONTAL;
-        percentage = element.hasAttribute("percentage")?Double.parseDouble(element.getAttribute("percentage")):0;
-    }
-
-    @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        return new ProgressBar(type, (Class<? extends Rectangle>) shape, shapeProgress, id);
     }
 
     @Override
     protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
         super.setAttributes(plugin, userGui, component);
-
-        ((ProgressBar) component).setPercentage(percentage);
+        plugin.setParagraphToWorldChangeEvent(userGui.getPlayerUUID(), (Paragraph) component);
     }
 }

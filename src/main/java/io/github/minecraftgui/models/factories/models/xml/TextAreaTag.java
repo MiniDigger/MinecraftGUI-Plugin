@@ -27,7 +27,7 @@ import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.shapes.Rectangle;
 import io.github.minecraftgui.models.shapes.RectangleColor;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -40,8 +40,8 @@ public class TextAreaTag extends ComponentTag {
 
     public TextAreaTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
-        buttonLineAfter = (ComponentTag) getXmlTagSetAs(element, "buttonLineAfter");
-        buttonLineBefore = (ComponentTag) getXmlTagSetAs(element, "buttonLineBefore");
+        buttonLineAfter = (ComponentTag) getXmlTagSetAs(element, "after");
+        buttonLineBefore = (ComponentTag) getXmlTagSetAs(element, "before");
 
         if(buttonLineAfter != null)
             model.addTag(buttonLineAfter);
@@ -51,7 +51,7 @@ public class TextAreaTag extends ComponentTag {
     }
 
     @Override
-    public Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    public Component createComponent(PluginInterface service, UserGui userGui) {
         Component blb = buttonLineBefore == null?new Div(RectangleColor.class):buttonLineBefore.createComponent(service, userGui);
         Component bla = buttonLineAfter == null?new Div(RectangleColor.class):buttonLineAfter.createComponent(service, userGui);
 
@@ -59,14 +59,16 @@ public class TextAreaTag extends ComponentTag {
     }
 
     @Override
-    protected void setAttributes(Component component) {
-        super.setAttributes(component);
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
+        super.setAttributes(plugin, userGui, component);
         TextArea textArea = (TextArea) component;
 
         if(buttonLineAfter != null)
-            buttonLineAfter.setAttributes(textArea.getButtonLineAfter());
+            buttonLineAfter.setAttributes(plugin, userGui, textArea.getButtonLineAfter());
 
         if(buttonLineBefore != null)
-            buttonLineBefore.setAttributes(textArea.getButtonLineBefore());
+            buttonLineBefore.setAttributes(plugin, userGui, textArea.getButtonLineBefore());
+
+        textArea.setText(convertString(plugin, userGui, getText()));
     }
 }

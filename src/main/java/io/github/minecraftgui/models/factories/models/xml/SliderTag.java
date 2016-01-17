@@ -20,14 +20,11 @@
 
 package io.github.minecraftgui.models.factories.models.xml;
 
-import io.github.minecraftgui.models.components.Component;
-import io.github.minecraftgui.models.components.Div;
-import io.github.minecraftgui.models.components.Slider;
-import io.github.minecraftgui.models.components.UserGui;
+import io.github.minecraftgui.models.components.*;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.shapes.Rectangle;
 import io.github.minecraftgui.models.shapes.RectangleColor;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -38,30 +35,34 @@ public class SliderTag extends ComponentTag {
     private final Class<? extends Rectangle> shapeProgress;
     private final ComponentTag button;
     private final Slider.Type type;
+    private final double percentage;
 
     public SliderTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
         button = (ComponentTag) getXmlTagSetAs(element, "button");
         shapeProgress = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeProgress"));
-        type = Slider.Type.valueOf(element.getAttribute("type").toUpperCase());
+        type = element.hasAttribute("type")? Slider.Type.valueOf(element.getAttribute("type").toUpperCase()): Slider.Type.HORIZONTAL;
+        percentage = element.hasAttribute("percentage")?Double.parseDouble(element.getAttribute("percentage")):0;
 
         if(button != null)
             model.addTag(button);
     }
 
     @Override
-    public Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    public Component createComponent(PluginInterface service, UserGui userGui) {
         Component b = button == null?new Div(RectangleColor.class):button.createComponent(service, userGui);
 
         return new Slider(type, (Class<? extends Rectangle>) shape, shapeProgress, b, id);
     }
 
     @Override
-    protected void setAttributes(Component component) {
-        super.setAttributes(component);
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
+        super.setAttributes(plugin, userGui, component);
         Slider slider = (Slider) component;
 
         if(button != null)
-            button.setAttributes(slider.getButton());
+            button.setAttributes(plugin, userGui, slider.getButton());
+
+        slider.setPercentage(percentage);
     }
 }

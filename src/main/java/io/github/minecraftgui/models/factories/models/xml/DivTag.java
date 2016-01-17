@@ -24,7 +24,7 @@ import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.Div;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 /**
@@ -37,7 +37,7 @@ public class DivTag extends ComponentTag {
     }
 
     @Override
-    public Component createComponent(MinecraftGuiService service, UserGui userGui) {
+    public Component createComponent(PluginInterface service, UserGui userGui) {
         return new Div(shape, id);
     }
 

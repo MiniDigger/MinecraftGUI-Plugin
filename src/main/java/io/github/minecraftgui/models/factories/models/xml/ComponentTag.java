@@ -22,33 +22,52 @@ package io.github.minecraftgui.models.factories.models.xml;
 
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.UserGui;
+import io.github.minecraftgui.models.components.Visibility;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.factories.models.css.CssRule;
+import io.github.minecraftgui.models.forms.Form;
+import io.github.minecraftgui.models.forms.Valuable;
+import io.github.minecraftgui.models.listeners.*;
 import io.github.minecraftgui.models.shapes.*;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Samuel on 2016-01-12.
  */
 public abstract class ComponentTag extends Tag {
 
-    protected abstract Component createComponent(MinecraftGuiService service, UserGui userGui);
+    private static final Pattern FUNCTION = Pattern.compile("\\w+\\((.+(, .+)*)*\\)");
+
+    protected abstract Component createComponent(PluginInterface service, UserGui userGui);
 
     protected final String id;
     protected final ArrayList<String> classes;
     protected Class<? extends Shape> shape;
     protected final ArrayList<CssRule> rules;
+    protected final String form;
+    private final String name;
+    private final String action;
+    private final HashMap<Class, Event> events;
 
     public ComponentTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
         id = element.getAttribute("id");
+        form = element.getAttribute("form");
+        name = element.getAttribute("name");
+        action = element.getAttribute("action");
         shape = getShapeByName(element.getAttribute("shape"));
         this.classes = generateClasses(element);
         this.rules = new ArrayList<>();
+        this.events = new HashMap<>();
+        initEvents(element);
     }
 
     public ArrayList<CssRule> getRules() {
@@ -68,14 +87,27 @@ public abstract class ComponentTag extends Tag {
         return classes;
     }
 
-    protected void setAttributes(Component component){
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component){
         for(CssRule cssRule : rules)
             cssRule.applyRulesOnComponent(component);
+
+        if(!form.equals("")){
+            Form form = userGui.getForm(this.form);
+
+            if(!name.equals("") && component instanceof Valuable)
+                form.addValuable(name, (Valuable) component);
+            else if(action.equalsIgnoreCase("submit"))
+                form.setButton(component);
+        }
+
+        setEvents(userGui, component);
     }
 
-    public Component getComponent(MinecraftGuiService service, UserGui userGui){
+    protected void initAfterChildrenCreated(PluginInterface service, UserGui userGui, Component component){}
+
+    public Component getComponent(PluginInterface service, UserGui userGui){
         Component component = createComponent(service, userGui);
-        setAttributes(component);
+        setAttributes(service, userGui, component);
 
         for(Tag tag : getChildren())
             if(tag instanceof ComponentTag)
@@ -84,12 +116,11 @@ public abstract class ComponentTag extends Tag {
         return component;
     }
 
-    private void getComponent(MinecraftGuiService service, UserGui userGui, Component parent){
+    private void getComponent(PluginInterface service, UserGui userGui, Component parent){
         Component component = createComponent(service, userGui);
-        System.out.println(parent.getClass().getName());
         parent.add(component, userGui);
 
-        setAttributes(component);
+        setAttributes(service, userGui, component);
 
         for(Tag tag : getChildren())
             if(tag instanceof ComponentTag) {
@@ -97,6 +128,8 @@ public abstract class ComponentTag extends Tag {
 
                 componentTag.getComponent(service, userGui, component);
             }
+
+        initAfterChildrenCreated(service, userGui, component);
     }
 
     private ArrayList<String> generateClasses(Element element){
@@ -115,6 +148,203 @@ public abstract class ComponentTag extends Tag {
         if(name.equals("rectangle-image")) return RectangleImage.class;
 
         return RectangleColor.class;
+    }
+
+    private void setEvents(UserGui userGui, Component component){
+        for(Map.Entry pairs : events.entrySet()){
+            Class listener = (Class) pairs.getKey();
+            Event event = (Event) pairs.getValue();
+
+            if(listener == OnBlurListener.class) {
+                component.addOnBlurListener(new OnBlurListener() {
+                    @Override
+                    public void onBlur(Component component) {
+                        event.event(userGui, component);
+                    }
+                });
+            }
+            else if(listener == OnClickListener.class) {
+                component.addOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(Component component) {
+                        event.event(userGui, component);
+                    }
+                });
+            }
+            else if(listener == OnDoubleClickListener.class) {
+                component.addOnDoubleClickListener(new OnDoubleClickListener() {
+                    @Override
+                    public void onDoubleClick(Component component) {
+                        event.event(userGui, component);
+                    }
+                });
+            }
+            else if(listener == OnFocusListener.class) {
+                component.addOnFocusListener(new OnFocusListener() {
+                    @Override
+                    public void onFocus(Component component) {
+                        event.event(userGui, component);
+                    }
+                });
+            }
+            else if(listener == OnMouseLeaveListener.class) {
+                component.addOnMouseLeaveListener(new OnMouseLeaveListener() {
+                    @Override
+                    public void onMouseLeave(Component component) {
+                        event.event(userGui, component);
+                    }
+                });
+            }
+            else if(listener == OnMouseEnterListener.class) {
+                component.addOnMouseEnterListener(new OnMouseEnterListener() {
+                    @Override
+                    public void onMouseEnter(Component component) {
+                        event.event(userGui, component);
+                    }
+                });
+            }
+        }
+    }
+
+    private void initEvents(Element element){
+        if(element.hasAttribute("onBlur"))
+            events.put(OnBlurListener.class, createEvent(element.getAttribute("onBlur")));
+        if(element.hasAttribute("onClick"))
+            events.put(OnClickListener.class, createEvent(element.getAttribute("onClick")));
+        if(element.hasAttribute("onDoubleClick"))
+            events.put(OnDoubleClickListener.class, createEvent(element.getAttribute("onDoubleClick")));
+        if(element.hasAttribute("onFocus"))
+            events.put(OnFocusListener.class, createEvent(element.getAttribute("onFocus")));
+        if(element.hasAttribute("onMouseEnter"))
+            events.put(OnMouseEnterListener.class, createEvent(element.getAttribute("onMouseEnter")));
+        if(element.hasAttribute("onMouseLeave"))
+            events.put(OnMouseLeaveListener.class, createEvent(element.getAttribute("onMouseLeave")));
+    }
+
+    private Event createEvent(String value){
+        Event event = null;
+        Matcher matcher = FUNCTION.matcher(value);
+
+        if(matcher.find()){
+            String values[] = value.trim().split("\\(");
+            String args[] = values[1].substring(0, values[1].indexOf(")")).split(",");
+            String function = values[0].toLowerCase().trim();
+
+            for(int i = 0; i < args.length; i++)
+                args[i] = args[i].trim();
+
+            switch (function){
+                case "hidechildren": event = new HideChildren(args); break;
+                case "showchildren": event = new ShowChildren(args); break;
+                case "showcomponent": event = new ShowComponent(args); break;
+                case "hidecomponent": event = new HideComponent(args); break;
+            }
+        }
+
+        return event;
+    }
+
+    private static abstract class Event{
+
+        protected final String args[];
+
+        public abstract void event(UserGui userGui, Component component);
+
+        public Event(String[] args) {
+            this.args = args;
+        }
+    }
+
+    private static abstract class DelayedEvent extends Event{
+
+        private final long time;
+
+        public abstract void delayedEvent(UserGui userGui, Component component);
+
+        public DelayedEvent(String[] args) {
+            super(args);
+            if(args.length >= 1)
+                time = Long.parseLong(args[0]);
+            else
+                time = 0;
+        }
+
+        @Override
+        public void event(UserGui userGui, Component component) {
+            if (time != 0) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(time);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        delayedEvent(userGui, component);
+                    }
+                }).start();
+            }
+            else
+                delayedEvent(userGui, component);
+        }
+
+    }
+
+    private static class ShowComponent extends DelayedEvent{
+
+        public ShowComponent(String[] args) {
+            super(args);
+        }
+
+        @Override
+        public void delayedEvent(UserGui userGui, Component component) {
+            Component comp = userGui.getComponent(args[1]);
+
+            if(comp != null)
+                comp.setVisibility(Visibility.VISIBLE);
+        }
+    }
+
+    private static class HideComponent extends DelayedEvent{
+
+        public HideComponent(String[] args) {
+            super(args);
+        }
+
+        @Override
+        public void delayedEvent(UserGui userGui, Component component) {
+            Component comp = userGui.getComponent(args[1]);
+
+            if(comp != null)
+                comp.setVisibility(Visibility.INVISIBLE);
+        }
+    }
+
+    private static class HideChildren extends DelayedEvent{
+
+        public HideChildren(String[] args) {
+            super(args);
+        }
+
+        @Override
+        public void delayedEvent(UserGui userGui, Component component) {
+            for(Component child : component.getChildren())
+                child.setVisibility(Visibility.INVISIBLE);
+        }
+    }
+
+    private static class ShowChildren extends DelayedEvent{
+
+        public ShowChildren(String[] args) {
+            super(args);
+        }
+
+        @Override
+        public void delayedEvent(UserGui userGui, Component component) {
+            for(Component child : component.getChildren())
+                child.setVisibility(Visibility.VISIBLE);
+        }
     }
 
 }

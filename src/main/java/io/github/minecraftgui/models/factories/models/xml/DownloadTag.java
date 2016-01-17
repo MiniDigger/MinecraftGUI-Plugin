@@ -22,10 +22,8 @@ package io.github.minecraftgui.models.factories.models.xml;
 
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
-import io.github.minecraftgui.views.MinecraftGuiService;
+import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
-
-import java.util.regex.Matcher;
 
 /**
  * Created by Samuel on 2016-01-12.
@@ -45,20 +43,8 @@ public class DownloadTag extends Tag {
         this.name = element.getAttribute("name");
     }
 
-    public String getUrl(MinecraftGuiService service, UserGui userGui) {
-        StringBuilder url = new StringBuilder(this.url);
-
-        Matcher matcher = PATTERN_PLAYER_UUID.matcher(url);
-
-        if(matcher.find())
-            url.replace(matcher.start(), matcher.end(), userGui.getPlayerUUID().toString());
-
-        matcher = PATTERN_PLAYER_NAME.matcher(url);
-
-        if(matcher.find())
-            url.replace(matcher.start(), matcher.end(), service.getPlayerName(userGui.getPlayerUUID()));
-
-        return url.toString();
+    public String getUrl(PluginInterface service, UserGui userGui) {
+        return convertString(service, userGui, this.url);
     }
 
     public String getName() {

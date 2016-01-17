@@ -29,7 +29,17 @@ public interface OnGuiListener {
 
     void onGuiPreInit(UserGui userGui);
     void onGuiInit(UserGui userGui);
-    void onGuiOpen(UserGui userGui);
-    void onGuiClose(UserGui userGui);
+
+    interface OnGuiOpen {
+
+        void onGuiOpen(UserGui userGui);
+
+    }
+
+    interface OnGuiClose {
+
+        void onGuiClose(UserGui userGui);
+
+    }
 
 }

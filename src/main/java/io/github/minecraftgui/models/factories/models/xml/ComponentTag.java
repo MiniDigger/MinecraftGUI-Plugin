@@ -22,9 +22,9 @@ package io.github.minecraftgui.models.factories.models.xml;
 
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.UserGui;
-import io.github.minecraftgui.models.components.Visibility;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.factories.models.css.CssRule;
+import io.github.minecraftgui.models.factories.models.xml.events.*;
 import io.github.minecraftgui.models.forms.Form;
 import io.github.minecraftgui.models.forms.Valuable;
 import io.github.minecraftgui.models.listeners.*;
@@ -242,109 +242,6 @@ public abstract class ComponentTag extends Tag {
         }
 
         return event;
-    }
-
-    private static abstract class Event{
-
-        protected final String args[];
-
-        public abstract void event(UserGui userGui, Component component);
-
-        public Event(String[] args) {
-            this.args = args;
-        }
-    }
-
-    private static abstract class DelayedEvent extends Event{
-
-        private final long time;
-
-        public abstract void delayedEvent(UserGui userGui, Component component);
-
-        public DelayedEvent(String[] args) {
-            super(args);
-            if(args.length >= 1)
-                time = Long.parseLong(args[0]);
-            else
-                time = 0;
-        }
-
-        @Override
-        public void event(UserGui userGui, Component component) {
-            if (time != 0) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(time);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        delayedEvent(userGui, component);
-                    }
-                }).start();
-            }
-            else
-                delayedEvent(userGui, component);
-        }
-
-    }
-
-    private static class ShowComponent extends DelayedEvent{
-
-        public ShowComponent(String[] args) {
-            super(args);
-        }
-
-        @Override
-        public void delayedEvent(UserGui userGui, Component component) {
-            Component comp = userGui.getComponent(args[1]);
-
-            if(comp != null)
-                comp.setVisibility(Visibility.VISIBLE);
-        }
-    }
-
-    private static class HideComponent extends DelayedEvent{
-
-        public HideComponent(String[] args) {
-            super(args);
-        }
-
-        @Override
-        public void delayedEvent(UserGui userGui, Component component) {
-            Component comp = userGui.getComponent(args[1]);
-
-            if(comp != null)
-                comp.setVisibility(Visibility.INVISIBLE);
-        }
-    }
-
-    private static class HideChildren extends DelayedEvent{
-
-        public HideChildren(String[] args) {
-            super(args);
-        }
-
-        @Override
-        public void delayedEvent(UserGui userGui, Component component) {
-            for(Component child : component.getChildren())
-                child.setVisibility(Visibility.INVISIBLE);
-        }
-    }
-
-    private static class ShowChildren extends DelayedEvent{
-
-        public ShowChildren(String[] args) {
-            super(args);
-        }
-
-        @Override
-        public void delayedEvent(UserGui userGui, Component component) {
-            for(Component child : component.getChildren())
-                child.setVisibility(Visibility.VISIBLE);
-        }
     }
 
 }

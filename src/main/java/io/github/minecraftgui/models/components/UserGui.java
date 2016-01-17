@@ -23,6 +23,7 @@ package io.github.minecraftgui.models.components;
 import io.github.minecraftgui.models.forms.Dropdown;
 import io.github.minecraftgui.models.forms.Form;
 import io.github.minecraftgui.models.forms.RadioButtonGroup;
+import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.network.UserConnection;
 
 import java.awt.*;
@@ -50,6 +51,14 @@ public final class UserGui {
         this.radioButtonGroups = new ConcurrentHashMap<>();
         this.componentsWithId = new ConcurrentHashMap<>();
         this.root = new Root(this, userConnection);
+    }
+
+    public void addOnGuiOpenListener(OnGuiListener plugin, OnGuiListener.OnGuiOpen onGuiOpen){
+        userConnection.addOnGuiOpenListener(plugin, onGuiOpen);
+    }
+
+    public void addOnGuiCloseListener(OnGuiListener plugin, OnGuiListener.OnGuiClose onGuiClose){
+        userConnection.addOnGuiCloseListener(plugin, onGuiClose);
     }
 
     public Form getForm(String name){

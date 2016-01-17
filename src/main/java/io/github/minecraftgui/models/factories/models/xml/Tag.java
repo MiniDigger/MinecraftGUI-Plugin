@@ -63,6 +63,7 @@ public abstract class Tag {
         xmlTags.put("option", OptionTag.class);
         xmlTags.put("onformsend", OnFormSendTag.class);
         xmlTags.put("playerworld", PlayerWorldTag.class);
+        xmlTags.put("onguievent", OnGuiEventTag.class);
     }
 
     private static Tag createXmlTag(Element element, GuiFactory.GuiModel model){

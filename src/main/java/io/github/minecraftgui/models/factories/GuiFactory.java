@@ -24,6 +24,7 @@ import io.github.minecraftgui.models.components.State;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.models.css.CssRule;
 import io.github.minecraftgui.models.factories.models.xml.*;
+import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -271,14 +272,20 @@ public class GuiFactory {
             }
         }
 
-        public void initGui(PluginInterface plugin, UserGui gui){
-            body.getComponent(plugin, gui);
+        public void initGui(PluginInterface pluginInterface, UserGui gui, OnGuiListener plugin){
+            body.getComponent(pluginInterface, gui);
 
             ArrayList<Tag> tags = this.tags.get(OnFormSendTag.class);
 
             if(tags != null)
                 for(Tag tag : tags)
-                    ((OnFormSendTag) tag).addEvent(plugin, gui);
+                    ((OnFormSendTag) tag).addEvent(pluginInterface, gui);
+
+            tags = this.tags.get(OnGuiEventTag.class);
+
+            if(tags != null)
+                for(Tag tag : tags)
+                    ((OnGuiEventTag) tag).setEvents(plugin, gui);
         }
 
         private ArrayList<Tag> getCssFiles(){

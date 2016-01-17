@@ -25,6 +25,7 @@ import io.github.minecraftgui.models.components.*;
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.Cursor;
 import io.github.minecraftgui.models.components.List;
+import io.github.minecraftgui.models.listeners.OnGuiListener;
 import io.github.minecraftgui.models.network.packets.*;
 import io.github.minecraftgui.models.shapes.Shape;
 import org.json.JSONObject;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Samuel on 2015-12-29.
@@ -48,6 +50,8 @@ public class UserConnection {
     private final HashMap<String, String> images;
     private final HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate;
     private final UUID uuid;
+    private final ConcurrentHashMap<OnGuiListener, CopyOnWriteArrayList<OnGuiListener.OnGuiOpen>> onGuiOpenListeners;
+    private final ConcurrentHashMap<OnGuiListener, CopyOnWriteArrayList<OnGuiListener.OnGuiClose>> onGuiCloseListeners;
 
     public UserConnection(NetworkController networkController, ArrayList<NetworkController.PluginInfo> pluginInfos, UUID uuid) {
         this.networkController = networkController;
@@ -58,9 +62,33 @@ public class UserConnection {
         this.fonts = new ArrayList<>();
         this.images = new HashMap<>();
         this.pluginInfos = pluginInfos;
+        this.onGuiOpenListeners = new ConcurrentHashMap<>();
+        this.onGuiCloseListeners = new ConcurrentHashMap<>();
 
         for(NetworkController.PluginInfo plugin : pluginInfos)
             userGuis.put(plugin.getName(), new UserGui(this));
+    }
+
+    public void addOnGuiOpenListener(OnGuiListener plugin, OnGuiListener.OnGuiOpen onGuiOpen){
+        CopyOnWriteArrayList<OnGuiListener.OnGuiOpen> onGuiOpens = onGuiOpenListeners.get(plugin);
+
+        if (onGuiOpens == null){
+            onGuiOpens = new CopyOnWriteArrayList<>();
+            onGuiOpenListeners.put(plugin, onGuiOpens);
+        }
+
+        onGuiOpens.add(onGuiOpen);
+    }
+
+    public void addOnGuiCloseListener(OnGuiListener plugin, OnGuiListener.OnGuiClose onGuiClose){
+        CopyOnWriteArrayList<OnGuiListener.OnGuiClose> onGuiCloses = onGuiCloseListeners.get(plugin);
+
+        if (onGuiCloses == null){
+            onGuiCloses = new CopyOnWriteArrayList<>();
+            onGuiCloseListeners.put(plugin, onGuiCloses);
+        }
+
+        onGuiCloses.add(onGuiClose);
     }
 
     public void reloadGui(){
@@ -280,13 +308,25 @@ public class UserConnection {
     }
 
     private void onGuiClose(){
-        for(NetworkController.PluginInfo pluginInfo : pluginInfos)
-            pluginInfo.getOnGuiListener().onGuiClose(userGuis.get(pluginInfo.getName()));
+        for(NetworkController.PluginInfo pluginInfo : pluginInfos) {
+            CopyOnWriteArrayList<OnGuiListener.OnGuiClose> onGuiCloses = onGuiCloseListeners.get(pluginInfo.getOnGuiListener());
+            UserGui userGui = userGuis.get(pluginInfo.getName());
+
+            if (onGuiCloses != null)
+                for(OnGuiListener.OnGuiClose onGuiClose : onGuiCloses)
+                    onGuiClose.onGuiClose(userGui);
+        }
     }
 
     private void onGuiOpen(){
-        for(NetworkController.PluginInfo pluginInfo : pluginInfos)
-            pluginInfo.getOnGuiListener().onGuiOpen(userGuis.get(pluginInfo.getName()));
+        for(NetworkController.PluginInfo pluginInfo : pluginInfos) {
+            CopyOnWriteArrayList<OnGuiListener.OnGuiOpen> onGuiOpens = onGuiOpenListeners.get(pluginInfo.getOnGuiListener());
+            UserGui userGui = userGuis.get(pluginInfo.getName());
+
+            if (onGuiOpens != null)
+                for(OnGuiListener.OnGuiOpen onGuiOpen : onGuiOpens)
+                    onGuiOpen.onGuiOpen(userGui);
+        }
     }
 
     private void sendPacket(int packetId, PacketOut packetOut){

@@ -75,10 +75,9 @@ public class Dropdown implements Valuable<String> {
         return paragraphValueDisplayed;
     }
 
-    public void init(String valueDisplayed){
+    public void init(){
         list.update();
         list.setVisibility(Visibility.INVISIBLE);
-        paragraphValueDisplayed.setText(valueDisplayed);
     }
 
     public void addValue(Paragraph paragraph, String value){

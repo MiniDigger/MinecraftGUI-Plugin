@@ -40,7 +40,7 @@ public class ComponentDependencyTag extends ComponentTag {
 
     @Override
     protected Component createComponent(PluginInterface service, UserGui userGui) {
-        return service.getUserGui(plugin, userGui.getPlayerUUID()).getComponent(id);
+        return plugin.equals("")?userGui.getComponent(id):service.getUserGui(plugin, userGui.getPlayerUUID()).getComponent(id);
     }
 
 }

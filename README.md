@@ -6,6 +6,7 @@ MinecraftGui is a plugin that will bring a lot of new possibilities to the devel
 - Multiple ways to create and customize your interfaces:
   - Write your interfaces with xml and css.
   - Simple API for the developers.
+  - Mix java with xml and css.
 - A lot of things to customize the components:
   - 12 events to handle every interactions with the player.
   - 4 states with 33 attributes to customize the components.

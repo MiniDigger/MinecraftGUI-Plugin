@@ -92,6 +92,13 @@ public class UserConnection {
     }
 
     public void reloadGui(){
+        components.clear();
+        onGuiCloseListeners.clear();
+        onGuiOpenListeners.clear();
+
+        for(NetworkController.PluginInfo pluginInfo : pluginInfos)
+            userGuis.get(pluginInfo.getName()).clear();
+
         sendPacket(NetworkController.PACKET_INIT_INTERFACE, new PacketInitInterface());
     }
 

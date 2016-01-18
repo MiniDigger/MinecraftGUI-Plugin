@@ -127,6 +127,14 @@ public final class UserGui {
         userConnection.addFontToGenerate(name, size, color);
     }
 
+    public void clear(){
+        forms.clear();
+        dropdowns.clear();
+        radioButtonGroups.clear();
+        components.clear();
+        componentsWithId.clear();
+    }
+
     protected final void addComponent(Component component){
         components.put(component.getUniqueId(), component);
 

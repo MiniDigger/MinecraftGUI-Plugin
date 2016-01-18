@@ -1,29 +1,9 @@
-## MinecraftGUI is a gui manager that allow you to create interface to ease the interaction with your plugins.
+# MinecraftGui
 
-https://www.youtube.com/watch?v=r3E62Ly7hjI
+MinecraftGui is a plugin that will bring a lot of new possibilities to the developers and to the server's administrators. A new way to do the interactions between the players and the server. This plugin allow to create graphical components on the player's client. The great force of MinecraftGui is that you don't need to know java to create interfaces. Everything has been simplified to allow anyone to create their own interfaces for their server.
 
-#### Features
-  - Each graphical button have more than +18 attributes per state with many possibilities.
-  - Draw images. GIF, PNG and JPG supported.
-  - Write text with custom fonts. TTF and OTF supported.
-  - Open website.
-  - Use text fields to interact with your plugin.
-  - Create button dynamically.
-  - Simple API to ease the creation and the interaction with the components.
-
-#### Commands
-```
-/gui change - Will allow the plugins to send or not components to you.
-/gui reset - Reset the position of every button.
-/gui reload - Reload your interface.
-```
-
-#### Build for the plugin version: https://github.com/djxy/MinecraftGUI-Plugin/releases
-#### Build for the mod version: https://github.com/djxy/MinecraftGUI-Mod/releases
-
-#### Currently, I'm searching developers who would like to implement MinecraftGUI on their project. I will help to create and implement everything to ease your work.
-
-#### To Do:
-  - Documentation.
-
-Link to mod version: https://github.com/djxy/MinecraftGUI-Mod
+### How to use MinecraftGui:
+- Server administrators:
+  - Create your interfaces with XML and CSS.
+- Developers: 
+  - You can use the API of MinecraftGui to create your interfaces programmatically and/or use XML and CSS.  

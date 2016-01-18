@@ -46,7 +46,7 @@ public class CssRule {
     private static final Pattern VALUE_COLOR = Pattern.compile("^(\\d{1,3},){3}\\d{1,3}$");
     private static final Pattern VALUE_COLOR_TIME = Pattern.compile("^(\\d{1,3},){3}\\d{1,3} \\d+$");
     private static final Pattern VALUE_POSITIONS = Pattern.compile("^-?\\d+(\\.\\d)?,-?\\d+(\\.\\d)?( -?\\d+(\\.\\d)?,-?\\d+(\\.\\d)?){2,}$");
-    private static final Pattern VALUE_POSITION = Pattern.compile("^(parent@)?\\w+ -?\\d+%(, (parent@)?\\w+ -?\\d+%)*$");
+    private static final Pattern VALUE_POSITION = Pattern.compile("^(parent@)?.+ -?\\d+%(, (parent@)?.+ -?\\d+%)*$");
 
     private final ArrayList<String> selectors;
     private final ArrayList<CssDeclaration> declarations;
@@ -302,7 +302,7 @@ public class CssRule {
                         PositionContainer positionContainer = new PositionContainer();
                         positionContainer.isParentAttribute = s[0].startsWith("parent@");
                         positionContainer.percentage = Double.parseDouble(s[1].substring(0, s[1].length() - 1)) / 100;
-                        positionContainer.attribute = positionContainer.isParentAttribute ? AttributeDouble.valueOf(s[0].substring(s[0].indexOf("@") + 1).toUpperCase().replaceAll("-", "_")) : AttributeDouble.valueOf(s[0].toUpperCase().replaceAll("-", "_"));
+                        positionContainer.attribute = positionContainer.isParentAttribute ? AttributeDouble.valueOf(s[0].substring(s[0].indexOf("@") + 1)) : AttributeDouble.valueOf(s[0].toUpperCase().replaceAll("-", "_"));
 
                         positionContainers.add(positionContainer);
                     }
@@ -311,7 +311,7 @@ public class CssRule {
                     PositionContainer positionContainer = new PositionContainer();
                     positionContainer.isParentAttribute = s[0].startsWith("parent@");
                     positionContainer.percentage = Double.parseDouble(s[1].substring(0, s[1].length() - 1)) / 100;
-                    positionContainer.attribute = positionContainer.isParentAttribute ? AttributeDouble.valueOf(s[0].substring(s[0].indexOf("@") + 1).toUpperCase().replaceAll("-", "_")) : AttributeDouble.valueOf(s[0].toUpperCase().replaceAll("-", "_"));
+                    positionContainer.attribute = positionContainer.isParentAttribute ? AttributeDouble.valueOf(s[0].substring(s[0].indexOf("@") + 1)) : AttributeDouble.valueOf(s[0].toUpperCase().replaceAll("-", "_"));
 
                     positionContainers.add(positionContainer);
                 }

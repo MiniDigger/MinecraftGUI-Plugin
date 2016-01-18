@@ -53,8 +53,6 @@ public class SpongeNetwork extends NetworkController implements MessageHandler<S
 
     @Override
     public void handleMessage(Packet packet, RemoteConnection remoteConnection, Platform.Type type) {
-        System.out.println(packet.jsonObject.toString());
-
         if(remoteConnection instanceof PlayerConnection) {
             UUID uuid = ((PlayerConnection) remoteConnection).getPlayer().getProfile().getUniqueId();
             UserConnection userConnection = getUserConnection(uuid);

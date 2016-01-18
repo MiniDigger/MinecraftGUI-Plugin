@@ -20,19 +20,49 @@
 
 package io.github.minecraftgui.views;
 
+import io.github.minecraftgui.controllers.NetworkController;
 import io.github.minecraftgui.models.components.UserGui;
+import io.github.minecraftgui.models.factories.GuiFactory;
+import io.github.minecraftgui.models.listeners.OnGuiListener;
 
+import java.io.File;
 import java.util.UUID;
 
 /**
- * Created by Samuel on 2016-01-11.
+ * Created by Samuel on 2016-01-16.
  */
-public interface MinecraftGuiService {
+public class MinecraftGuiService {
 
-    boolean isPlayerConnectedWithClient(UUID player);
+    private final NetworkController networkController;
+    private final PluginInterface pluginInterface;
 
-    UserGui getUserGui(String plugin, UUID user);
+    public MinecraftGuiService(NetworkController networkController, PluginInterface pluginInterface) {
+        this.networkController = networkController;
+        this.pluginInterface = pluginInterface;
+    }
 
-    String getPlayerName(UUID uuid);
+    public void addPlugin(OnGuiListener plugin, String name){
+        networkController.addPlugin(plugin, name);
+    }
+
+    public void addPlugin(OnGuiListener plugin, String name, String... dependencies){
+        networkController.addPlugin(plugin, name, dependencies);
+    }
+
+    public PluginInterface getPluginInterface() {
+        return pluginInterface;
+    }
+
+    public UserGui getUserGui(UUID player, String plugin) {
+        return networkController.getUserConnection(player).getUserGui(plugin);
+    }
+
+    public GuiFactory.GuiModel createGuiModel(File file) {
+        return GuiFactory.createGuiModel(file);
+    }
+
+    public boolean isPlayerConnectedWithClient(UUID player) {
+        return networkController.getUserConnection(player) != null;
+    }
 
 }

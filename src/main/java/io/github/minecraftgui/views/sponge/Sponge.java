@@ -33,6 +33,9 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.service.economy.EconomyService;
+import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.text.Text;
 
 import java.nio.file.Path;
@@ -92,7 +95,24 @@ public class Sponge implements PluginInterface {
     @Override
     public void setParagraphToWorldChangeEvent(UUID player, Paragraph paragraph) {
         game.getEventManager().registerListeners(this, new WorldChangeEvent(paragraph, player));
+
         paragraph.setText(org.spongepowered.api.Sponge.getGame().getServer().getPlayer(player).get().getWorld().getName());
+    }
+
+    @Override
+    public void setParagraphToEconomyTransactionEvent(UUID player, Paragraph paragraph, String currency) {
+        game.getEventManager().registerListeners(this, new EconomyTransactionEvent(paragraph, player, currency));
+
+        EconomyService economyService = game.getServiceManager().provide(EconomyService.class).get();
+        UniqueAccount account = economyService.getAccount(player).get();
+        Currency curr = null;
+
+        for(Currency c : economyService.getCurrencies())
+            if(c.getDisplayName().toPlain().equalsIgnoreCase(currency))
+                curr = c;
+
+        if(curr != null)
+            paragraph.setText(account.getBalance(curr).toString());
     }
 
 }

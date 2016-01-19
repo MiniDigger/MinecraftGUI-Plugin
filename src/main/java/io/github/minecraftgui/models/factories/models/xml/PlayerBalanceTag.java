@@ -18,26 +18,31 @@
  *
  */
 
-package io.github.minecraftgui.views;
+package io.github.minecraftgui.models.factories.models.xml;
 
+import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.Paragraph;
 import io.github.minecraftgui.models.components.UserGui;
-
-import java.util.UUID;
+import io.github.minecraftgui.models.factories.GuiFactory;
+import io.github.minecraftgui.views.PluginInterface;
+import org.w3c.dom.Element;
 
 /**
- * Created by Samuel on 2016-01-11.
+ * Created by Samuel on 2016-01-19.
  */
-public interface PluginInterface {
+public class PlayerBalanceTag extends ParagraphTag {
 
-    UserGui getUserGui(String plugin, UUID player);
+    private final String currency;
 
-    String getPlayerName(UUID player);
+    public PlayerBalanceTag(Element element, GuiFactory.GuiModel model) {
+        super(element, model);
+        currency = element.getAttribute("currency");
+    }
 
-    void sendCommand(UUID sender, String command);
-
-    void setParagraphToWorldChangeEvent(UUID player, Paragraph paragraph);
-
-    void setParagraphToEconomyTransactionEvent(UUID player, Paragraph paragraph, String currency);
+    @Override
+    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
+        super.setAttributes(plugin, userGui, component);
+        plugin.setParagraphToEconomyTransactionEvent(userGui.getPlayerUUID(), (Paragraph) component,  currency);
+    }
 
 }

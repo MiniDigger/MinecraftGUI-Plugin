@@ -35,10 +35,12 @@ public class ShowComponent extends DelayedEvent{
 
     @Override
     public void delayedEvent(UserGui userGui, Component component) {
-        Component comp = userGui.getComponent(args[1]);
+        for(int i = 1; i < args.length; i++){
+            Component comp = userGui.getComponent(args[i]);
 
-        if(comp != null)
-            comp.setVisibility(Visibility.VISIBLE);
+            if(comp != null)
+                comp.setVisibility(Visibility.VISIBLE);
+        }
     }
 
 }

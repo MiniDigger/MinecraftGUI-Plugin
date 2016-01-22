@@ -33,6 +33,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
@@ -89,7 +90,12 @@ public class Sponge implements PluginInterface {
 
     @Override
     public void sendCommand(UUID sender, String command) {
-        org.spongepowered.api.Sponge.getGame().getCommandManager().process(org.spongepowered.api.Sponge.getGame().getServer().getPlayer(sender).get(), command);
+        Task.Builder taskBuilder = game.getScheduler().createTaskBuilder();
+
+        taskBuilder
+                .execute(() -> {
+                    org.spongepowered.api.Sponge.getGame().getCommandManager().process(org.spongepowered.api.Sponge.getGame().getServer().getPlayer(sender).get(), command);
+                }).submit(this);
     }
 
     @Override

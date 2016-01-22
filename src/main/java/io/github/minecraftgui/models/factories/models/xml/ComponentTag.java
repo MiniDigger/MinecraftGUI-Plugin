@@ -45,6 +45,14 @@ import java.util.regex.Pattern;
 public abstract class ComponentTag extends Tag {
 
     private static final Pattern FUNCTION = Pattern.compile("\\w+\\((.+(, .+)*)*\\)");
+    private static final Object EVENTS[][] = {
+            {"onBlur", OnBlurListener.class},
+            {"onClick", OnClickListener.class},
+            {"onDoubleClick", OnDoubleClickListener.class},
+            {"onFocus", OnFocusListener.class},
+            {"onMouseEnter", OnMouseEnterListener.class},
+            {"onMouseLeave", OnMouseLeaveListener.class}
+    };
 
     protected abstract Component createComponent(PluginInterface service, UserGui userGui);
 
@@ -55,7 +63,7 @@ public abstract class ComponentTag extends Tag {
     protected final String form;
     private final String name;
     private final String action;
-    private final HashMap<Class, Event> events;
+    private final HashMap<Class, ArrayList<Event>> events;
 
     public ComponentTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
@@ -153,77 +161,84 @@ public abstract class ComponentTag extends Tag {
     private void setEvents(UserGui userGui, Component component){
         for(Map.Entry pairs : events.entrySet()){
             Class listener = (Class) pairs.getKey();
-            Event event = (Event) pairs.getValue();
+            ArrayList<Event> events = (ArrayList) pairs.getValue();
 
-            if(listener == OnBlurListener.class) {
-                component.addOnBlurListener(new OnBlurListener() {
-                    @Override
-                    public void onBlur(Component component) {
-                        event.event(userGui, component);
-                    }
-                });
-            }
-            else if(listener == OnClickListener.class) {
-                component.addOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(Component component) {
-                        event.event(userGui, component);
-                    }
-                });
-            }
-            else if(listener == OnDoubleClickListener.class) {
-                component.addOnDoubleClickListener(new OnDoubleClickListener() {
-                    @Override
-                    public void onDoubleClick(Component component) {
-                        event.event(userGui, component);
-                    }
-                });
-            }
-            else if(listener == OnFocusListener.class) {
-                component.addOnFocusListener(new OnFocusListener() {
-                    @Override
-                    public void onFocus(Component component) {
-                        event.event(userGui, component);
-                    }
-                });
-            }
-            else if(listener == OnMouseLeaveListener.class) {
-                component.addOnMouseLeaveListener(new OnMouseLeaveListener() {
-                    @Override
-                    public void onMouseLeave(Component component) {
-                        event.event(userGui, component);
-                    }
-                });
-            }
-            else if(listener == OnMouseEnterListener.class) {
-                component.addOnMouseEnterListener(new OnMouseEnterListener() {
-                    @Override
-                    public void onMouseEnter(Component component) {
-                        event.event(userGui, component);
-                    }
-                });
+            for(Event event : events) {
+                if (listener == OnBlurListener.class) {
+                    component.addOnBlurListener(new OnBlurListener() {
+                        @Override
+                        public void onBlur(Component component) {
+                            event.event(userGui, component);
+                        }
+                    });
+                } else if (listener == OnClickListener.class) {
+                    component.addOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(Component component) {
+                            event.event(userGui, component);
+                        }
+                    });
+                } else if (listener == OnDoubleClickListener.class) {
+                    component.addOnDoubleClickListener(new OnDoubleClickListener() {
+                        @Override
+                        public void onDoubleClick(Component component) {
+                            event.event(userGui, component);
+                        }
+                    });
+                } else if (listener == OnFocusListener.class) {
+                    component.addOnFocusListener(new OnFocusListener() {
+                        @Override
+                        public void onFocus(Component component) {
+                            event.event(userGui, component);
+                        }
+                    });
+                } else if (listener == OnMouseLeaveListener.class) {
+                    component.addOnMouseLeaveListener(new OnMouseLeaveListener() {
+                        @Override
+                        public void onMouseLeave(Component component) {
+                            event.event(userGui, component);
+                        }
+                    });
+                } else if (listener == OnMouseEnterListener.class) {
+                    component.addOnMouseEnterListener(new OnMouseEnterListener() {
+                        @Override
+                        public void onMouseEnter(Component component) {
+                            event.event(userGui, component);
+                        }
+                    });
+                }
             }
         }
     }
 
     private void initEvents(Element element){
-        if(element.hasAttribute("onBlur"))
-            events.put(OnBlurListener.class, createEvent(element.getAttribute("onBlur")));
-        if(element.hasAttribute("onClick"))
-            events.put(OnClickListener.class, createEvent(element.getAttribute("onClick")));
-        if(element.hasAttribute("onDoubleClick"))
-            events.put(OnDoubleClickListener.class, createEvent(element.getAttribute("onDoubleClick")));
-        if(element.hasAttribute("onFocus"))
-            events.put(OnFocusListener.class, createEvent(element.getAttribute("onFocus")));
-        if(element.hasAttribute("onMouseEnter"))
-            events.put(OnMouseEnterListener.class, createEvent(element.getAttribute("onMouseEnter")));
-        if(element.hasAttribute("onMouseLeave"))
-            events.put(OnMouseLeaveListener.class, createEvent(element.getAttribute("onMouseLeave")));
+        for(Object obj[] : EVENTS){
+            if(element.hasAttribute((String) obj[0])){
+                String value = element.getAttribute((String) obj[0]);
+                String values[];
+
+                if(value.contains(";"))
+                    values = value.split(";");
+                else
+                    values = new String[]{value};
+
+                for(String val : values) {
+                    ArrayList<Event> events = this.events.get(obj[1]);
+
+                    if(events == null){
+                        events = new ArrayList<>();
+                        this.events.put((Class) obj[1], events);
+                    }
+
+                    events.add(createEvent(val));
+                }
+            }
+        }
     }
 
     private Event createEvent(String value){
         Event event = null;
-        Matcher matcher = FUNCTION.matcher(value);
+        Matcher matcher = FUNCTION.matcher(value.trim());
 
         if(matcher.find()){
             String values[] = value.trim().split("\\(");

@@ -33,14 +33,19 @@ import java.util.ArrayList;
 public class AdminPlugin implements OnGuiListener {
 
     private final MinecraftGuiService service;
-    private final ArrayList<GuiFactory.GuiModel> guiModels;
+    private ArrayList<GuiFactory.GuiModel> guiModels;
     private final File xmlFolder;
+    private boolean isDevMode = false;
 
     public AdminPlugin(MinecraftGuiService service, String path) {
         this.service = service;
         this.xmlFolder = initXmlFolder(path);
         this.guiModels = initGuiModels();
         service.addPlugin(this, "MinecraftGuiAdmin", initDependencies());
+    }
+
+    public void setDevMode(boolean isDevMode) {
+        this.isDevMode = isDevMode;
     }
 
     @Override
@@ -51,6 +56,9 @@ public class AdminPlugin implements OnGuiListener {
 
     @Override
     public void onGuiInit(UserGui userGui) {
+        if(isDevMode)
+            guiModels = initGuiModels();
+
         for(GuiFactory.GuiModel guiModel : guiModels)
             guiModel.initGui(service.getPluginInterface(), userGui, this);
     }

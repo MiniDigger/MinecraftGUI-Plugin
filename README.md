@@ -1,6 +1,6 @@
 # MinecraftGui v2.0
 
-MinecraftGui is a plugin that will bring a lot of new possibilities to the developers and to the server's administrators. A new way to do the interactions between the players and the server. This plugin allow to create graphical components on the player's client. The great force of MinecraftGui is you don't need to know java to create interfaces. Everything has been simplified to allow anyone to create their own gui for their server.
+MinecraftGui is a plugin that will bring a lot of new possibilities to the developers and to the server's administrators. A new way to do the interactions between the players and the server. This plugin allow to create graphical components on the player's client. The great force of MinecraftGui is you don't need to know java to create interfaces. Everything has been simplified to allow anyone to create their own graphical user interfaces for their server.
 
 Features
 --

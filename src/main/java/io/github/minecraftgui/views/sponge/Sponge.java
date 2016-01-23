@@ -80,11 +80,11 @@ public class Sponge implements PluginInterface {
                 .executor(new CommandExecutor() {
                     @Override
                     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-                        adminPlugin.setDevMode(true);
+                        adminPlugin.setDevMode((Boolean) commandContext.getOne("state").get());
                         return CommandResult.success();
                     }
                 })
-                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("action"))))
+                .arguments(GenericArguments.onlyOne(GenericArguments.bool(Text.of("status"))))
                 .build();
 
         game.getCommandManager().register(this, commandReload, "gui");

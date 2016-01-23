@@ -42,7 +42,7 @@ import org.spongepowered.api.text.Text;
 import java.nio.file.Path;
 import java.util.UUID;
 
-@Plugin(id = "MinecraftGui", name = "Minecraft GUI Server", version = "2.0")
+@Plugin(id = "MinecraftGui", name = "Minecraft Gui Server", version = "2.0")
 public class Sponge implements PluginInterface {
 
     @Inject

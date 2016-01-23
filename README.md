@@ -25,3 +25,12 @@ How to use MinecraftGui:
   - You can create your interfaces by following this guide.
 - **Developers**
   - To implement MinecraftGui in your plugin, follow this guide.
+
+Screenshots
+--
+
+![](http://img15.hostingpics.net/pics/37530920160123122439.png)
+
+![](http://img15.hostingpics.net/pics/97058220160123122251.png)
+
+![](http://s28.postimg.org/vojy5hbrh/2016_01_23_12_23_16.png)

@@ -26,7 +26,12 @@ import io.github.minecraftgui.views.MinecraftGuiService;
 import io.github.minecraftgui.views.PluginInterface;
 import io.github.minecraftgui.views.sponge.commands.ReloadCommand;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
@@ -53,24 +58,37 @@ public class Sponge implements PluginInterface {
 
     private SpongeNetwork spongeNetwork;
     private MinecraftGuiService service;
+    private AdminPlugin adminPlugin;
 
     @Listener
     public void onInitializationEvent(GameInitializationEvent event) {
         this.spongeNetwork = new SpongeNetwork(this, game);
         this.service = new MinecraftGuiService(spongeNetwork, this);
 
-        new AdminPlugin(service, defaultConfig.toString().substring(0, defaultConfig.toString().lastIndexOf("\\")));
+        adminPlugin = new AdminPlugin(service, defaultConfig.toString().substring(0, defaultConfig.toString().lastIndexOf("\\")));
 
         game.getServiceManager().setProvider(this, MinecraftGuiService.class, this.service);
 
-        CommandSpec commandSpec = CommandSpec.builder()
+        CommandSpec commandReload = CommandSpec.builder()
                 .description(Text.of("MinecraftGui commands"))
-                .arguments()
                 .executor(new ReloadCommand(spongeNetwork))
                 .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("action"))))
                 .build();
 
-        game.getCommandManager().register(this, commandSpec, "gui");
+        CommandSpec commandDev = CommandSpec.builder()
+                .description(Text.of("MinecraftGui command to start the dev mode."))
+                .executor(new CommandExecutor() {
+                    @Override
+                    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+                        adminPlugin.setDevMode(true);
+                        return CommandResult.success();
+                    }
+                })
+                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("action"))))
+                .build();
+
+        game.getCommandManager().register(this, commandReload, "gui");
+        game.getCommandManager().register(this, commandDev, "guidev");
     }
 
     @Listener

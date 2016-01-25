@@ -44,6 +44,7 @@ import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.text.Text;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -65,7 +66,7 @@ public class Sponge implements PluginInterface {
         this.spongeNetwork = new SpongeNetwork(this, game);
         this.service = new MinecraftGuiService(spongeNetwork, this);
 
-        adminPlugin = new AdminPlugin(service, defaultConfig.toString().substring(0, defaultConfig.toString().lastIndexOf("\\")));
+        adminPlugin = new AdminPlugin(service, defaultConfig.toString().substring(0, defaultConfig.toString().lastIndexOf(File.separator)));
 
         game.getServiceManager().setProvider(this, MinecraftGuiService.class, this.service);
 

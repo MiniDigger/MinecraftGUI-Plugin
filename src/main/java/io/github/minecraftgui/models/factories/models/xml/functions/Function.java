@@ -30,7 +30,7 @@ public abstract class Function {
 
     protected final String args[];
 
-    public abstract void event(UserGui userGui, Component component);
+    public abstract void execute(UserGui userGui, Component component);
 
     public Function(String[] args) {
         this.args = args;

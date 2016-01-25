@@ -34,7 +34,7 @@ public class HideComponent extends DelayedFunction {
     }
 
     @Override
-    public void delayedEvent(UserGui userGui, Component component) {
+    public void delayedFunction(UserGui userGui, Component component) {
         for(int i = 1; i < args.length; i++){
             Component comp = userGui.getComponent(args[i]);
 

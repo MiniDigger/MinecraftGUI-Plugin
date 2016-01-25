@@ -30,7 +30,7 @@ public abstract class DelayedFunction extends Function {
 
     private final long time;
 
-    public abstract void delayedEvent(UserGui userGui, Component component);
+    public abstract void delayedFunction(UserGui userGui, Component component);
 
     public DelayedFunction(String[] args) {
         super(args);
@@ -41,7 +41,7 @@ public abstract class DelayedFunction extends Function {
     }
 
     @Override
-    public void event(UserGui userGui, Component component) {
+    public void execute(UserGui userGui, Component component) {
         if (time != 0) {
             new Thread(new Runnable() {
                 @Override
@@ -52,12 +52,12 @@ public abstract class DelayedFunction extends Function {
                         e.printStackTrace();
                     }
 
-                    delayedEvent(userGui, component);
+                    delayedFunction(userGui, component);
                 }
             }).start();
         }
         else
-            delayedEvent(userGui, component);
+            delayedFunction(userGui, component);
     }
 
 }

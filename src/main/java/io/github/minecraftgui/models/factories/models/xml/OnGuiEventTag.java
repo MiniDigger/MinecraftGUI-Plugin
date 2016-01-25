@@ -40,24 +40,24 @@ public class OnGuiEventTag extends Tag {
 
     private static final Pattern FUNCTION = Pattern.compile("\\w+\\((.+(, .+)*)*\\)");
 
-    private final HashMap<Class, Function> events;
+    private final HashMap<Class, Function> functions;
 
     public OnGuiEventTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
-        this.events = new HashMap<>();
+        this.functions = new HashMap<>();
         initEvents(element);
     }
 
-    public void setEvents(OnGuiListener plugin, UserGui userGui){
-        for(Map.Entry pairs : events.entrySet()){
+    public void setFunctions(OnGuiListener plugin, UserGui userGui){
+        for(Map.Entry pairs : functions.entrySet()){
             Class listener = (Class) pairs.getKey();
-            Function event = (Function) pairs.getValue();
+            Function function = (Function) pairs.getValue();
 
             if(listener == OnGuiListener.OnGuiOpen.class) {
                 userGui.addOnGuiOpenListener(plugin, new OnGuiListener.OnGuiOpen() {
                     @Override
                     public void onGuiOpen(UserGui userGui) {
-                        event.event(userGui, null);
+                        function.execute(userGui, null);
                     }
                 });
             }
@@ -65,7 +65,7 @@ public class OnGuiEventTag extends Tag {
                 userGui.addOnGuiCloseListener(plugin, new OnGuiListener.OnGuiClose() {
                     @Override
                     public void onGuiClose(UserGui userGui) {
-                        event.event(userGui, null);
+                        function.execute(userGui, null);
                     }
                 });
             }
@@ -74,13 +74,13 @@ public class OnGuiEventTag extends Tag {
 
     private void initEvents(Element element){
         if(element.hasAttribute("onOpen"))
-            events.put(OnGuiListener.OnGuiOpen.class, createEvent(element.getAttribute("onOpen")));
+            functions.put(OnGuiListener.OnGuiOpen.class, createFunction(element.getAttribute("onOpen")));
         if(element.hasAttribute("onClose"))
-            events.put(OnGuiListener.OnGuiClose.class, createEvent(element.getAttribute("onClose")));
+            functions.put(OnGuiListener.OnGuiClose.class, createFunction(element.getAttribute("onClose")));
     }
 
-    private Function createEvent(String value){
-        Function event = null;
+    private Function createFunction(String value){
+        Function fct = null;
         Matcher matcher = FUNCTION.matcher(value);
 
         if(matcher.find()){
@@ -92,12 +92,12 @@ public class OnGuiEventTag extends Tag {
                 args[i] = args[i].trim();
 
             switch (function){
-                case "showcomponent": event = new ShowComponent(args); break;
-                case "hidecomponent": event = new HideComponent(args); break;
+                case "showcomponent": fct = new ShowComponent(args); break;
+                case "hidecomponent": fct = new HideComponent(args); break;
             }
         }
 
-        return event;
+        return fct;
     }
 
 }

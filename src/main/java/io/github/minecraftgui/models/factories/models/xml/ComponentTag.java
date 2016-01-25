@@ -63,7 +63,7 @@ public abstract class ComponentTag extends Tag {
     protected final String form;
     private final String name;
     private final String action;
-    private final HashMap<Class, ArrayList<Function>> events;
+    private final HashMap<Class, ArrayList<Function>> functions;
 
     public ComponentTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
@@ -74,8 +74,8 @@ public abstract class ComponentTag extends Tag {
         shape = getShapeByName(element.getAttribute("shape"));
         this.classes = generateClasses(element);
         this.rules = new ArrayList<>();
-        this.events = new HashMap<>();
-        initEvents(element);
+        this.functions = new HashMap<>();
+        initFunctions(element);
     }
 
     public ArrayList<CssRule> getRules() {
@@ -108,7 +108,7 @@ public abstract class ComponentTag extends Tag {
                 form.setButton(component);
         }
 
-        setEvents(userGui, component);
+        setFunctions(userGui, component);
     }
 
     protected void initAfterChildrenCreated(PluginInterface service, UserGui userGui, Component component){}
@@ -158,52 +158,52 @@ public abstract class ComponentTag extends Tag {
         return RectangleColor.class;
     }
 
-    private void setEvents(UserGui userGui, Component component){
-        for(Map.Entry pairs : events.entrySet()){
+    private void setFunctions(UserGui userGui, Component component){
+        for(Map.Entry pairs : functions.entrySet()){
             Class listener = (Class) pairs.getKey();
-            ArrayList<Function> events = (ArrayList) pairs.getValue();
+            ArrayList<Function> functions = (ArrayList) pairs.getValue();
 
-            for(Function event : events) {
+            for(Function function : functions) {
                 if (listener == OnBlurListener.class) {
                     component.addOnBlurListener(new OnBlurListener() {
                         @Override
                         public void onBlur(Component component) {
-                            event.event(userGui, component);
+                            function.execute(userGui, component);
                         }
                     });
                 } else if (listener == OnClickListener.class) {
                     component.addOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(Component component) {
-                            event.event(userGui, component);
+                            function.execute(userGui, component);
                         }
                     });
                 } else if (listener == OnDoubleClickListener.class) {
                     component.addOnDoubleClickListener(new OnDoubleClickListener() {
                         @Override
                         public void onDoubleClick(Component component) {
-                            event.event(userGui, component);
+                            function.execute(userGui, component);
                         }
                     });
                 } else if (listener == OnFocusListener.class) {
                     component.addOnFocusListener(new OnFocusListener() {
                         @Override
                         public void onFocus(Component component) {
-                            event.event(userGui, component);
+                            function.execute(userGui, component);
                         }
                     });
                 } else if (listener == OnMouseLeaveListener.class) {
                     component.addOnMouseLeaveListener(new OnMouseLeaveListener() {
                         @Override
                         public void onMouseLeave(Component component) {
-                            event.event(userGui, component);
+                            function.execute(userGui, component);
                         }
                     });
                 } else if (listener == OnMouseEnterListener.class) {
                     component.addOnMouseEnterListener(new OnMouseEnterListener() {
                         @Override
                         public void onMouseEnter(Component component) {
-                            event.event(userGui, component);
+                            function.execute(userGui, component);
                         }
                     });
                 }
@@ -211,7 +211,7 @@ public abstract class ComponentTag extends Tag {
         }
     }
 
-    private void initEvents(Element element){
+    private void initFunctions(Element element){
         for(Object obj[] : EVENTS){
             if(element.hasAttribute((String) obj[0])){
                 String value = element.getAttribute((String) obj[0]);
@@ -223,21 +223,21 @@ public abstract class ComponentTag extends Tag {
                     values = new String[]{value};
 
                 for(String val : values) {
-                    ArrayList<Function> events = this.events.get(obj[1]);
+                    ArrayList<Function> functions = this.functions.get(obj[1]);
 
-                    if(events == null){
-                        events = new ArrayList<>();
-                        this.events.put((Class) obj[1], events);
+                    if(functions == null){
+                        functions = new ArrayList<>();
+                        this.functions.put((Class) obj[1], functions);
                     }
 
-                    events.add(createEvent(val));
+                    functions.add(createFunction(val));
                 }
             }
         }
     }
 
-    private Function createEvent(String value){
-        Function event = null;
+    private Function createFunction(String value){
+        Function fct = null;
         Matcher matcher = FUNCTION.matcher(value.trim());
 
         if(matcher.find()){
@@ -249,14 +249,14 @@ public abstract class ComponentTag extends Tag {
                 args[i] = args[i].trim();
 
             switch (function){
-                case "hidechildren": event = new HideChildren(args); break;
-                case "showchildren": event = new ShowChildren(args); break;
-                case "showcomponent": event = new ShowComponent(args); break;
-                case "hidecomponent": event = new HideComponent(args); break;
+                case "hidechildren": fct = new HideChildren(args); break;
+                case "showchildren": fct = new ShowChildren(args); break;
+                case "showcomponent": fct = new ShowComponent(args); break;
+                case "hidecomponent": fct = new HideComponent(args); break;
             }
         }
 
-        return event;
+        return fct;
     }
 
 }

@@ -34,7 +34,7 @@ public class HideChildren extends DelayedFunction {
     }
 
     @Override
-    public void delayedEvent(UserGui userGui, Component component) {
+    public void delayedFunction(UserGui userGui, Component component) {
         for(Component child : component.getChildren())
             child.setVisibility(Visibility.INVISIBLE);
     }

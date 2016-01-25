@@ -285,7 +285,7 @@ public class GuiFactory {
 
             if(tags != null)
                 for(Tag tag : tags)
-                    ((OnGuiEventTag) tag).setEvents(plugin, gui);
+                    ((OnGuiEventTag) tag).setFunctions(plugin, gui);
         }
 
         private ArrayList<Tag> getCssFiles(){

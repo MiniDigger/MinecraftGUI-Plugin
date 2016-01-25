@@ -24,7 +24,7 @@ import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.factories.models.css.CssRule;
-import io.github.minecraftgui.models.factories.models.xml.events.*;
+import io.github.minecraftgui.models.factories.models.xml.functions.*;
 import io.github.minecraftgui.models.forms.Form;
 import io.github.minecraftgui.models.forms.Valuable;
 import io.github.minecraftgui.models.listeners.*;
@@ -63,7 +63,7 @@ public abstract class ComponentTag extends Tag {
     protected final String form;
     private final String name;
     private final String action;
-    private final HashMap<Class, ArrayList<Event>> events;
+    private final HashMap<Class, ArrayList<Function>> events;
 
     public ComponentTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
@@ -161,9 +161,9 @@ public abstract class ComponentTag extends Tag {
     private void setEvents(UserGui userGui, Component component){
         for(Map.Entry pairs : events.entrySet()){
             Class listener = (Class) pairs.getKey();
-            ArrayList<Event> events = (ArrayList) pairs.getValue();
+            ArrayList<Function> events = (ArrayList) pairs.getValue();
 
-            for(Event event : events) {
+            for(Function event : events) {
                 if (listener == OnBlurListener.class) {
                     component.addOnBlurListener(new OnBlurListener() {
                         @Override
@@ -223,7 +223,7 @@ public abstract class ComponentTag extends Tag {
                     values = new String[]{value};
 
                 for(String val : values) {
-                    ArrayList<Event> events = this.events.get(obj[1]);
+                    ArrayList<Function> events = this.events.get(obj[1]);
 
                     if(events == null){
                         events = new ArrayList<>();
@@ -236,8 +236,8 @@ public abstract class ComponentTag extends Tag {
         }
     }
 
-    private Event createEvent(String value){
-        Event event = null;
+    private Function createEvent(String value){
+        Function event = null;
         Matcher matcher = FUNCTION.matcher(value.trim());
 
         if(matcher.find()){

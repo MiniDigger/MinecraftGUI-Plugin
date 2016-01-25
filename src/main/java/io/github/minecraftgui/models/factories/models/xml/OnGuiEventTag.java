@@ -22,9 +22,9 @@ package io.github.minecraftgui.models.factories.models.xml;
 
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
-import io.github.minecraftgui.models.factories.models.xml.events.Event;
-import io.github.minecraftgui.models.factories.models.xml.events.HideComponent;
-import io.github.minecraftgui.models.factories.models.xml.events.ShowComponent;
+import io.github.minecraftgui.models.factories.models.xml.functions.Function;
+import io.github.minecraftgui.models.factories.models.xml.functions.HideComponent;
+import io.github.minecraftgui.models.factories.models.xml.functions.ShowComponent;
 import io.github.minecraftgui.models.listeners.OnGuiListener;
 import org.w3c.dom.Element;
 
@@ -40,7 +40,7 @@ public class OnGuiEventTag extends Tag {
 
     private static final Pattern FUNCTION = Pattern.compile("\\w+\\((.+(, .+)*)*\\)");
 
-    private final HashMap<Class, Event> events;
+    private final HashMap<Class, Function> events;
 
     public OnGuiEventTag(Element element, GuiFactory.GuiModel model) {
         super(element, model);
@@ -51,7 +51,7 @@ public class OnGuiEventTag extends Tag {
     public void setEvents(OnGuiListener plugin, UserGui userGui){
         for(Map.Entry pairs : events.entrySet()){
             Class listener = (Class) pairs.getKey();
-            Event event = (Event) pairs.getValue();
+            Function event = (Function) pairs.getValue();
 
             if(listener == OnGuiListener.OnGuiOpen.class) {
                 userGui.addOnGuiOpenListener(plugin, new OnGuiListener.OnGuiOpen() {
@@ -79,8 +79,8 @@ public class OnGuiEventTag extends Tag {
             events.put(OnGuiListener.OnGuiClose.class, createEvent(element.getAttribute("onClose")));
     }
 
-    private Event createEvent(String value){
-        Event event = null;
+    private Function createEvent(String value){
+        Function event = null;
         Matcher matcher = FUNCTION.matcher(value);
 
         if(matcher.find()){

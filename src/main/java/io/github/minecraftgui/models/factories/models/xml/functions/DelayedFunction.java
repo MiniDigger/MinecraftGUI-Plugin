@@ -18,7 +18,7 @@
  *
  */
 
-package io.github.minecraftgui.models.factories.models.xml.events;
+package io.github.minecraftgui.models.factories.models.xml.functions;
 
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.UserGui;
@@ -26,13 +26,13 @@ import io.github.minecraftgui.models.components.UserGui;
 /**
  * Created by Samuel on 2016-01-17.
  */
-public abstract class DelayedEvent extends Event {
+public abstract class DelayedFunction extends Function {
 
     private final long time;
 
     public abstract void delayedEvent(UserGui userGui, Component component);
 
-    public DelayedEvent(String[] args) {
+    public DelayedFunction(String[] args) {
         super(args);
         if(args.length >= 1)
             time = Long.parseLong(args[0]);

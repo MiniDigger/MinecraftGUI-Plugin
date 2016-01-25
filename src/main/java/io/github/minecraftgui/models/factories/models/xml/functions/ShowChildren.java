@@ -18,7 +18,7 @@
  *
  */
 
-package io.github.minecraftgui.models.factories.models.xml.events;
+package io.github.minecraftgui.models.factories.models.xml.functions;
 
 import io.github.minecraftgui.models.components.Component;
 import io.github.minecraftgui.models.components.UserGui;
@@ -27,16 +27,16 @@ import io.github.minecraftgui.models.components.Visibility;
 /**
  * Created by Samuel on 2016-01-17.
  */
-public class HideChildren extends DelayedEvent{
+public class ShowChildren extends DelayedFunction {
 
-    public HideChildren(String[] args) {
+    public ShowChildren(String[] args) {
         super(args);
     }
 
     @Override
     public void delayedEvent(UserGui userGui, Component component) {
         for(Component child : component.getChildren())
-            child.setVisibility(Visibility.INVISIBLE);
+            child.setVisibility(Visibility.VISIBLE);
     }
 
 }

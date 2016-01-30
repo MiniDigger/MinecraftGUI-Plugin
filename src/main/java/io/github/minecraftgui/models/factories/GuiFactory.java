@@ -37,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
 
 /**
  * Created by Samuel on 2016-01-05.
@@ -124,11 +125,11 @@ public class GuiFactory {
 
     private static void loadCssFiles(GuiModel model, File file){
         if(model.getCssFiles() != null) {
-            String path = file.getPath().substring(0, file.getPath().lastIndexOf("\\")+1);
+            String path = file.getPath().substring(0, file.getPath().lastIndexOf(File.separator)+1);
 
             for(Tag tag : model.getCssFiles()){
                 LinkTag linkTag = (LinkTag) tag;
-                File css = new File(path+linkTag.getSrc());
+                File css = new File(path+linkTag.getSrc().replaceAll("/", Matcher.quoteReplacement(File.separator)));
 
                 if(css.exists() && css.isFile())
                     loadCssFile(model, css);

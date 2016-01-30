@@ -73,7 +73,7 @@ public class AdminPlugin implements OnGuiListener {
     }
 
     private File initXmlFolder(String path){
-        File file = new File(path+"/xml");
+        File file = new File(path+File.separator+"xml");
         file.mkdirs();
 
         return file;

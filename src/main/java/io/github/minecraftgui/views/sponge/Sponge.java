@@ -85,7 +85,7 @@ public class Sponge implements PluginInterface {
                         return CommandResult.success();
                     }
                 })
-                .arguments(GenericArguments.onlyOne(GenericArguments.bool(Text.of("status"))))
+                .arguments(GenericArguments.onlyOne(GenericArguments.bool(Text.of("state"))))
                 .build();
 
         game.getCommandManager().register(this, commandReload, "gui");

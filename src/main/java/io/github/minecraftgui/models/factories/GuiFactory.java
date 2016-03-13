@@ -31,10 +31,7 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -214,9 +211,18 @@ public class GuiFactory {
 
     private static Document getDocument(File file){
         try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            String line;
+            String buffer = "";
+
+            while((line = br.readLine()) != null)
+                buffer += line;
+
+            br.close();
+
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(new FileInputStream(file));
+            Document doc = dBuilder.parse(new ByteArrayInputStream(buffer.getBytes("UTF-8")));
             doc.getDocumentElement().normalize();
 
             return doc;

@@ -27,8 +27,8 @@ import io.github.minecraftgui.models.components.Component;
  */
 public abstract class Rectangle<V> extends Shape<V> {
 
-    public Rectangle(String type, String componentShape, Component component) {
-        super(type, componentShape, component);
+    public Rectangle( String type, String componentShape, Component component ) {
+        super( type, componentShape, component );
     }
 
 }

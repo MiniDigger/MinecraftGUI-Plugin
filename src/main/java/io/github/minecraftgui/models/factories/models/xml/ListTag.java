@@ -39,44 +39,49 @@ public class ListTag extends ComponentTag {
     private final ComponentTag buttonListAfter;
     private final String dropdown;
 
-    public ListTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        dropdown = element.getAttribute("dropdown");
-        buttonListBefore = (ComponentTag) getXmlTagSetAs(element, "before");
-        buttonListAfter = (ComponentTag) getXmlTagSetAs(element, "after");
+    public ListTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        dropdown = element.getAttribute( "dropdown" );
+        buttonListBefore = (ComponentTag) getXmlTagSetAs( element, "before" );
+        buttonListAfter = (ComponentTag) getXmlTagSetAs( element, "after" );
 
-        if(buttonListBefore != null)
-            model.addTag(buttonListBefore);
-        if(buttonListAfter != null)
-            model.addTag(buttonListAfter);
+        if ( buttonListBefore != null ) {
+            model.addTag( buttonListBefore );
+        }
+        if ( buttonListAfter != null ) {
+            model.addTag( buttonListAfter );
+        }
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        Component blb = buttonListBefore == null?new Div(RectangleColor.class):buttonListBefore.createComponent(service, userGui);
-        Component bla = buttonListAfter == null?new Div(RectangleColor.class):buttonListAfter.createComponent(service, userGui);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        Component blb = buttonListBefore == null ? new Div( RectangleColor.class ) : buttonListBefore.createComponent( service, userGui );
+        Component bla = buttonListAfter == null ? new Div( RectangleColor.class ) : buttonListAfter.createComponent( service, userGui );
 
-        return new List((Class<? extends Rectangle>) shape, blb, bla, id);
+        return new List( (Class<? extends Rectangle>) shape, blb, bla, id );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
         List list = (List) component;
 
-        if(buttonListAfter != null)
-            buttonListAfter.setAttributes(plugin, userGui, list.getButtonListAfter());
+        if ( buttonListAfter != null ) {
+            buttonListAfter.setAttributes( plugin, userGui, list.getButtonListAfter() );
+        }
 
-        if(buttonListBefore !=  null)
-            buttonListBefore.setAttributes(plugin, userGui, list.getButtonListBefore());
+        if ( buttonListBefore != null ) {
+            buttonListBefore.setAttributes( plugin, userGui, list.getButtonListBefore() );
+        }
 
-        if(!dropdown.equals(""))
-            userGui.getDropdown(this.dropdown).setList(list);
+        if ( !dropdown.equals( "" ) ) {
+            userGui.getDropdown( this.dropdown ).setList( list );
+        }
     }
 
     @Override
-    protected void initAfterChildrenCreated(PluginInterface service, UserGui userGui, Component component) {
-        super.initAfterChildrenCreated(service, userGui, component);
-        ((List) component).update();
+    protected void initAfterChildrenCreated( PluginInterface service, UserGui userGui, Component component ) {
+        super.initAfterChildrenCreated( service, userGui, component );
+        ( (List) component ).update();
     }
 }

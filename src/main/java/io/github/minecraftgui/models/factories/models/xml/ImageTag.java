@@ -29,8 +29,8 @@ import org.w3c.dom.Element;
  */
 public class ImageTag extends DivTag {
 
-    public ImageTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public ImageTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
         this.shape = RectangleImage.class;
     }
 

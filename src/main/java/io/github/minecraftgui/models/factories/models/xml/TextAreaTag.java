@@ -38,37 +38,41 @@ public class TextAreaTag extends ComponentTag {
     private final ComponentTag buttonLineBefore;
     private final ComponentTag buttonLineAfter;
 
-    public TextAreaTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        buttonLineAfter = (ComponentTag) getXmlTagSetAs(element, "after");
-        buttonLineBefore = (ComponentTag) getXmlTagSetAs(element, "before");
+    public TextAreaTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        buttonLineAfter = (ComponentTag) getXmlTagSetAs( element, "after" );
+        buttonLineBefore = (ComponentTag) getXmlTagSetAs( element, "before" );
 
-        if(buttonLineAfter != null)
-            model.addTag(buttonLineAfter);
+        if ( buttonLineAfter != null ) {
+            model.addTag( buttonLineAfter );
+        }
 
-        if(buttonLineBefore != null)
-            model.addTag(buttonLineBefore);
+        if ( buttonLineBefore != null ) {
+            model.addTag( buttonLineBefore );
+        }
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        Component blb = buttonLineBefore == null?new Div(RectangleColor.class):buttonLineBefore.createComponent(service, userGui);
-        Component bla = buttonLineAfter == null?new Div(RectangleColor.class):buttonLineAfter.createComponent(service, userGui);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        Component blb = buttonLineBefore == null ? new Div( RectangleColor.class ) : buttonLineBefore.createComponent( service, userGui );
+        Component bla = buttonLineAfter == null ? new Div( RectangleColor.class ) : buttonLineAfter.createComponent( service, userGui );
 
-        return new TextArea((Class<? extends Rectangle>) shape, id, blb, bla);
+        return new TextArea( (Class<? extends Rectangle>) shape, id, blb, bla );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
         TextArea textArea = (TextArea) component;
 
-        if(buttonLineAfter != null)
-            buttonLineAfter.setAttributes(plugin, userGui, textArea.getButtonLineAfter());
+        if ( buttonLineAfter != null ) {
+            buttonLineAfter.setAttributes( plugin, userGui, textArea.getButtonLineAfter() );
+        }
 
-        if(buttonLineBefore != null)
-            buttonLineBefore.setAttributes(plugin, userGui, textArea.getButtonLineBefore());
+        if ( buttonLineBefore != null ) {
+            buttonLineBefore.setAttributes( plugin, userGui, textArea.getButtonLineBefore() );
+        }
 
-        textArea.setText(convertString(plugin, userGui, getText()));
+        textArea.setText( convertString( plugin, userGui, getText() ) );
     }
 }

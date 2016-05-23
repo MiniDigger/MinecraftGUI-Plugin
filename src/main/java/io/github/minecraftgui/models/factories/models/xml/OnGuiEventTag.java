@@ -38,62 +38,68 @@ import java.util.regex.Pattern;
  */
 public class OnGuiEventTag extends Tag {
 
-    private static final Pattern FUNCTION = Pattern.compile("\\w+\\((.+(, .+)*)*\\)");
+    private static final Pattern FUNCTION = Pattern.compile( "\\w+\\((.+(, .+)*)*\\)" );
 
     private final HashMap<Class, Function> functions;
 
-    public OnGuiEventTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public OnGuiEventTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
         this.functions = new HashMap<>();
-        initEvents(element);
+        initEvents( element );
     }
 
-    public void setFunctions(OnGuiListener plugin, UserGui userGui){
-        for(Map.Entry pairs : functions.entrySet()){
+    public void setFunctions( OnGuiListener plugin, UserGui userGui ) {
+        for ( Map.Entry pairs : functions.entrySet() ) {
             Class listener = (Class) pairs.getKey();
             Function function = (Function) pairs.getValue();
 
-            if(listener == OnGuiListener.OnGuiOpen.class) {
-                userGui.addOnGuiOpenListener(plugin, new OnGuiListener.OnGuiOpen() {
+            if ( listener == OnGuiListener.OnGuiOpen.class ) {
+                userGui.addOnGuiOpenListener( plugin, new OnGuiListener.OnGuiOpen() {
                     @Override
-                    public void onGuiOpen(UserGui userGui) {
-                        function.execute(userGui, null);
+                    public void onGuiOpen( UserGui userGui ) {
+                        function.execute( userGui, null );
                     }
-                });
-            }
-            else if(listener == OnGuiListener.OnGuiClose.class) {
-                userGui.addOnGuiCloseListener(plugin, new OnGuiListener.OnGuiClose() {
+                } );
+            } else if ( listener == OnGuiListener.OnGuiClose.class ) {
+                userGui.addOnGuiCloseListener( plugin, new OnGuiListener.OnGuiClose() {
                     @Override
-                    public void onGuiClose(UserGui userGui) {
-                        function.execute(userGui, null);
+                    public void onGuiClose( UserGui userGui ) {
+                        function.execute( userGui, null );
                     }
-                });
+                } );
             }
         }
     }
 
-    private void initEvents(Element element){
-        if(element.hasAttribute("onOpen"))
-            functions.put(OnGuiListener.OnGuiOpen.class, createFunction(element.getAttribute("onOpen")));
-        if(element.hasAttribute("onClose"))
-            functions.put(OnGuiListener.OnGuiClose.class, createFunction(element.getAttribute("onClose")));
+    private void initEvents( Element element ) {
+        if ( element.hasAttribute( "onOpen" ) ) {
+            functions.put( OnGuiListener.OnGuiOpen.class, createFunction( element.getAttribute( "onOpen" ) ) );
+        }
+        if ( element.hasAttribute( "onClose" ) ) {
+            functions.put( OnGuiListener.OnGuiClose.class, createFunction( element.getAttribute( "onClose" ) ) );
+        }
     }
 
-    private Function createFunction(String value){
+    private Function createFunction( String value ) {
         Function fct = null;
-        Matcher matcher = FUNCTION.matcher(value);
+        Matcher matcher = FUNCTION.matcher( value );
 
-        if(matcher.find()){
-            String values[] = value.trim().split("\\(");
-            String args[] = values[1].substring(0, values[1].indexOf(")")).split(",");
+        if ( matcher.find() ) {
+            String values[] = value.trim().split( "\\(" );
+            String args[] = values[1].substring( 0, values[1].indexOf( ")" ) ).split( "," );
             String function = values[0].toLowerCase().trim();
 
-            for(int i = 0; i < args.length; i++)
+            for ( int i = 0; i < args.length; i++ ) {
                 args[i] = args[i].trim();
+            }
 
-            switch (function){
-                case "showcomponent": fct = new ShowComponent(args); break;
-                case "hidecomponent": fct = new HideComponent(args); break;
+            switch ( function ) {
+                case "showcomponent":
+                    fct = new ShowComponent( args );
+                    break;
+                case "hidecomponent":
+                    fct = new HideComponent( args );
+                    break;
             }
         }
 

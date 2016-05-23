@@ -35,39 +35,40 @@ public abstract class ComponentValuable<V> extends Component implements Valuable
     private final CopyOnWriteArrayList<OnValueChangeListener> listeners;
     protected V value;
 
-    public ComponentValuable(String type, Class<? extends Shape> shape) {
-        super(type, shape);
+    public ComponentValuable( String type, Class<? extends Shape> shape ) {
+        super( type, shape );
         this.listeners = new CopyOnWriteArrayList<>();
     }
 
-    public ComponentValuable(String type, Class<? extends Shape> shape, String id) {
-        super(type, shape, id);
+    public ComponentValuable( String type, Class<? extends Shape> shape, String id ) {
+        super( type, shape, id );
         this.listeners = new CopyOnWriteArrayList<>();
     }
 
     @Override
     protected void init() {
         super.init();
-        userConnection.addEventListener(this, NetworkController.ON_VALUE_CHANGE_LISTENER);
+        userConnection.addEventListener( this, NetworkController.ON_VALUE_CHANGE_LISTENER );
     }
 
-    public final void addOnValueChangeListener(OnValueChangeListener listener){
-        this.listeners.add(listener);
+    public final void addOnValueChangeListener( OnValueChangeListener listener ) {
+        this.listeners.add( listener );
     }
 
-    public final void removeOnValueChangeListener(OnValueChangeListener listener){
-        this.listeners.remove(listener);
+    public final void removeOnValueChangeListener( OnValueChangeListener listener ) {
+        this.listeners.remove( listener );
     }
 
     public V getValue() {
         return value;
     }
 
-    public void setValue(V value){
+    public void setValue( V value ) {
         this.value = value;
 
-        for(OnValueChangeListener listener : listeners)
-            listener.onValueChange(this);
+        for ( OnValueChangeListener listener : listeners ) {
+            listener.onValueChange( this );
+        }
     }
 
 }

@@ -27,49 +27,64 @@ import io.github.minecraftgui.controllers.NetworkController;
  */
 public class AttributeDouble extends Attribute {
 
-    public static final AttributeDouble WIDTH = new AttributeDouble(NetworkController.WIDTH);
-    public static final AttributeDouble HEIGHT = new AttributeDouble(NetworkController.HEIGHT);
-    public static final AttributeDouble BORDER_TOP = new AttributeDouble(NetworkController.BORDER_TOP);
-    public static final AttributeDouble BORDER_LEFT = new AttributeDouble(NetworkController.BORDER_LEFT);
-    public static final AttributeDouble BORDER_RIGHT = new AttributeDouble(NetworkController.BORDER_RIGHT);
-    public static final AttributeDouble BORDER_BOTTOM = new AttributeDouble(NetworkController.BORDER_BOTTOM);
-    public static final AttributeDouble PADDING_TOP = new AttributeDouble(NetworkController.PADDING_TOP);
-    public static final AttributeDouble PADDING_LEFT = new AttributeDouble(NetworkController.PADDING_LEFT);
-    public static final AttributeDouble PADDING_RIGHT = new AttributeDouble(NetworkController.PADDING_RIGHT);
-    public static final AttributeDouble PADDING_BOTTOM = new AttributeDouble(NetworkController.PADDING_BOTTOM);
-    public static final AttributeDouble MARGIN_TOP = new AttributeDouble(NetworkController.MARGIN_TOP);
-    public static final AttributeDouble MARGIN_LEFT = new AttributeDouble(NetworkController.MARGIN_LEFT);
-    public static final AttributeDouble MARGIN_RIGHT = new AttributeDouble(NetworkController.MARGIN_RIGHT);
-    public static final AttributeDouble MARGIN_BOTTOM = new AttributeDouble(NetworkController.MARGIN_BOTTOM);
-    public static final AttributeDouble TEXT = new AttributeDouble(NetworkController.TEXT);
+    public static final AttributeDouble WIDTH = new AttributeDouble( NetworkController.WIDTH );
+    public static final AttributeDouble HEIGHT = new AttributeDouble( NetworkController.HEIGHT );
+    public static final AttributeDouble BORDER_TOP = new AttributeDouble( NetworkController.BORDER_TOP );
+    public static final AttributeDouble BORDER_LEFT = new AttributeDouble( NetworkController.BORDER_LEFT );
+    public static final AttributeDouble BORDER_RIGHT = new AttributeDouble( NetworkController.BORDER_RIGHT );
+    public static final AttributeDouble BORDER_BOTTOM = new AttributeDouble( NetworkController.BORDER_BOTTOM );
+    public static final AttributeDouble PADDING_TOP = new AttributeDouble( NetworkController.PADDING_TOP );
+    public static final AttributeDouble PADDING_LEFT = new AttributeDouble( NetworkController.PADDING_LEFT );
+    public static final AttributeDouble PADDING_RIGHT = new AttributeDouble( NetworkController.PADDING_RIGHT );
+    public static final AttributeDouble PADDING_BOTTOM = new AttributeDouble( NetworkController.PADDING_BOTTOM );
+    public static final AttributeDouble MARGIN_TOP = new AttributeDouble( NetworkController.MARGIN_TOP );
+    public static final AttributeDouble MARGIN_LEFT = new AttributeDouble( NetworkController.MARGIN_LEFT );
+    public static final AttributeDouble MARGIN_RIGHT = new AttributeDouble( NetworkController.MARGIN_RIGHT );
+    public static final AttributeDouble MARGIN_BOTTOM = new AttributeDouble( NetworkController.MARGIN_BOTTOM );
+    public static final AttributeDouble TEXT = new AttributeDouble( NetworkController.TEXT );
 
-    private AttributeDouble(String name) {
-        super(name);
+    private AttributeDouble( String name ) {
+        super( name );
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return getName();
     }
 
-    public static AttributeDouble valueOf(String name){
-        name = name.replaceAll("-", "_");
-        switch (name.toUpperCase()){
-            case "WIDTH": return WIDTH;
-            case "HEIGHT": return HEIGHT;
-            case "BORDER_TOP": return BORDER_TOP;
-            case "BORDER_LEFT": return BORDER_LEFT;
-            case "BORDER_RIGHT": return BORDER_RIGHT;
-            case "BORDER_BOTTOM": return BORDER_BOTTOM;
-            case "PADDING_TOP": return PADDING_TOP;
-            case "PADDING_LEFT": return PADDING_LEFT;
-            case "PADDING_RIGHT": return PADDING_RIGHT;
-            case "PADDING_BOTTOM": return PADDING_BOTTOM;
-            case "MARGIN_TOP": return MARGIN_TOP;
-            case "MARGIN_LEFT": return MARGIN_LEFT;
-            case "MARGIN_RIGHT": return MARGIN_RIGHT;
-            case "MARGIN_BOTTOM": return MARGIN_BOTTOM;
-            case "TEXT": return TEXT;
+    public static AttributeDouble valueOf( String name ) {
+        name = name.replaceAll( "-", "_" );
+        switch ( name.toUpperCase() ) {
+            case "WIDTH":
+                return WIDTH;
+            case "HEIGHT":
+                return HEIGHT;
+            case "BORDER_TOP":
+                return BORDER_TOP;
+            case "BORDER_LEFT":
+                return BORDER_LEFT;
+            case "BORDER_RIGHT":
+                return BORDER_RIGHT;
+            case "BORDER_BOTTOM":
+                return BORDER_BOTTOM;
+            case "PADDING_TOP":
+                return PADDING_TOP;
+            case "PADDING_LEFT":
+                return PADDING_LEFT;
+            case "PADDING_RIGHT":
+                return PADDING_RIGHT;
+            case "PADDING_BOTTOM":
+                return PADDING_BOTTOM;
+            case "MARGIN_TOP":
+                return MARGIN_TOP;
+            case "MARGIN_LEFT":
+                return MARGIN_LEFT;
+            case "MARGIN_RIGHT":
+                return MARGIN_RIGHT;
+            case "MARGIN_BOTTOM":
+                return MARGIN_BOTTOM;
+            case "TEXT":
+                return TEXT;
         }
 
         return null;

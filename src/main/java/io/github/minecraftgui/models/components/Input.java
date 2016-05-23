@@ -28,12 +28,12 @@ import io.github.minecraftgui.models.shapes.Rectangle;
  */
 public class Input extends ComponentEditableText {
 
-    public Input(Class<? extends Rectangle> shape) {
-        super(NetworkController.INPUT, shape);
+    public Input( Class<? extends Rectangle> shape ) {
+        super( NetworkController.INPUT, shape );
     }
 
-    public Input(Class<? extends Rectangle> shape, String id) {
-        super(NetworkController.INPUT, shape, id);
+    public Input( Class<? extends Rectangle> shape, String id ) {
+        super( NetworkController.INPUT, shape, id );
     }
 
     @Override

@@ -40,29 +40,29 @@ public class CheckBoxTag extends ComponentTag {
     private final String group;
     private final String value;
 
-    public CheckBoxTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        shapeValueOnTrue = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeValueOnTrue"));
-        shapeValueOnFalse = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeValueOnFalse"));
-        checked = element.hasAttribute("checked")?Boolean.parseBoolean(element.getAttribute("checked")) : false;
-        group = element.getAttribute("group");
-        value = element.getAttribute("value");
+    public CheckBoxTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        shapeValueOnTrue = (Class<? extends Rectangle>) getShapeByName( element.getAttribute( "shapeValueOnTrue" ) );
+        shapeValueOnFalse = (Class<? extends Rectangle>) getShapeByName( element.getAttribute( "shapeValueOnFalse" ) );
+        checked = element.hasAttribute( "checked" ) ? Boolean.parseBoolean( element.getAttribute( "checked" ) ) : false;
+        group = element.getAttribute( "group" );
+        value = element.getAttribute( "value" );
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-       return new CheckBox(shapeValueOnTrue, shapeValueOnFalse, id);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        return new CheckBox( shapeValueOnTrue, shapeValueOnFalse, id );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
-        ((CheckBox) component).setChecked(checked);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
+        ( (CheckBox) component ).setChecked( checked );
 
-        if(!form.equals("") && !group.equals("")) {
-            RadioButtonGroup radioButtonGroup = userGui.getRadioButtonGroup(group);
-            userGui.getForm(form).addValuable(group, radioButtonGroup);
-            radioButtonGroup.addCheckBox((CheckBox) component, value);
+        if ( !form.equals( "" ) && !group.equals( "" ) ) {
+            RadioButtonGroup radioButtonGroup = userGui.getRadioButtonGroup( group );
+            userGui.getForm( form ).addValuable( group, radioButtonGroup );
+            radioButtonGroup.addCheckBox( (CheckBox) component, value );
         }
     }
 

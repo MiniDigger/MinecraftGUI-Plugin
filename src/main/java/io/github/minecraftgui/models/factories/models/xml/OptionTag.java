@@ -38,25 +38,26 @@ public class OptionTag extends ComponentTag {
     protected final String value;
     private final String dropdown;
 
-    public OptionTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        dropdown = element.getAttribute("dropdown");
-        value = element.getAttribute("value");
+    public OptionTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        dropdown = element.getAttribute( "dropdown" );
+        value = element.getAttribute( "value" );
     }
 
     @Override
-    protected Component createComponent(PluginInterface service, UserGui userGui) {
-        return new Paragraph((Class<? extends Rectangle>) shape, id, new Div(RectangleColor.class), new Div(RectangleColor.class));
+    protected Component createComponent( PluginInterface service, UserGui userGui ) {
+        return new Paragraph( (Class<? extends Rectangle>) shape, id, new Div( RectangleColor.class ), new Div( RectangleColor.class ) );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
         Paragraph paragraph = (Paragraph) component;
 
-        paragraph.setText(convertString(plugin, userGui, getText()));
+        paragraph.setText( convertString( plugin, userGui, getText() ) );
 
-        if(!dropdown.equals(""))
-            userGui.getDropdown(this.dropdown).addValue(paragraph, getText());
+        if ( !dropdown.equals( "" ) ) {
+            userGui.getDropdown( this.dropdown ).addValue( paragraph, getText() );
+        }
     }
 }

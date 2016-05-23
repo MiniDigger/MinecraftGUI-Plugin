@@ -37,17 +37,17 @@ public class ReloadCommand implements CommandExecutor {
 
     private final NetworkController networkController;
 
-    public ReloadCommand(NetworkController networkController) {
+    public ReloadCommand( NetworkController networkController ) {
         this.networkController = networkController;
     }
 
     @Override
-    public CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
-        if(commandSource instanceof Player && args.<String>getOne("action").get().equalsIgnoreCase("reload")){
+    public CommandResult execute( CommandSource commandSource, CommandContext args ) throws CommandException {
+        if ( commandSource instanceof Player && args.<String>getOne( "action" ).get().equalsIgnoreCase( "reload" ) ) {
             Player player = (Player) commandSource;
 
-            player.sendMessage(Text.builder("Your gui will be reloaded.").color(TextColors.GRAY).build());
-            networkController.reloadUser(player.getUniqueId());
+            player.sendMessage( Text.builder( "Your gui will be reloaded." ).color( TextColors.GRAY ).build() );
+            networkController.reloadUser( player.getUniqueId() );
         }
 
         return CommandResult.success();

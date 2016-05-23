@@ -29,28 +29,28 @@ import io.github.minecraftgui.models.shapes.Shape;
  */
 public class ProgressBar extends ComponentValuable<Double> {
 
-    public enum Type{HORIZONTAL, VERTICAL}
+    public enum Type {HORIZONTAL, VERTICAL}
 
     private final Shape shapeOnProgress;
 
-    public ProgressBar(Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress) {
-        super((type == Type.HORIZONTAL? NetworkController.PROGRESS_BAR_HORIZONTAL:NetworkController.PROGRESS_BAR_VERTICAL), shape);
-        this.shapeOnProgress = getShapeByClass(shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS);
+    public ProgressBar( Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress ) {
+        super( ( type == Type.HORIZONTAL ? NetworkController.PROGRESS_BAR_HORIZONTAL : NetworkController.PROGRESS_BAR_VERTICAL ), shape );
+        this.shapeOnProgress = getShapeByClass( shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS );
     }
 
-    public ProgressBar(Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress, String id) {
-        super((type == Type.HORIZONTAL? NetworkController.PROGRESS_BAR_HORIZONTAL:NetworkController.PROGRESS_BAR_VERTICAL), shape, id);
-        this.shapeOnProgress = getShapeByClass(shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS);
+    public ProgressBar( Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress, String id ) {
+        super( ( type == Type.HORIZONTAL ? NetworkController.PROGRESS_BAR_HORIZONTAL : NetworkController.PROGRESS_BAR_VERTICAL ), shape, id );
+        this.shapeOnProgress = getShapeByClass( shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS );
     }
 
-    public void setPercentage(double percentage){
-        userConnection.setValue(this, percentage);
+    public void setPercentage( double percentage ) {
+        userConnection.setValue( this, percentage );
     }
 
     @Override
     protected void init() {
         super.init();
-        this.shapeOnProgress.setUserConnection(userConnection);
+        this.shapeOnProgress.setUserConnection( userConnection );
     }
 
     @Override

@@ -31,13 +31,13 @@ public class PacketUpdateList extends PacketOut {
 
     private final List list;
 
-    public PacketUpdateList(List list) {
+    public PacketUpdateList( List list ) {
         this.list = list;
     }
 
     @Override
     public JSONObject toJSON() {
-        return new JSONObject().put(NetworkController.COMPONENT_ID, list.getUniqueId().toString());
+        return new JSONObject().put( NetworkController.COMPONENT_ID, list.getUniqueId().toString() );
     }
 
 }

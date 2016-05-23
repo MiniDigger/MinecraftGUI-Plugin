@@ -44,8 +44,9 @@ public class Form {
         Form form = this;
 
         this.onClickListener = component -> {
-            for (OnFormSendListener listener : listeners)
-                listener.onFormSend(form);
+            for ( OnFormSendListener listener : listeners ) {
+                listener.onFormSend( form );
+            }
         };
     }
 
@@ -53,27 +54,28 @@ public class Form {
         return button;
     }
 
-    public void setButton(Component button){
-        if(this.button != null)
-            this.button.removeOnClickListener(onClickListener);
+    public void setButton( Component button ) {
+        if ( this.button != null ) {
+            this.button.removeOnClickListener( onClickListener );
+        }
 
         this.button = button;
-        this.button.addOnClickListener(onClickListener);
+        this.button.addOnClickListener( onClickListener );
     }
 
-    public void addValuable(String name, Valuable valuable){
-        valuables.put(name.toLowerCase(), valuable);
+    public void addValuable( String name, Valuable valuable ) {
+        valuables.put( name.toLowerCase(), valuable );
     }
 
-    public Valuable getValuable(String name){
-        return valuables.get(name.toLowerCase());
+    public Valuable getValuable( String name ) {
+        return valuables.get( name.toLowerCase() );
     }
 
-    public void addOnFormSendListener(OnFormSendListener listener){
-        listeners.add(listener);
+    public void addOnFormSendListener( OnFormSendListener listener ) {
+        listeners.add( listener );
     }
 
-    public void removeOnFormSendListener(OnFormSendListener listener){
-        listeners.remove(listener);
+    public void removeOnFormSendListener( OnFormSendListener listener ) {
+        listeners.remove( listener );
     }
 }

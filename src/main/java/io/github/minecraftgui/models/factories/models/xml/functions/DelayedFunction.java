@@ -30,34 +30,35 @@ public abstract class DelayedFunction extends Function {
 
     private final long time;
 
-    public abstract void delayedFunction(UserGui userGui, Component component);
+    public abstract void delayedFunction( UserGui userGui, Component component );
 
-    public DelayedFunction(String[] args) {
-        super(args);
-        if(args.length >= 1)
-            time = Long.parseLong(args[0]);
-        else
+    public DelayedFunction( String[] args ) {
+        super( args );
+        if ( args.length >= 1 ) {
+            time = Long.parseLong( args[0] );
+        } else {
             time = 0;
+        }
     }
 
     @Override
-    public void execute(UserGui userGui, Component component) {
-        if (time != 0) {
-            new Thread(new Runnable() {
+    public void execute( UserGui userGui, Component component ) {
+        if ( time != 0 ) {
+            new Thread( new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(time);
-                    } catch (InterruptedException e) {
+                        Thread.sleep( time );
+                    } catch ( InterruptedException e ) {
                         e.printStackTrace();
                     }
 
-                    delayedFunction(userGui, component);
+                    delayedFunction( userGui, component );
                 }
-            }).start();
+            } ).start();
+        } else {
+            delayedFunction( userGui, component );
         }
-        else
-            delayedFunction(userGui, component);
     }
 
 }

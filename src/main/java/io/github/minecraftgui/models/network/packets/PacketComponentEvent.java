@@ -35,9 +35,9 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     protected final Component component;
 
-    public PacketComponentEvent(UserConnection userConnection, JSONObject jsonObject) {
-        super(jsonObject);
-        this.component = userConnection.getComponent(UUID.fromString(jsonObject.getString(NetworkController.COMPONENT_ID)));
+    public PacketComponentEvent( UserConnection userConnection, JSONObject jsonObject ) {
+        super( jsonObject );
+        this.component = userConnection.getComponent( UUID.fromString( jsonObject.getString( NetworkController.COMPONENT_ID ) ) );
     }
 
     public Component getComponent() {
@@ -46,8 +46,8 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnBlur extends PacketComponentEvent {
 
-        public OnBlur(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnBlur( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
             component.onBlur();
         }
@@ -55,8 +55,8 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnFocus extends PacketComponentEvent {
 
-        public OnFocus(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnFocus( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
             component.onFocus();
         }
@@ -64,8 +64,8 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnClick extends PacketComponentEvent {
 
-        public OnClick(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnClick( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
             component.onClick();
         }
@@ -73,8 +73,8 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnDoubleClick extends PacketComponentEvent {
 
-        public OnDoubleClick(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnDoubleClick( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
             component.onDoubleClick();
         }
@@ -82,26 +82,26 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnInput extends PacketComponentEvent {
 
-        public OnInput(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnInput( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
-            component.onInput(jsonObject.getString(NetworkController.INPUT).charAt(0));
+            component.onInput( jsonObject.getString( NetworkController.INPUT ).charAt( 0 ) );
         }
     }
 
     public static class OnKeyPressed extends PacketComponentEvent {
 
-        public OnKeyPressed(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnKeyPressed( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
-            component.onKeyPressed(jsonObject.getInt(NetworkController.KEY));
+            component.onKeyPressed( jsonObject.getInt( NetworkController.KEY ) );
         }
     }
 
     public static class OnRemove extends PacketComponentEvent {
 
-        public OnRemove(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnRemove( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
             component.onRemove();
         }
@@ -109,8 +109,8 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnMouseEnter extends PacketComponentEvent {
 
-        public OnMouseEnter(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnMouseEnter( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
             component.onMouseEnter();
         }
@@ -118,8 +118,8 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnMouseLeave extends PacketComponentEvent {
 
-        public OnMouseLeave(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnMouseLeave( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
             component.onMouseLeave();
         }
@@ -127,11 +127,12 @@ public abstract class PacketComponentEvent extends PacketIn {
 
     public static class OnValueChange extends PacketComponentEvent {
 
-        public OnValueChange(UserConnection userConnection, JSONObject jsonObject) {
-            super(userConnection, jsonObject);
+        public OnValueChange( UserConnection userConnection, JSONObject jsonObject ) {
+            super( userConnection, jsonObject );
 
-            if(component instanceof ComponentValuable)
-                ((ComponentValuable) component).setValue(jsonObject.get(NetworkController.VALUE));
+            if ( component instanceof ComponentValuable ) {
+                ( (ComponentValuable) component ).setValue( jsonObject.get( NetworkController.VALUE ) );
+            }
         }
     }
 

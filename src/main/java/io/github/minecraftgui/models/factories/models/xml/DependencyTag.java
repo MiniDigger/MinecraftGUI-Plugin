@@ -30,9 +30,9 @@ public class DependencyTag extends Tag {
 
     private final String plugin;
 
-    public DependencyTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        this.plugin = element.getAttribute("plugin");
+    public DependencyTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        this.plugin = element.getAttribute( "plugin" );
     }
 
     public String getPlugin() {

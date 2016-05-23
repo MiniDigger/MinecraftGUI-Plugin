@@ -31,12 +31,12 @@ import org.w3c.dom.Element;
  */
 public class RootTag extends ComponentTag {
 
-    public RootTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public RootTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
     }
 
     @Override
-    protected Component createComponent(PluginInterface service, UserGui userGui) {
+    protected Component createComponent( PluginInterface service, UserGui userGui ) {
         return userGui.getRoot();
     }
 

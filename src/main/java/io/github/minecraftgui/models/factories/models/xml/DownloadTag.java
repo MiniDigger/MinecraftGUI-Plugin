@@ -30,21 +30,21 @@ import org.w3c.dom.Element;
  */
 public class DownloadTag extends Tag {
 
-    public enum Type{IMAGE, FONT}
+    public enum Type {IMAGE, FONT}
 
     private final Type type;
     private final String url;
     private final String name;
 
-    public DownloadTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        this.type = Type.valueOf(element.getAttribute("type").toUpperCase());
-        this.url = element.getAttribute("url");
-        this.name = element.getAttribute("name");
+    public DownloadTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        this.type = Type.valueOf( element.getAttribute( "type" ).toUpperCase() );
+        this.url = element.getAttribute( "url" );
+        this.name = element.getAttribute( "name" );
     }
 
-    public String getUrl(PluginInterface service, UserGui userGui) {
-        return convertString(service, userGui, this.url);
+    public String getUrl( PluginInterface service, UserGui userGui ) {
+        return convertString( service, userGui, this.url );
     }
 
     public String getName() {

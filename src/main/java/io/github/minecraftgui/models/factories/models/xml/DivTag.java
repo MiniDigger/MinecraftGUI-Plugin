@@ -32,13 +32,13 @@ import org.w3c.dom.Element;
  */
 public class DivTag extends ComponentTag {
 
-    public DivTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public DivTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        return new Div(shape, id);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        return new Div( shape, id );
     }
 
 }

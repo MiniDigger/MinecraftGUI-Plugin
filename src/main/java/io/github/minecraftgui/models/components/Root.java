@@ -30,10 +30,10 @@ import java.util.UUID;
 /**
  * Created by Samuel on 2016-01-02.
  */
-public final class Root extends Component{
+public final class Root extends Component {
 
-    public Root(UserGui userGui, UserConnection userConnection) {
-        super("", RectangleColor.class);
+    public Root( UserGui userGui, UserConnection userConnection ) {
+        super( "", RectangleColor.class );
         this.userGui = userGui;
         this.userConnection = userConnection;
     }
@@ -48,28 +48,30 @@ public final class Root extends Component{
     }
 
     @Override
-    public void add(Component component) {
-        if(component.parent != null || component.userConnection != null || component.userGui != null)
-            throw new ComponentException("Can't add a component that is already assigned.");
+    public void add( Component component ) {
+        if ( component.parent != null || component.userConnection != null || component.userGui != null ) {
+            throw new ComponentException( "Can't add a component that is already assigned." );
+        }
 
         component.parent = this;
         component.userGui = this.userGui;
         component.userConnection = this.userConnection;
-        this.userGui.addComponent(component);
-        this.userConnection.addComponent(component, true);
-        this.children.add(component);
+        this.userGui.addComponent( component );
+        this.userConnection.addComponent( component, true );
+        this.children.add( component );
 
         component.init();
-        userConnection.addEventListener(component, NetworkController.ON_REMOVE_LISTENER);
+        userConnection.addEventListener( component, NetworkController.ON_REMOVE_LISTENER );
 
-        for(Component specialChild : component.specialChildren)
-            component.add(specialChild);
+        for ( Component specialChild : component.specialChildren ) {
+            component.add( specialChild );
+        }
 
     }
 
     @Override
-    public void add(Component component, UserGui gui) {
-        this.add(component);
+    public void add( Component component, UserGui gui ) {
+        this.add( component );
     }
 
 }

@@ -32,14 +32,14 @@ public class PacketAddEventListener extends PacketOut {
     private final Component component;
     private final String event;
 
-    public PacketAddEventListener(Component component, String event) {
+    public PacketAddEventListener( Component component, String event ) {
         this.component = component;
         this.event = event;
     }
 
     @Override
     public JSONObject toJSON() {
-        return new JSONObject().put(NetworkController.COMPONENT_ID, component.getUniqueId().toString()).put(NetworkController.EVENT, event);
+        return new JSONObject().put( NetworkController.COMPONENT_ID, component.getUniqueId().toString() ).put( NetworkController.EVENT, event );
     }
 
 }

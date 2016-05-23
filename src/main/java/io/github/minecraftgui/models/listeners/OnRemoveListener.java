@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnRemoveListener {
 
-    void onRemove(Component component);
+    void onRemove( Component component );
 
 }

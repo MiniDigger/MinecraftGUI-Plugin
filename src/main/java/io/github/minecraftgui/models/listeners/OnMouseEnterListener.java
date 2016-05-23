@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnMouseEnterListener {
 
-    void onMouseEnter(Component component);
+    void onMouseEnter( Component component );
 
 }

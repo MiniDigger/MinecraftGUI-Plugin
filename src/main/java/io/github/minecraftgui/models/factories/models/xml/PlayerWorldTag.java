@@ -32,13 +32,13 @@ import org.w3c.dom.Element;
  */
 public class PlayerWorldTag extends ParagraphTag {
 
-    public PlayerWorldTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public PlayerWorldTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
-        plugin.setParagraphToWorldChangeEvent(userGui.getPlayerUUID(), (Paragraph) component);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
+        plugin.setParagraphToWorldChangeEvent( userGui.getPlayerUUID(), (Paragraph) component );
     }
 }

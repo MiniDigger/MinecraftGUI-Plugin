@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnInputListener {
 
-    void onInput(Component component, char input);
+    void onInput( Component component, char input );
 
 }

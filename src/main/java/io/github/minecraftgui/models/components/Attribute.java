@@ -27,7 +27,7 @@ public class Attribute {
 
     private final String name;
 
-    Attribute(String name) {
+    Attribute( String name ) {
         this.name = name;
     }
 

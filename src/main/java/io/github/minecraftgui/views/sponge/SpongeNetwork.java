@@ -27,7 +27,12 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.network.*;
+import org.spongepowered.api.network.ChannelBinding;
+import org.spongepowered.api.network.ChannelBuf;
+import org.spongepowered.api.network.Message;
+import org.spongepowered.api.network.MessageHandler;
+import org.spongepowered.api.network.PlayerConnection;
+import org.spongepowered.api.network.RemoteConnection;
 
 import java.util.UUID;
 
@@ -39,41 +44,42 @@ public class SpongeNetwork extends NetworkController implements MessageHandler<S
     private final Game game;
     private final ChannelBinding.IndexedMessageChannel indexedMessageChannel;
 
-    public SpongeNetwork(Object plugin, Game game) {
+    public SpongeNetwork( Object plugin, Game game ) {
         this.game = game;
-        indexedMessageChannel = game.getChannelRegistrar().createChannel(plugin, NetworkController.MINECRAFT_GUI_CHANNEL);
-        indexedMessageChannel.registerMessage(SpongeNetwork.Packet.class, 0, this);
-        game.getEventManager().registerListeners(plugin, this);
+        indexedMessageChannel = game.getChannelRegistrar().createChannel( plugin, NetworkController.MINECRAFT_GUI_CHANNEL );
+        indexedMessageChannel.registerMessage( SpongeNetwork.Packet.class, 0, this );
+        game.getEventManager().registerListeners( plugin, this );
     }
 
     @Listener
-    public void playerDisconnect(ClientConnectionEvent.Disconnect event){
-        removeUserConnection(event.getTargetEntity().getUniqueId());
+    public void playerDisconnect( ClientConnectionEvent.Disconnect event ) {
+        removeUserConnection( event.getTargetEntity().getUniqueId() );
     }
 
     @Override
-    public void handleMessage(Packet packet, RemoteConnection remoteConnection, Platform.Type type) {
-        if(remoteConnection instanceof PlayerConnection) {
-            UUID uuid = ((PlayerConnection) remoteConnection).getPlayer().getProfile().getUniqueId();
-            UserConnection userConnection = getUserConnection(uuid);
+    public void handleMessage( Packet packet, RemoteConnection remoteConnection, Platform.Type type ) {
+        if ( remoteConnection instanceof PlayerConnection ) {
+            UUID uuid = ( (PlayerConnection) remoteConnection ).getPlayer().getProfile().getUniqueId();
+            UserConnection userConnection = getUserConnection( uuid );
 
-            if(userConnection != null)
-                userConnection.receivePacket(packet.jsonObject);
-            else
-                createUserConnection(uuid).receivePacket(packet.jsonObject);
+            if ( userConnection != null ) {
+                userConnection.receivePacket( packet.jsonObject );
+            } else {
+                createUserConnection( uuid ).receivePacket( packet.jsonObject );
+            }
         }
     }
 
     @Override
-    public void sendPacktTo(UUID uuid, JSONObject jsonObject) {
-        indexedMessageChannel.sendTo(game.getServer().getPlayer(uuid).get(), new Packet(jsonObject));
+    public void sendPacktTo( UUID uuid, JSONObject jsonObject ) {
+        indexedMessageChannel.sendTo( game.getServer().getPlayer( uuid ).get(), new Packet( jsonObject ) );
     }
 
     public static class Packet implements Message {
 
         private JSONObject jsonObject;
 
-        public Packet(JSONObject jsonObject) {
+        public Packet( JSONObject jsonObject ) {
             this.jsonObject = jsonObject;
         }
 
@@ -81,14 +87,15 @@ public class SpongeNetwork extends NetworkController implements MessageHandler<S
         }
 
         @Override
-        public void readFrom(ChannelBuf channelBuf) {
-            jsonObject = new JSONObject(new String(channelBuf.array()).trim());
+        public void readFrom( ChannelBuf channelBuf ) {
+            jsonObject = new JSONObject( new String( channelBuf.array() ).trim() );
         }
 
         @Override
-        public void writeTo(ChannelBuf channelBuf) {
-            for(byte b : jsonObject.toString().getBytes())
-                channelBuf.writeByte(b);
+        public void writeTo( ChannelBuf channelBuf ) {
+            for ( byte b : jsonObject.toString().getBytes() ) {
+                channelBuf.writeByte( b );
+            }
         }
 
     }

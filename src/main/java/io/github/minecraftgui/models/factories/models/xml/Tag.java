@@ -38,52 +38,52 @@ import java.util.regex.Pattern;
  */
 public abstract class Tag {
 
-    public static final Pattern PATTERN_PLAYER_UUID = Pattern.compile("\\{PLAYER_UUID\\}");
-    public static final Pattern PATTERN_PLAYER_NAME = Pattern.compile("\\{PLAYER_NAME\\}");
+    public static final Pattern PATTERN_PLAYER_UUID = Pattern.compile( "\\{PLAYER_UUID\\}" );
+    public static final Pattern PATTERN_PLAYER_NAME = Pattern.compile( "\\{PLAYER_NAME\\}" );
 
     private static final ConcurrentHashMap<String, Class<? extends Tag>> xmlTags = new ConcurrentHashMap<>();
 
     static {
-        xmlTags.put("head", HeadTag.class);
-        xmlTags.put("component", ComponentDependencyTag.class);
-        xmlTags.put("root", RootTag.class);
-        xmlTags.put("textarea", TextAreaTag.class);
-        xmlTags.put("checkbox", CheckBoxTag.class);
-        xmlTags.put("div", DivTag.class);
-        xmlTags.put("input", InputTag.class);
-        xmlTags.put("list", ListTag.class);
-        xmlTags.put("p", ParagraphTag.class);
-        xmlTags.put("progressbar", ProgressBarTag.class);
-        xmlTags.put("slider", SliderTag.class);
-        xmlTags.put("dependency", DependencyTag.class);
-        xmlTags.put("download", DownloadTag.class);
-        xmlTags.put("generate", GenerateTag.class);
-        xmlTags.put("img", ImageTag.class);
-        xmlTags.put("link", LinkTag.class);
-        xmlTags.put("option", OptionTag.class);
-        xmlTags.put("onformsend", OnFormSendTag.class);
-        xmlTags.put("playerworld", PlayerWorldTag.class);
-        xmlTags.put("onguievent", OnGuiEventTag.class);
-        xmlTags.put("playerbalance", PlayerBalanceTag.class);
+        xmlTags.put( "head", HeadTag.class );
+        xmlTags.put( "component", ComponentDependencyTag.class );
+        xmlTags.put( "root", RootTag.class );
+        xmlTags.put( "textarea", TextAreaTag.class );
+        xmlTags.put( "checkbox", CheckBoxTag.class );
+        xmlTags.put( "div", DivTag.class );
+        xmlTags.put( "input", InputTag.class );
+        xmlTags.put( "list", ListTag.class );
+        xmlTags.put( "p", ParagraphTag.class );
+        xmlTags.put( "progressbar", ProgressBarTag.class );
+        xmlTags.put( "slider", SliderTag.class );
+        xmlTags.put( "dependency", DependencyTag.class );
+        xmlTags.put( "download", DownloadTag.class );
+        xmlTags.put( "generate", GenerateTag.class );
+        xmlTags.put( "img", ImageTag.class );
+        xmlTags.put( "link", LinkTag.class );
+        xmlTags.put( "option", OptionTag.class );
+        xmlTags.put( "onformsend", OnFormSendTag.class );
+        xmlTags.put( "playerworld", PlayerWorldTag.class );
+        xmlTags.put( "onguievent", OnGuiEventTag.class );
+        xmlTags.put( "playerbalance", PlayerBalanceTag.class );
     }
 
-    private static Tag createXmlTag(Element element, GuiFactory.GuiModel model){
+    private static Tag createXmlTag( Element element, GuiFactory.GuiModel model ) {
         try {
-            Class<? extends Tag> clazz = xmlTags.get(element.getTagName().toLowerCase());
-            Constructor<?> ctor = clazz.getConstructor(Element.class, GuiFactory.GuiModel.class);
-            return (Tag) ctor.newInstance(element, model);
-        } catch (Exception e) {
+            Class<? extends Tag> clazz = xmlTags.get( element.getTagName().toLowerCase() );
+            Constructor<?> ctor = clazz.getConstructor( Element.class, GuiFactory.GuiModel.class );
+            return (Tag) ctor.newInstance( element, model );
+        } catch ( Exception e ) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static Class<? extends Tag> getTagClass(String tag){
-        return xmlTags.get(tag.toLowerCase());
+    public static Class<? extends Tag> getTagClass( String tag ) {
+        return xmlTags.get( tag.toLowerCase() );
     }
 
     /*******************************************
-    *******************************************/
+     *******************************************/
 
     private final GuiFactory.GuiModel guiModel;
     private Tag parent;
@@ -92,15 +92,16 @@ public abstract class Tag {
     private final ArrayList<Tag> children;
     private String text;
 
-    public Tag(Element element, GuiFactory.GuiModel model) {
+    public Tag( Element element, GuiFactory.GuiModel model ) {
         children = new ArrayList<>();
         childrenIndexed = new HashMap<>();
         this.guiModel = model;
         this.element = element;
         this.text = "";
 
-        for(int i = 0; i < element.getChildNodes().getLength(); i++)
-            text = text.equals("") && element.getChildNodes().item(i).getNodeName().equals("#text")?element.getChildNodes().item(i).getTextContent().trim():text;
+        for ( int i = 0; i < element.getChildNodes().getLength(); i++ ) {
+            text = text.equals( "" ) && element.getChildNodes().item( i ).getNodeName().equals( "#text" ) ? element.getChildNodes().item( i ).getTextContent().trim() : text;
+        }
     }
 
     public Tag getParent() {
@@ -111,52 +112,54 @@ public abstract class Tag {
         return children;
     }
 
-    public void add(Tag tag){
-        children.add(tag);
-        addIndexedTag(tag);
+    public void add( Tag tag ) {
+        children.add( tag );
+        addIndexedTag( tag );
     }
 
-    public ArrayList<Tag> getTagIndexed(Class<? extends Tag> clazz){
-        return childrenIndexed.get(clazz);
+    public ArrayList<Tag> getTagIndexed( Class<? extends Tag> clazz ) {
+        return childrenIndexed.get( clazz );
     }
 
-    protected String getText(){
+    protected String getText() {
         return text;
     }
 
-    private void addIndexedTag(Tag tag){
-        ArrayList<Tag> models = childrenIndexed.get(tag.getClass());
+    private void addIndexedTag( Tag tag ) {
+        ArrayList<Tag> models = childrenIndexed.get( tag.getClass() );
 
-        if(models == null){
+        if ( models == null ) {
             models = new ArrayList<>();
-            childrenIndexed.put(tag.getClass(), models);
+            childrenIndexed.put( tag.getClass(), models );
         }
 
-        models.add(tag);
+        models.add( tag );
     }
 
-    protected String convertString(PluginInterface service, UserGui userGui, String text){
-        StringBuilder str = new StringBuilder(text);
+    protected String convertString( PluginInterface service, UserGui userGui, String text ) {
+        StringBuilder str = new StringBuilder( text );
         Matcher matcher;
 
-        while((matcher = PATTERN_PLAYER_UUID.matcher(str)).find())
-            str.replace(matcher.start(), matcher.end(), userGui.getPlayerUUID().toString());
+        while ( ( matcher = PATTERN_PLAYER_UUID.matcher( str ) ).find() ) {
+            str.replace( matcher.start(), matcher.end(), userGui.getPlayerUUID().toString() );
+        }
 
-        while((matcher = PATTERN_PLAYER_NAME.matcher(str)).find())
-            str.replace(matcher.start(), matcher.end(), service.getPlayerName(userGui.getPlayerUUID()));
+        while ( ( matcher = PATTERN_PLAYER_NAME.matcher( str ) ).find() ) {
+            str.replace( matcher.start(), matcher.end(), service.getPlayerName( userGui.getPlayerUUID() ) );
+        }
 
         return str.toString();
     }
 
-    protected Tag getXmlTagSetAs(Element element, String as){
-        for(int i = 0; i < element.getChildNodes().getLength(); i++){
-            Node node = element.getChildNodes().item(i);
+    protected Tag getXmlTagSetAs( Element element, String as ) {
+        for ( int i = 0; i < element.getChildNodes().getLength(); i++ ) {
+            Node node = element.getChildNodes().item( i );
 
-            if(node instanceof Element && ((Element) node).getAttribute("setAs").equalsIgnoreCase(as)) {
-                element.removeChild(node);
-                Tag tag = createXmlTag((Element) node, this.guiModel);
+            if ( node instanceof Element && ( (Element) node ).getAttribute( "setAs" ).equalsIgnoreCase( as ) ) {
+                element.removeChild( node );
+                Tag tag = createXmlTag( (Element) node, this.guiModel );
 
-                addIndexedTag(tag);
+                addIndexedTag( tag );
 
                 return tag;
             }
@@ -165,16 +168,16 @@ public abstract class Tag {
         return null;
     }
 
-    public void init(){
-        this.guiModel.addTag(this);
+    public void init() {
+        this.guiModel.addTag( this );
 
-        for(int i = 0; i < element.getChildNodes().getLength(); i++) {
-            Node node = element.getChildNodes().item(i);
+        for ( int i = 0; i < element.getChildNodes().getLength(); i++ ) {
+            Node node = element.getChildNodes().item( i );
 
-            if (node instanceof Element) {
-                Tag tag = createXmlTag((Element) node, this.guiModel);
+            if ( node instanceof Element ) {
+                Tag tag = createXmlTag( (Element) node, this.guiModel );
                 tag.parent = this;
-                this.add(tag);
+                this.add( tag );
 
                 tag.init();
             }

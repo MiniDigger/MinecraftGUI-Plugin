@@ -29,16 +29,17 @@ import io.github.minecraftgui.models.components.State;
  */
 public class RectangleImage extends Rectangle<String> {
 
-    public RectangleImage(String componentShape, Component component) {
-        super(NetworkController.RECTANGLE_IMAGE, componentShape, component);
+    public RectangleImage( String componentShape, Component component ) {
+        super( NetworkController.RECTANGLE_IMAGE, componentShape, component );
     }
 
     @Override
-    public void setBackground(State state, String value) {
-        userConnection.setBackgroundImage(component, this, state, value);
+    public void setBackground( State state, String value ) {
+        userConnection.setBackgroundImage( component, this, state, value );
     }
 
     @Override
-    public void setBackground(State state, String value, long time) {}
+    public void setBackground( State state, String value, long time ) {
+    }
 
 }

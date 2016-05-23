@@ -37,22 +37,22 @@ public class ProgressBarTag extends ComponentTag {
     private final ProgressBar.Type type;
     private final double percentage;
 
-    public ProgressBarTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        shapeProgress = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeProgress"));
-        type = element.hasAttribute("type")?ProgressBar.Type.valueOf(element.getAttribute("type").toUpperCase()): ProgressBar.Type.HORIZONTAL;
-        percentage = element.hasAttribute("percentage")?Double.parseDouble(element.getAttribute("percentage")):0;
+    public ProgressBarTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        shapeProgress = (Class<? extends Rectangle>) getShapeByName( element.getAttribute( "shapeProgress" ) );
+        type = element.hasAttribute( "type" ) ? ProgressBar.Type.valueOf( element.getAttribute( "type" ).toUpperCase() ) : ProgressBar.Type.HORIZONTAL;
+        percentage = element.hasAttribute( "percentage" ) ? Double.parseDouble( element.getAttribute( "percentage" ) ) : 0;
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        return new ProgressBar(type, (Class<? extends Rectangle>) shape, shapeProgress, id);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        return new ProgressBar( type, (Class<? extends Rectangle>) shape, shapeProgress, id );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
 
-        ((ProgressBar) component).setPercentage(percentage);
+        ( (ProgressBar) component ).setPercentage( percentage );
     }
 }

@@ -34,15 +34,15 @@ public class PlayerBalanceTag extends ParagraphTag {
 
     private final String currency;
 
-    public PlayerBalanceTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        currency = element.getAttribute("currency");
+    public PlayerBalanceTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        currency = element.getAttribute( "currency" );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
-        plugin.setParagraphToEconomyTransactionEvent(userGui.getPlayerUUID(), (Paragraph) component,  currency);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
+        plugin.setParagraphToEconomyTransactionEvent( userGui.getPlayerUUID(), (Paragraph) component, currency );
     }
 
 }

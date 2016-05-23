@@ -35,44 +35,46 @@ public class List extends Component {
     private final Component buttonListAfter;
     private UUID lastComponentAdded = UUID.randomUUID();
 
-    public List(Class<? extends Rectangle> shape, Component buttonListBefore, Component buttonListAfter) {
-        super(NetworkController.LIST, shape);
+    public List( Class<? extends Rectangle> shape, Component buttonListBefore, Component buttonListAfter ) {
+        super( NetworkController.LIST, shape );
 
-        if(buttonListAfter == null || buttonListBefore == null)
-            throw new ComponentException("The buttons can't be null.");
+        if ( buttonListAfter == null || buttonListBefore == null ) {
+            throw new ComponentException( "The buttons can't be null." );
+        }
 
         this.buttonListAfter = buttonListAfter;
         this.buttonListBefore = buttonListBefore;
-        specialChildren.add(buttonListBefore);
-        specialChildren.add(buttonListAfter);
+        specialChildren.add( buttonListBefore );
+        specialChildren.add( buttonListAfter );
     }
 
-    public List(Class<? extends Rectangle> shape, Component buttonListBefore, Component buttonListAfter, String id) {
-        super(NetworkController.LIST, shape, id);
+    public List( Class<? extends Rectangle> shape, Component buttonListBefore, Component buttonListAfter, String id ) {
+        super( NetworkController.LIST, shape, id );
 
-        if(buttonListAfter == null || buttonListBefore == null)
-            throw new ComponentException("The buttons can't be null.");
+        if ( buttonListAfter == null || buttonListBefore == null ) {
+            throw new ComponentException( "The buttons can't be null." );
+        }
 
         this.buttonListAfter = buttonListAfter;
         this.buttonListBefore = buttonListBefore;
-        specialChildren.add(buttonListBefore);
-        specialChildren.add(buttonListAfter);
+        specialChildren.add( buttonListBefore );
+        specialChildren.add( buttonListAfter );
     }
 
     @Override
-    public void add(Component component) {
-        super.add(component);
+    public void add( Component component ) {
+        super.add( component );
         lastComponentAdded = component.getUniqueId();
     }
 
     @Override
-    public void add(Component component, UserGui userGui) {
-        super.add(component, userGui);
+    public void add( Component component, UserGui userGui ) {
+        super.add( component, userGui );
         lastComponentAdded = component.getUniqueId();
     }
 
-    public void update(){
-        userConnection.updateList(this);
+    public void update() {
+        userConnection.updateList( this );
     }
 
     public Component getButtonListBefore() {

@@ -41,52 +41,57 @@ public class ParagraphTag extends ComponentTag {
     protected final String text;
     private final String dropdown;
 
-    public ParagraphTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public ParagraphTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
         text = element.getTextContent().trim();
-        dropdown = element.getAttribute("dropdown");
-        buttonLineAfter = (ComponentTag) getXmlTagSetAs(element, "after");
-        buttonLineBefore = (ComponentTag) getXmlTagSetAs(element, "before");
+        dropdown = element.getAttribute( "dropdown" );
+        buttonLineAfter = (ComponentTag) getXmlTagSetAs( element, "after" );
+        buttonLineBefore = (ComponentTag) getXmlTagSetAs( element, "before" );
 
-        if(buttonLineAfter != null)
-            model.addTag(buttonLineAfter);
-        if(buttonLineBefore != null)
-            model.addTag(buttonLineBefore);
-    }
-
-    @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        Component blb = buttonLineBefore == null?new Div(RectangleColor.class):buttonLineBefore.createComponent(service, userGui);
-        Component bla = buttonLineAfter == null?new Div(RectangleColor.class):buttonLineAfter.createComponent(service, userGui);
-
-        return new Paragraph((Class<? extends Rectangle>) shape, id, blb, bla);
-    }
-
-    @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
-        Paragraph paragraph = (Paragraph) component;
-
-        if(buttonLineAfter != null)
-            buttonLineAfter.setAttributes(plugin, userGui, paragraph.getButtonLineAfter());
-
-        if(buttonLineBefore != null)
-            buttonLineBefore.setAttributes(plugin, userGui, paragraph.getButtonLineBefore());
-
-        paragraph.setText(convertString(plugin, userGui, getText()));
-
-        if(!form.equals("") && !dropdown.equals("")){
-            Dropdown dropdown = userGui.getDropdown(this.dropdown);
-            userGui.getForm(form).addValuable(this.dropdown, dropdown);
-            dropdown.setParagraphValueDisplayed(paragraph);
+        if ( buttonLineAfter != null ) {
+            model.addTag( buttonLineAfter );
+        }
+        if ( buttonLineBefore != null ) {
+            model.addTag( buttonLineBefore );
         }
     }
 
     @Override
-    protected void initAfterChildrenCreated(PluginInterface service, UserGui userGui, Component component) {
-        super.initAfterChildrenCreated(service, userGui, component);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        Component blb = buttonLineBefore == null ? new Div( RectangleColor.class ) : buttonLineBefore.createComponent( service, userGui );
+        Component bla = buttonLineAfter == null ? new Div( RectangleColor.class ) : buttonLineAfter.createComponent( service, userGui );
 
-        if(!form.equals("") && !dropdown.equals(""))
-            userGui.getDropdown(this.dropdown).init();
+        return new Paragraph( (Class<? extends Rectangle>) shape, id, blb, bla );
+    }
+
+    @Override
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
+        Paragraph paragraph = (Paragraph) component;
+
+        if ( buttonLineAfter != null ) {
+            buttonLineAfter.setAttributes( plugin, userGui, paragraph.getButtonLineAfter() );
+        }
+
+        if ( buttonLineBefore != null ) {
+            buttonLineBefore.setAttributes( plugin, userGui, paragraph.getButtonLineBefore() );
+        }
+
+        paragraph.setText( convertString( plugin, userGui, getText() ) );
+
+        if ( !form.equals( "" ) && !dropdown.equals( "" ) ) {
+            Dropdown dropdown = userGui.getDropdown( this.dropdown );
+            userGui.getForm( form ).addValuable( this.dropdown, dropdown );
+            dropdown.setParagraphValueDisplayed( paragraph );
+        }
+    }
+
+    @Override
+    protected void initAfterChildrenCreated( PluginInterface service, UserGui userGui, Component component ) {
+        super.initAfterChildrenCreated( service, userGui, component );
+
+        if ( !form.equals( "" ) && !dropdown.equals( "" ) ) {
+            userGui.getDropdown( this.dropdown ).init();
+        }
     }
 }

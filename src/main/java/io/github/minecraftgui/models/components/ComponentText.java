@@ -29,32 +29,32 @@ import java.awt.*;
  */
 public abstract class ComponentText extends ComponentValuable<String> {
 
-    public ComponentText(String type, Class<? extends Shape> shape) {
-        super(type, shape);
+    public ComponentText( String type, Class<? extends Shape> shape ) {
+        super( type, shape );
     }
 
-    public ComponentText(String type, Class<? extends Shape> shape, String id) {
-        super(type, shape, id);
+    public ComponentText( String type, Class<? extends Shape> shape, String id ) {
+        super( type, shape, id );
     }
 
-    public String getText(){
+    public String getText() {
         return this.value;
     }
 
-    public void setText(String text){
-        userConnection.setValue(this, text);
+    public void setText( String text ) {
+        userConnection.setValue( this, text );
     }
 
-    public void setFont(State state, String font){
-        userConnection.setFont(this, state, font);
+    public void setFont( State state, String font ) {
+        userConnection.setFont( this, state, font );
     }
 
-    public void setFontSize(State state, int size){
-        userConnection.setFontSize(this, state, size);
+    public void setFontSize( State state, int size ) {
+        userConnection.setFontSize( this, state, size );
     }
 
-    public void setFontColor(State state, Color color){
-        userConnection.setFontColor(this, state, color);
+    public void setFontColor( State state, Color color ) {
+        userConnection.setFontColor( this, state, color );
     }
 
 }

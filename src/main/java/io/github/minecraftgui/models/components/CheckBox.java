@@ -27,36 +27,36 @@ import io.github.minecraftgui.models.shapes.Shape;
 /**
  * Created by Samuel on 2015-12-30.
  */
-public class CheckBox extends ComponentValuable<Boolean>{
+public class CheckBox extends ComponentValuable<Boolean> {
 
     private final Shape shapeOnValueTrue;
     private final Shape shapeOnValueFalse;
 
-    public CheckBox(Class<? extends Shape> shapeOnValueTrue, Class<? extends Shape> shapeOnValueFalse) {
-        super(NetworkController.CHECKBOX, RectangleColor.class);
+    public CheckBox( Class<? extends Shape> shapeOnValueTrue, Class<? extends Shape> shapeOnValueFalse ) {
+        super( NetworkController.CHECKBOX, RectangleColor.class );
         this.value = false;
-        this.shapeOnValueTrue = getShapeByClass(shapeOnValueTrue, NetworkController.SHAPE_ON_VALUE_TRUE);
-        this.shapeOnValueFalse = getShapeByClass(shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_FALSE);
+        this.shapeOnValueTrue = getShapeByClass( shapeOnValueTrue, NetworkController.SHAPE_ON_VALUE_TRUE );
+        this.shapeOnValueFalse = getShapeByClass( shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_FALSE );
         this.shape = this.shapeOnValueTrue;
     }
 
-    public CheckBox(Class<? extends Shape> shapeOnValueTrue, Class<? extends Shape> shapeOnValueFalse, String id) {
-        super(NetworkController.CHECKBOX, RectangleColor.class, id);
+    public CheckBox( Class<? extends Shape> shapeOnValueTrue, Class<? extends Shape> shapeOnValueFalse, String id ) {
+        super( NetworkController.CHECKBOX, RectangleColor.class, id );
         this.value = false;
-        this.shapeOnValueTrue = getShapeByClass(shapeOnValueTrue, NetworkController.SHAPE_ON_VALUE_TRUE);
-        this.shapeOnValueFalse = getShapeByClass(shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_FALSE);
+        this.shapeOnValueTrue = getShapeByClass( shapeOnValueTrue, NetworkController.SHAPE_ON_VALUE_TRUE );
+        this.shapeOnValueFalse = getShapeByClass( shapeOnValueFalse, NetworkController.SHAPE_ON_VALUE_FALSE );
         this.shape = this.shapeOnValueTrue;
     }
 
-    public void setChecked(boolean checked){
-        userConnection.setValue(this, checked);
+    public void setChecked( boolean checked ) {
+        userConnection.setValue( this, checked );
     }
 
     @Override
     protected void init() {
         super.init();
-        this.shapeOnValueTrue.setUserConnection(userConnection);
-        this.shapeOnValueFalse.setUserConnection(userConnection);
+        this.shapeOnValueTrue.setUserConnection( userConnection );
+        this.shapeOnValueFalse.setUserConnection( userConnection );
     }
 
     public Shape getShapeOnValueTrue() {

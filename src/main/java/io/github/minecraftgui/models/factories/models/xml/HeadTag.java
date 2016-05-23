@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  */
 public class HeadTag extends Tag {
 
-    public HeadTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public HeadTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
     }
 }

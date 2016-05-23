@@ -29,7 +29,7 @@ public abstract class PacketIn {
 
     protected final JSONObject jsonObject;
 
-    public PacketIn(JSONObject jsonObject) {
+    public PacketIn( JSONObject jsonObject ) {
         this.jsonObject = jsonObject;
     }
 

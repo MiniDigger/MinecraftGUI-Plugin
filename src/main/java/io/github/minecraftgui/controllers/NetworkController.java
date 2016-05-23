@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class NetworkController {
 
     public static final String MINECRAFT_GUI_CHANNEL = "MinecraftGUI";
-    public static final UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    public static final UUID ROOT_ID = UUID.fromString( "00000000-0000-0000-0000-000000000000" );
 
     public static final int PACKET_INIT_CONNECTION = 0;
     public static final int PACKET_INIT_CLIENT = 1;
@@ -188,55 +188,56 @@ public abstract class NetworkController {
     private final ConcurrentHashMap<UUID, UserConnection> playerConnections;
     private final ArrayList<PluginInfo> pluginsInfo;
 
-    public abstract void sendPacktTo(UUID uuid, JSONObject jsonObject);
+    public abstract void sendPacktTo( UUID uuid, JSONObject jsonObject );
 
     public NetworkController() {
         this.playerConnections = new ConcurrentHashMap<>();
         this.pluginsInfo = new ArrayList<>();
     }
 
-    public void addPlugin(OnGuiListener plugin, String pluginName){
-        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<>()));
+    public void addPlugin( OnGuiListener plugin, String pluginName ) {
+        pluginsInfo.add( new PluginInfo( pluginName, plugin, new ArrayList<>() ) );
     }
 
-    public void addPlugin(OnGuiListener plugin, String pluginName, String... dependencies){
-        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<>(Arrays.asList(dependencies))));
+    public void addPlugin( OnGuiListener plugin, String pluginName, String... dependencies ) {
+        pluginsInfo.add( new PluginInfo( pluginName, plugin, new ArrayList<>( Arrays.asList( dependencies ) ) ) );
     }
 
-    public void sortPlugins(){
+    public void sortPlugins() {
         ArrayList<PluginInfo> pluginsToRemove = new ArrayList<>();
         ArrayList<PluginInfo> pluginsAdded = new ArrayList<>();
-        int i,j;
+        int i, j;
 
-        while(pluginsInfo.size() != 0){
-            for(i = 0; i < pluginsInfo.size(); i++){
-                PluginInfo pluginInfo = pluginsInfo.get(i);
+        while ( pluginsInfo.size() != 0 ) {
+            for ( i = 0; i < pluginsInfo.size(); i++ ) {
+                PluginInfo pluginInfo = pluginsInfo.get( i );
 
-                if(pluginInfo.dependencies.size() == 0){
-                    pluginsAdded.add(pluginInfo);
-                    pluginsToRemove.add(pluginInfo);
-                }
-                else {
+                if ( pluginInfo.dependencies.size() == 0 ) {
+                    pluginsAdded.add( pluginInfo );
+                    pluginsToRemove.add( pluginInfo );
+                } else {
                     int nbDependenciesToFind = pluginInfo.dependencies.size();
 
-                    for(j = 0; j < pluginsAdded.size(); j++){
-                        PluginInfo pluginInfoAdded = pluginsAdded.get(j);
+                    for ( j = 0; j < pluginsAdded.size(); j++ ) {
+                        PluginInfo pluginInfoAdded = pluginsAdded.get( j );
 
-                        if(pluginInfo.dependencies.contains(pluginInfoAdded.name))
+                        if ( pluginInfo.dependencies.contains( pluginInfoAdded.name ) ) {
                             nbDependenciesToFind--;
+                        }
                     }
 
-                    if(nbDependenciesToFind == 0){
-                        pluginsAdded.add(pluginInfo);
-                        pluginsToRemove.add(pluginInfo);
+                    if ( nbDependenciesToFind == 0 ) {
+                        pluginsAdded.add( pluginInfo );
+                        pluginsToRemove.add( pluginInfo );
                     }
                 }
             }
 
-            if(pluginsToRemove.size() == 0)
+            if ( pluginsToRemove.size() == 0 ) {
                 pluginsInfo.clear();
-            else
-                pluginsInfo.removeAll(pluginsToRemove);
+            } else {
+                pluginsInfo.removeAll( pluginsToRemove );
+            }
 
             pluginsToRemove.clear();
         }
@@ -246,36 +247,37 @@ public abstract class NetworkController {
         pluginsInfo.addAll( pluginsAdded );
     }
 
-    public UserConnection getUserConnection(UUID uuid){
-        return playerConnections.get(uuid);
+    public UserConnection getUserConnection( UUID uuid ) {
+        return playerConnections.get( uuid );
     }
 
-    public void removeUserConnection(UUID uuid){
-        playerConnections.remove(uuid);
+    public void removeUserConnection( UUID uuid ) {
+        playerConnections.remove( uuid );
     }
 
-    public UserConnection createUserConnection(UUID uuid){
-        UserConnection userConnection = new UserConnection(this, (ArrayList<PluginInfo>) pluginsInfo.clone(), uuid);
+    public UserConnection createUserConnection( UUID uuid ) {
+        UserConnection userConnection = new UserConnection( this, (ArrayList<PluginInfo>) pluginsInfo.clone(), uuid );
 
-        playerConnections.put(uuid, userConnection);
+        playerConnections.put( uuid, userConnection );
 
         return userConnection;
     }
 
-    public void reloadUser(UUID uuid){
-        UserConnection userConnection = playerConnections.get(uuid);
+    public void reloadUser( UUID uuid ) {
+        UserConnection userConnection = playerConnections.get( uuid );
 
-        if(userConnection != null)
+        if ( userConnection != null ) {
             userConnection.reloadGui();
+        }
     }
 
-    public static class PluginInfo{
+    public static class PluginInfo {
 
         private final String name;
         private final OnGuiListener onGuiListener;
         private final ArrayList<String> dependencies;
 
-        private PluginInfo(String name, OnGuiListener onGuiListener, ArrayList<String> dependencies) {
+        private PluginInfo( String name, OnGuiListener onGuiListener, ArrayList<String> dependencies ) {
             this.name = name;
             this.onGuiListener = onGuiListener;
             this.dependencies = dependencies;

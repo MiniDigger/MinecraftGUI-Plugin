@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnBlurListener {
 
-    void onBlur(Component component);
+    void onBlur( Component component );
 
 }

@@ -32,31 +32,31 @@ import java.util.regex.Pattern;
  */
 public class GenerateTag extends Tag {
 
-    public static final Pattern PATTERN_COLOR = Pattern.compile("^[0-9]{1,3},[0-9]{1,3},[0-9]{1,3},[0-9]{1,3}$");
+    public static final Pattern PATTERN_COLOR = Pattern.compile( "^[0-9]{1,3},[0-9]{1,3},[0-9]{1,3},[0-9]{1,3}$" );
 
     private final String name;
     private final int size;
     private final Color color;
 
-    public GenerateTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        this.name = element.getAttribute("name");
-        this.size = Integer.parseInt(element.getAttribute("size"));
+    public GenerateTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        this.name = element.getAttribute( "name" );
+        this.size = Integer.parseInt( element.getAttribute( "size" ) );
 
-        String color = element.getAttribute("color");
-        Matcher matcher = PATTERN_COLOR.matcher(color);
+        String color = element.getAttribute( "color" );
+        Matcher matcher = PATTERN_COLOR.matcher( color );
 
-        if(matcher.find()){
-            String colors[] = color.split(",");
-            int r = Integer.parseInt(colors[0]);
-            int g = Integer.parseInt(colors[1]);
-            int b = Integer.parseInt(colors[2]);
-            int a = Integer.parseInt(colors[3]);
+        if ( matcher.find() ) {
+            String colors[] = color.split( "," );
+            int r = Integer.parseInt( colors[0] );
+            int g = Integer.parseInt( colors[1] );
+            int b = Integer.parseInt( colors[2] );
+            int a = Integer.parseInt( colors[3] );
 
-            this.color = new Color(r,g,b,a);
-        }
-        else
+            this.color = new Color( r, g, b, a );
+        } else {
             this.color = null;
+        }
     }
 
     public String getName() {

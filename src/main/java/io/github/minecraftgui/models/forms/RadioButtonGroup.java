@@ -21,8 +21,6 @@
 package io.github.minecraftgui.models.forms;
 
 import io.github.minecraftgui.models.components.CheckBox;
-import io.github.minecraftgui.models.components.ComponentValuable;
-import io.github.minecraftgui.models.listeners.OnValueChangeListener;
 
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,41 +34,41 @@ public class RadioButtonGroup implements Valuable<String> {
     private CheckBox current = null;
     private boolean skipNextEvent = false;
 
-    public RadioButtonGroup(){
+    public RadioButtonGroup() {
         this.checkBoxes = new ConcurrentHashMap<>();
     }
 
-    public void addCheckBox(CheckBox checkBox, String value){
-        this.checkBoxes.put(checkBox, value);
+    public void addCheckBox( CheckBox checkBox, String value ) {
+        this.checkBoxes.put( checkBox, value );
 
         checkBox.addOnValueChangeListener( component -> {
             CheckBox box = (CheckBox) component;
 
-            if(current != box) {
+            if ( current != box ) {
                 if ( box.getValue() ) {
                     Enumeration<CheckBox> checks = checkBoxes.keys();
                     current = box;
 
-                    while(checks.hasMoreElements()) {
+                    while ( checks.hasMoreElements() ) {
                         CheckBox check = checks.nextElement();
 
-                        if (check != box)
-                            check.setChecked(false);
+                        if ( check != box ) {
+                            check.setChecked( false );
+                        }
                     }
                 }
-            }
-            else if(!skipNextEvent) {
-                box.setChecked(true);
+            } else if ( !skipNextEvent ) {
+                box.setChecked( true );
                 skipNextEvent = true;
-            }
-            else
+            } else {
                 skipNextEvent = false;
+            }
         } );
     }
 
     @Override
     public String getValue() {
-        return current == null?null:checkBoxes.get(current);
+        return current == null ? null : checkBoxes.get( current );
     }
 
 }

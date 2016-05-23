@@ -29,14 +29,15 @@ import io.github.minecraftgui.models.components.Visibility;
  */
 public class ShowChildren extends DelayedFunction {
 
-    public ShowChildren(String[] args) {
-        super(args);
+    public ShowChildren( String[] args ) {
+        super( args );
     }
 
     @Override
-    public void delayedFunction(UserGui userGui, Component component) {
-        for(Component child : component.getChildren())
-            child.setVisibility(Visibility.VISIBLE);
+    public void delayedFunction( UserGui userGui, Component component ) {
+        for ( Component child : component.getChildren() ) {
+            child.setVisibility( Visibility.VISIBLE );
+        }
     }
 
 }

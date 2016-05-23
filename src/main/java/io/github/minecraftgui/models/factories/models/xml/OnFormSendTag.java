@@ -23,7 +23,6 @@ package io.github.minecraftgui.models.factories.models.xml;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.forms.Form;
-import io.github.minecraftgui.models.listeners.OnFormSendListener;
 import io.github.minecraftgui.views.PluginInterface;
 import org.w3c.dom.Element;
 
@@ -35,28 +34,28 @@ import java.util.regex.Pattern;
  */
 public class OnFormSendTag extends Tag {
 
-    private static final Pattern VALUE = Pattern.compile("\\{\\w+\\}");
+    private static final Pattern VALUE = Pattern.compile( "\\{\\w+\\}" );
 
     private final String form;
     private final String command;
 
-    public OnFormSendTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        form = element.getAttribute("form");
-        command = element.getAttribute("command");
+    public OnFormSendTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        form = element.getAttribute( "form" );
+        command = element.getAttribute( "command" );
     }
 
-    public void addEvent(PluginInterface pluginInterface, UserGui userGui){
-        userGui.getForm(this.form).addOnFormSendListener( form1 -> pluginInterface.sendCommand(userGui.getPlayerUUID(), convertCommand( form1 )) );
+    public void addEvent( PluginInterface pluginInterface, UserGui userGui ) {
+        userGui.getForm( this.form ).addOnFormSendListener( form1 -> pluginInterface.sendCommand( userGui.getPlayerUUID(), convertCommand( form1 ) ) );
     }
 
-    private String convertCommand(Form form){
-        StringBuilder str = new StringBuilder(command);
+    private String convertCommand( Form form ) {
+        StringBuilder str = new StringBuilder( command );
         Matcher matcher;
 
-        while((matcher = VALUE.matcher(str)).find()) {
-            String value = matcher.group().substring(1, matcher.group().length()-1);
-            str.replace(matcher.start(), matcher.end(), form.getValuable(value).getValue().toString());
+        while ( ( matcher = VALUE.matcher( str ) ).find() ) {
+            String value = matcher.group().substring( 1, matcher.group().length() - 1 );
+            str.replace( matcher.start(), matcher.end(), form.getValuable( value ).getValue().toString() );
         }
 
         return str.toString();

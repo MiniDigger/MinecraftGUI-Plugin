@@ -32,36 +32,38 @@ public class TextArea extends ComponentEditableText {
     private final Component buttonLineBefore;
     private final Component buttonLineAfter;
 
-    public TextArea(Class<? extends Rectangle> shape, Component buttonLineBefore, Component buttonLineAfter) {
-        super(NetworkController.TEXT_AREA, shape);
+    public TextArea( Class<? extends Rectangle> shape, Component buttonLineBefore, Component buttonLineAfter ) {
+        super( NetworkController.TEXT_AREA, shape );
 
-        if(buttonLineAfter == null || buttonLineBefore == null)
-            throw new ComponentException("The buttons can't be null.");
-
-        this.buttonLineAfter = buttonLineAfter;
-        this.buttonLineBefore = buttonLineBefore;
-        specialChildren.add(buttonLineBefore);
-        specialChildren.add(buttonLineAfter);
-    }
-
-    public TextArea(Class<? extends Rectangle> shape, String id, Component buttonLineBefore, Component buttonLineAfter) {
-        super(NetworkController.TEXT_AREA, shape, id);
-
-        if(buttonLineAfter == null || buttonLineBefore == null)
-            throw new ComponentException("The buttons can't be null.");
+        if ( buttonLineAfter == null || buttonLineBefore == null ) {
+            throw new ComponentException( "The buttons can't be null." );
+        }
 
         this.buttonLineAfter = buttonLineAfter;
         this.buttonLineBefore = buttonLineBefore;
-        specialChildren.add(buttonLineBefore);
-        specialChildren.add(buttonLineAfter);
+        specialChildren.add( buttonLineBefore );
+        specialChildren.add( buttonLineAfter );
     }
 
-    public void setNbLineVisible(int nb){
-        userConnection.setTextNbLine(this, nb);
+    public TextArea( Class<? extends Rectangle> shape, String id, Component buttonLineBefore, Component buttonLineAfter ) {
+        super( NetworkController.TEXT_AREA, shape, id );
+
+        if ( buttonLineAfter == null || buttonLineBefore == null ) {
+            throw new ComponentException( "The buttons can't be null." );
+        }
+
+        this.buttonLineAfter = buttonLineAfter;
+        this.buttonLineBefore = buttonLineBefore;
+        specialChildren.add( buttonLineBefore );
+        specialChildren.add( buttonLineAfter );
     }
 
-    public void setTextAlignement(TextAlignment alignement) {
-        userConnection.setTextAlignment(this, alignement);
+    public void setNbLineVisible( int nb ) {
+        userConnection.setTextNbLine( this, nb );
+    }
+
+    public void setTextAlignement( TextAlignment alignement ) {
+        userConnection.setTextAlignment( this, alignement );
     }
 
     public Component getButtonLineBefore() {

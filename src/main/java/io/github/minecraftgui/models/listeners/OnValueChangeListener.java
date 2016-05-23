@@ -7,6 +7,6 @@ import io.github.minecraftgui.models.components.ComponentValuable;
  */
 public interface OnValueChangeListener {
 
-    void onValueChange(ComponentValuable component);
+    void onValueChange( ComponentValuable component );
 
 }

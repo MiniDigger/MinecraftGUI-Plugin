@@ -30,41 +30,43 @@ import io.github.minecraftgui.models.shapes.Shape;
  */
 public class Slider extends ComponentValuable<Double> {
 
-    public enum Type{HORIZONTAL, VERTICAL}
+    public enum Type {HORIZONTAL, VERTICAL}
 
     private final Shape shapeOnProgress;
     private final Component button;
 
-    public Slider(Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress, Component button) {
-        super((type == Type.HORIZONTAL? NetworkController.SLIDER_HORIZONTAL:NetworkController.SLIDER_VERTICAL), shape);
-        this.shapeOnProgress = getShapeByClass(shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS);
+    public Slider( Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress, Component button ) {
+        super( ( type == Type.HORIZONTAL ? NetworkController.SLIDER_HORIZONTAL : NetworkController.SLIDER_VERTICAL ), shape );
+        this.shapeOnProgress = getShapeByClass( shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS );
 
-        if(button == null)
-            throw new ComponentException("The button can't be null.");
-
-        this.button = button;
-        specialChildren.add(button);
-    }
-
-    public Slider(Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress, Component button, String id) {
-        super((type == Type.HORIZONTAL? NetworkController.SLIDER_HORIZONTAL:NetworkController.SLIDER_VERTICAL), shape, id);
-        this.shapeOnProgress = getShapeByClass(shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS);
-
-        if(button == null)
-            throw new ComponentException("The button can't be null.");
+        if ( button == null ) {
+            throw new ComponentException( "The button can't be null." );
+        }
 
         this.button = button;
-        specialChildren.add(button);
+        specialChildren.add( button );
     }
 
-    public void setPercentage(double percentage){
-        userConnection.setValue(this, percentage);
+    public Slider( Type type, Class<? extends Rectangle> shape, Class<? extends Rectangle> shapeOnProgress, Component button, String id ) {
+        super( ( type == Type.HORIZONTAL ? NetworkController.SLIDER_HORIZONTAL : NetworkController.SLIDER_VERTICAL ), shape, id );
+        this.shapeOnProgress = getShapeByClass( shapeOnProgress, NetworkController.SHAPE_ON_PROGRESS );
+
+        if ( button == null ) {
+            throw new ComponentException( "The button can't be null." );
+        }
+
+        this.button = button;
+        specialChildren.add( button );
+    }
+
+    public void setPercentage( double percentage ) {
+        userConnection.setValue( this, percentage );
     }
 
     @Override
     protected void init() {
         super.init();
-        this.shapeOnProgress.setUserConnection(userConnection);
+        this.shapeOnProgress.setUserConnection( userConnection );
     }
 
     public Component getButton() {

@@ -43,67 +43,67 @@ public final class UserGui {
     private final ConcurrentHashMap<String, Component> componentsWithId;
     private final Root root;
 
-    public UserGui(UserConnection userConnection) {
+    public UserGui( UserConnection userConnection ) {
         this.userConnection = userConnection;
         this.components = new ConcurrentHashMap<>();
         this.dropdowns = new ConcurrentHashMap<>();
         this.forms = new ConcurrentHashMap<>();
         this.radioButtonGroups = new ConcurrentHashMap<>();
         this.componentsWithId = new ConcurrentHashMap<>();
-        this.root = new Root(this, userConnection);
+        this.root = new Root( this, userConnection );
     }
 
-    public void addOnGuiOpenListener(OnGuiListener plugin, OnGuiListener.OnGuiOpen onGuiOpen){
-        userConnection.addOnGuiOpenListener(plugin, onGuiOpen);
+    public void addOnGuiOpenListener( OnGuiListener plugin, OnGuiListener.OnGuiOpen onGuiOpen ) {
+        userConnection.addOnGuiOpenListener( plugin, onGuiOpen );
     }
 
-    public void addOnGuiCloseListener(OnGuiListener plugin, OnGuiListener.OnGuiClose onGuiClose){
-        userConnection.addOnGuiCloseListener(plugin, onGuiClose);
+    public void addOnGuiCloseListener( OnGuiListener plugin, OnGuiListener.OnGuiClose onGuiClose ) {
+        userConnection.addOnGuiCloseListener( plugin, onGuiClose );
     }
 
-    public Form getForm(String name){
-        Form form = forms.get(name.toLowerCase());
+    public Form getForm( String name ) {
+        Form form = forms.get( name.toLowerCase() );
 
-        if(form != null)
-            return forms.get(name.toLowerCase());
-        else{
+        if ( form != null ) {
+            return forms.get( name.toLowerCase() );
+        } else {
             form = new Form();
 
-            forms.put(name.toLowerCase(), form);
+            forms.put( name.toLowerCase(), form );
 
             return form;
         }
     }
 
-    public Dropdown getDropdown(String name){
-        Dropdown dropdown = dropdowns.get(name.toLowerCase());
+    public Dropdown getDropdown( String name ) {
+        Dropdown dropdown = dropdowns.get( name.toLowerCase() );
 
-        if(dropdown != null)
+        if ( dropdown != null ) {
             return dropdown;
-        else {
+        } else {
             dropdown = new Dropdown();
 
-            dropdowns.put(name.toLowerCase(), dropdown);
+            dropdowns.put( name.toLowerCase(), dropdown );
 
             return dropdown;
         }
     }
 
-    public RadioButtonGroup getRadioButtonGroup(String name){
-        RadioButtonGroup radioButtonGroup = radioButtonGroups.get(name.toLowerCase());
+    public RadioButtonGroup getRadioButtonGroup( String name ) {
+        RadioButtonGroup radioButtonGroup = radioButtonGroups.get( name.toLowerCase() );
 
-        if(radioButtonGroup != null)
+        if ( radioButtonGroup != null ) {
             return radioButtonGroup;
-        else{
+        } else {
             radioButtonGroup = new RadioButtonGroup();
 
-            radioButtonGroups.put(name.toLowerCase(), radioButtonGroup);
+            radioButtonGroups.put( name.toLowerCase(), radioButtonGroup );
 
             return radioButtonGroup;
         }
     }
 
-    public UUID getPlayerUUID(){
+    public UUID getPlayerUUID() {
         return userConnection.getUserUuid();
     }
 
@@ -111,23 +111,23 @@ public final class UserGui {
         return root;
     }
 
-    public Component getComponent(String id){
-        return componentsWithId.get(id);
+    public Component getComponent( String id ) {
+        return componentsWithId.get( id );
     }
 
-    public void addImage(String url, String name){
-        userConnection.addImage(url, name);
+    public void addImage( String url, String name ) {
+        userConnection.addImage( url, name );
     }
 
-    public void addFont(String url){
-        userConnection.addFont(url);
+    public void addFont( String url ) {
+        userConnection.addFont( url );
     }
 
-    public void addFontToGenerate(String name, int size, Color color){
-        userConnection.addFontToGenerate(name, size, color);
+    public void addFontToGenerate( String name, int size, Color color ) {
+        userConnection.addFontToGenerate( name, size, color );
     }
 
-    public void clear(){
+    public void clear() {
         forms.clear();
         dropdowns.clear();
         radioButtonGroups.clear();
@@ -135,18 +135,20 @@ public final class UserGui {
         componentsWithId.clear();
     }
 
-    protected final void addComponent(Component component){
-        components.put(component.getUniqueId(), component);
+    protected final void addComponent( Component component ) {
+        components.put( component.getUniqueId(), component );
 
-        if(component.getId() != null)
-            componentsWithId.put(component.getId(), component);
+        if ( component.getId() != null ) {
+            componentsWithId.put( component.getId(), component );
+        }
     }
 
-    protected final void removeComponent(Component component){
-        components.remove(component.getUniqueId());
+    protected final void removeComponent( Component component ) {
+        components.remove( component.getUniqueId() );
 
-        if(component.getId() != null)
-            componentsWithId.remove(component.getId());
+        if ( component.getId() != null ) {
+            componentsWithId.remove( component.getId() );
+        }
     }
 
 }

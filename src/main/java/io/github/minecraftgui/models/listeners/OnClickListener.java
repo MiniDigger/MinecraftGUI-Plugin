@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnClickListener {
 
-    void onClick(Component component);
+    void onClick( Component component );
 
 }

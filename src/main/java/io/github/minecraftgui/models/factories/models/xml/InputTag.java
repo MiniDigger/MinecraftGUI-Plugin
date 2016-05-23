@@ -33,19 +33,19 @@ import org.w3c.dom.Element;
  */
 public class InputTag extends ComponentTag {
 
-    public InputTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
+    public InputTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        return new Input((Class<? extends Rectangle>) shape, id);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        return new Input( (Class<? extends Rectangle>) shape, id );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
 
-        ((Input) component).setText(convertString(plugin, userGui, getText()));
+        ( (Input) component ).setText( convertString( plugin, userGui, getText() ) );
     }
 }

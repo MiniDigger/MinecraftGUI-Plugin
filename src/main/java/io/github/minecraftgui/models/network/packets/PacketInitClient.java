@@ -38,7 +38,7 @@ public class PacketInitClient extends PacketOut {
     private final HashMap<String, String> images;
     private final HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate;
 
-    public PacketInitClient(ArrayList<String> fonts, HashMap<String, String> images, HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate) {
+    public PacketInitClient( ArrayList<String> fonts, HashMap<String, String> images, HashMap<String, HashMap<Color, ArrayList<Integer>>> fontsGenerate ) {
         this.fonts = fonts;
         this.images = images;
         this.fontsGenerate = fontsGenerate;
@@ -51,41 +51,44 @@ public class PacketInitClient extends PacketOut {
         JSONArray images = new JSONArray();
         JSONArray fontsToGenerate = new JSONArray();
 
-        for(String font : this.fonts)
-            fonts.put(font);
+        for ( String font : this.fonts ) {
+            fonts.put( font );
+        }
 
-        for(Map.Entry pairs : this.images.entrySet())
-            images.put(new JSONObject().put(NetworkController.URL, pairs.getKey()).put(NetworkController.NAME, pairs.getValue()));
+        for ( Map.Entry pairs : this.images.entrySet() ) {
+            images.put( new JSONObject().put( NetworkController.URL, pairs.getKey() ).put( NetworkController.NAME, pairs.getValue() ) );
+        }
 
-        for(Map.Entry pairs : this.fontsGenerate.entrySet()) {
+        for ( Map.Entry pairs : this.fontsGenerate.entrySet() ) {
             JSONObject font = new JSONObject();
             JSONArray colorList = new JSONArray();
 
-            for(Map.Entry pairs1 : ((HashMap<Color, Integer>)pairs.getValue()).entrySet()) {
+            for ( Map.Entry pairs1 : ( (HashMap<Color, Integer>) pairs.getValue() ).entrySet() ) {
                 JSONObject colorObj = new JSONObject();
                 JSONArray sizeList = new JSONArray();
                 Color color = (Color) pairs1.getKey();
                 ArrayList<Integer> sizes = (ArrayList) pairs1.getValue();
 
-                for(Integer size : sizes)
-                    sizeList.put(size);
+                for ( Integer size : sizes ) {
+                    sizeList.put( size );
+                }
 
-                colorObj.put(NetworkController.R, color.getRed());
-                colorObj.put(NetworkController.G, color.getGreen());
-                colorObj.put(NetworkController.B, color.getBlue());
-                colorObj.put(NetworkController.A, color.getAlpha());
-                colorObj.put(NetworkController.LIST, sizeList);
-                colorList.put(colorObj);
+                colorObj.put( NetworkController.R, color.getRed() );
+                colorObj.put( NetworkController.G, color.getGreen() );
+                colorObj.put( NetworkController.B, color.getBlue() );
+                colorObj.put( NetworkController.A, color.getAlpha() );
+                colorObj.put( NetworkController.LIST, sizeList );
+                colorList.put( colorObj );
             }
 
-            font.put(NetworkController.NAME, pairs.getKey());
-            font.put(NetworkController.LIST, colorList);
-            fontsToGenerate.put(font);
+            font.put( NetworkController.NAME, pairs.getKey() );
+            font.put( NetworkController.LIST, colorList );
+            fontsToGenerate.put( font );
         }
 
-        jsonObject.put(NetworkController.FONTS, fonts);
-        jsonObject.put(NetworkController.IMAGES, images);
-        jsonObject.put(NetworkController.FONTS_TO_GENERATE, fontsToGenerate);
+        jsonObject.put( NetworkController.FONTS, fonts );
+        jsonObject.put( NetworkController.IMAGES, images );
+        jsonObject.put( NetworkController.FONTS_TO_GENERATE, fontsToGenerate );
 
         return jsonObject;
     }

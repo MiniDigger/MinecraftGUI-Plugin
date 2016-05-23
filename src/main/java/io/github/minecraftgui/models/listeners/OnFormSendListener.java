@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.forms.Form;
  */
 public interface OnFormSendListener {
 
-    void onFormSend(Form form);
+    void onFormSend( Form form );
 
 }

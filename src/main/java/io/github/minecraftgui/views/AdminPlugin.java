@@ -37,56 +37,60 @@ public class AdminPlugin implements OnGuiListener {
     private final File xmlFolder;
     private boolean isDevMode = false;
 
-    public AdminPlugin(MinecraftGuiService service, String path) {
+    public AdminPlugin( MinecraftGuiService service, String path ) {
         this.service = service;
-        this.xmlFolder = initXmlFolder(path);
+        this.xmlFolder = initXmlFolder( path );
         this.guiModels = initGuiModels();
-        service.addPlugin(this, "MinecraftGuiAdmin", initDependencies());
+        service.addPlugin( this, "MinecraftGuiAdmin", initDependencies() );
     }
 
-    public void setDevMode(boolean isDevMode) {
+    public void setDevMode( boolean isDevMode ) {
         this.isDevMode = isDevMode;
     }
 
     @Override
-    public void onGuiPreInit(UserGui userGui) {
-        for(GuiFactory.GuiModel guiModel : guiModels)
-            guiModel.preInitGui(service.getPluginInterface(), userGui);
+    public void onGuiPreInit( UserGui userGui ) {
+        for ( GuiFactory.GuiModel guiModel : guiModels ) {
+            guiModel.preInitGui( service.getPluginInterface(), userGui );
+        }
     }
 
     @Override
-    public void onGuiInit(UserGui userGui) {
-        if(isDevMode)
+    public void onGuiInit( UserGui userGui ) {
+        if ( isDevMode ) {
             guiModels = initGuiModels();
+        }
 
-        for(GuiFactory.GuiModel guiModel : guiModels)
-            guiModel.initGui(service.getPluginInterface(), userGui, this);
+        for ( GuiFactory.GuiModel guiModel : guiModels ) {
+            guiModel.initGui( service.getPluginInterface(), userGui, this );
+        }
     }
 
-    private String[] initDependencies(){
+    private String[] initDependencies() {
         ArrayList<String> dependencies = new ArrayList<>();
 
-        for(GuiFactory.GuiModel guiModel : guiModels)
-            dependencies.addAll(guiModel.getDependencies());
+        for ( GuiFactory.GuiModel guiModel : guiModels ) {
+            dependencies.addAll( guiModel.getDependencies() );
+        }
 
-        return dependencies.toArray(new String[dependencies.size()]);
+        return dependencies.toArray( new String[dependencies.size()] );
     }
 
-    private File initXmlFolder(String path){
-        File file = new File(path+File.separator+"xml");
+    private File initXmlFolder( String path ) {
+        File file = new File( path + File.separator + "xml" );
         file.mkdirs();
 
         return file;
     }
 
-    private ArrayList<GuiFactory.GuiModel> initGuiModels(){
+    private ArrayList<GuiFactory.GuiModel> initGuiModels() {
         ArrayList<GuiFactory.GuiModel> guiModels = new ArrayList<>();
 
-        for(File file : xmlFolder.listFiles()){
-            if(file.getName().endsWith(".xml")){
-                try{
-                    guiModels.add(service.createGuiModel(file));
-                }catch (Exception e){
+        for ( File file : xmlFolder.listFiles() ) {
+            if ( file.getName().endsWith( ".xml" ) ) {
+                try {
+                    guiModels.add( service.createGuiModel( file ) );
+                } catch ( Exception e ) {
                     e.printStackTrace();
                 }
             }

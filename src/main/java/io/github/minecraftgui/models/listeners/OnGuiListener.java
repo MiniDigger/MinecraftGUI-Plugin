@@ -27,18 +27,19 @@ import io.github.minecraftgui.models.components.UserGui;
  */
 public interface OnGuiListener {
 
-    void onGuiPreInit(UserGui userGui);
-    void onGuiInit(UserGui userGui);
+    void onGuiPreInit( UserGui userGui );
+
+    void onGuiInit( UserGui userGui );
 
     interface OnGuiOpen {
 
-        void onGuiOpen(UserGui userGui);
+        void onGuiOpen( UserGui userGui );
 
     }
 
     interface OnGuiClose {
 
-        void onGuiClose(UserGui userGui);
+        void onGuiClose( UserGui userGui );
 
     }
 

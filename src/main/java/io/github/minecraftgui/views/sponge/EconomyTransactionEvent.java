@@ -35,20 +35,21 @@ public class EconomyTransactionEvent {
     private final UUID player;
     private final String currency;
 
-    public EconomyTransactionEvent(Paragraph paragraph, UUID player, String currency) {
+    public EconomyTransactionEvent( Paragraph paragraph, UUID player, String currency ) {
         this.paragraph = paragraph;
         this.player = player;
         this.currency = currency;
     }
 
     @Listener
-    public void onEconomyTransaction(org.spongepowered.api.event.economy.EconomyTransactionEvent event){
-        if(event.getTransactionResult().getCurrency().getDisplayName().toPlain().equalsIgnoreCase(currency)) {
-            if (event.getTransactionResult().getAccount() instanceof UniqueAccount) {
+    public void onEconomyTransaction( org.spongepowered.api.event.economy.EconomyTransactionEvent event ) {
+        if ( event.getTransactionResult().getCurrency().getDisplayName().toPlain().equalsIgnoreCase( currency ) ) {
+            if ( event.getTransactionResult().getAccount() instanceof UniqueAccount ) {
                 UniqueAccount account = (UniqueAccount) event.getTransactionResult().getAccount();
 
-                if(account.getUUID().equals(player))
-                    paragraph.setText(account.getBalance(event.getTransactionResult().getCurrency()).toString());
+                if ( account.getUUID().equals( player ) ) {
+                    paragraph.setText( account.getBalance( event.getTransactionResult().getCurrency() ).toString() );
+                }
             }
         }
     }

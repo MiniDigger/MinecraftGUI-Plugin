@@ -28,12 +28,12 @@ import io.github.minecraftgui.models.shapes.Shape;
  */
 public class Div extends Component {
 
-    public Div(Class<? extends Shape> shape) {
-        super(NetworkController.DIV, shape);
+    public Div( Class<? extends Shape> shape ) {
+        super( NetworkController.DIV, shape );
     }
 
-    public Div(Class<? extends Shape> shape, String id) {
-        super(NetworkController.DIV, shape, id);
+    public Div( Class<? extends Shape> shape, String id ) {
+        super( NetworkController.DIV, shape, id );
     }
 
 }

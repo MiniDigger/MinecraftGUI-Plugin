@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnDoubleClickListener {
 
-    void onDoubleClick(Component component);
+    void onDoubleClick( Component component );
 
 }

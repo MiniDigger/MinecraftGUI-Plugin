@@ -29,17 +29,18 @@ import io.github.minecraftgui.models.components.Visibility;
  */
 public class HideComponent extends DelayedFunction {
 
-    public HideComponent(String[] args) {
-        super(args);
+    public HideComponent( String[] args ) {
+        super( args );
     }
 
     @Override
-    public void delayedFunction(UserGui userGui, Component component) {
-        for(int i = 1; i < args.length; i++){
-            Component comp = userGui.getComponent(args[i]);
+    public void delayedFunction( UserGui userGui, Component component ) {
+        for ( int i = 1; i < args.length; i++ ) {
+            Component comp = userGui.getComponent( args[i] );
 
-            if(comp != null)
-                comp.setVisibility(Visibility.INVISIBLE);
+            if ( comp != null ) {
+                comp.setVisibility( Visibility.INVISIBLE );
+            }
         }
     }
 

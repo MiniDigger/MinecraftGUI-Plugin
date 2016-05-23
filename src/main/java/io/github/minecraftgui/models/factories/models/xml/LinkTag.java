@@ -30,9 +30,9 @@ public class LinkTag extends Tag {
 
     private final String src;
 
-    public LinkTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        this.src = element.getAttribute("src");
+    public LinkTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        this.src = element.getAttribute( "src" );
     }
 
     public String getSrc() {

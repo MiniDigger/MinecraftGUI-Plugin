@@ -29,16 +29,16 @@ import java.awt.*;
  */
 public abstract class ComponentEditableText extends ComponentText {
 
-    public ComponentEditableText(String type, Class<? extends Shape> shape) {
-        super(type, shape);
+    public ComponentEditableText( String type, Class<? extends Shape> shape ) {
+        super( type, shape );
     }
 
-    public ComponentEditableText(String type, Class<? extends Shape> shape, String id) {
-        super(type, shape, id);
+    public ComponentEditableText( String type, Class<? extends Shape> shape, String id ) {
+        super( type, shape, id );
     }
 
-    public void setCursorColor(State state, Color color){
-        userConnection.setCursorColor(this, state, color);
+    public void setCursorColor( State state, Color color ) {
+        userConnection.setCursorColor( this, state, color );
     }
 
 }

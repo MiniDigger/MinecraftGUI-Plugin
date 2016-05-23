@@ -36,33 +36,33 @@ public class MinecraftGuiService {
     private final NetworkController networkController;
     private final PluginInterface pluginInterface;
 
-    public MinecraftGuiService(NetworkController networkController, PluginInterface pluginInterface) {
+    public MinecraftGuiService( NetworkController networkController, PluginInterface pluginInterface ) {
         this.networkController = networkController;
         this.pluginInterface = pluginInterface;
     }
 
-    public void addPlugin(OnGuiListener plugin, String name){
-        networkController.addPlugin(plugin, name);
+    public void addPlugin( OnGuiListener plugin, String name ) {
+        networkController.addPlugin( plugin, name );
     }
 
-    public void addPlugin(OnGuiListener plugin, String name, String... dependencies){
-        networkController.addPlugin(plugin, name, dependencies);
+    public void addPlugin( OnGuiListener plugin, String name, String... dependencies ) {
+        networkController.addPlugin( plugin, name, dependencies );
     }
 
     public PluginInterface getPluginInterface() {
         return pluginInterface;
     }
 
-    public UserGui getUserGui(UUID player, String plugin) {
-        return networkController.getUserConnection(player).getUserGui(plugin);
+    public UserGui getUserGui( UUID player, String plugin ) {
+        return networkController.getUserConnection( player ).getUserGui( plugin );
     }
 
-    public GuiFactory.GuiModel createGuiModel(File file) {
-        return GuiFactory.createGuiModel(file);
+    public GuiFactory.GuiModel createGuiModel( File file ) {
+        return GuiFactory.createGuiModel( file );
     }
 
-    public boolean isPlayerConnectedWithClient(UUID player) {
-        return networkController.getUserConnection(player) != null;
+    public boolean isPlayerConnectedWithClient( UUID player ) {
+        return networkController.getUserConnection( player ) != null;
     }
 
 }

@@ -31,40 +31,40 @@ import java.awt.*;
  */
 public class PolygonColor extends Shape<Color> {
 
-    public PolygonColor(String componentShape, Component component) {
-        super(NetworkController.POLYGON_COLOR, componentShape, component);
+    public PolygonColor( String componentShape, Component component ) {
+        super( NetworkController.POLYGON_COLOR, componentShape, component );
     }
 
-    public void setPositions(double positions[][]){
-        userConnection.setPositions(component, this, positions);
-    }
-
-    @Override
-    public void setBackground(State state, Color value) {
-        userConnection.setAttribute(NetworkController.BACKGROUND_COLOR, component, this, state, 1, 0, value);
-    }
-
-    public void setBackground(State state, Color value, long time) {
-        userConnection.setAttribute(NetworkController.BACKGROUND_COLOR, component, this,  state, 1, time, value);
+    public void setPositions( double positions[][] ) {
+        userConnection.setPositions( component, this, positions );
     }
 
     @Override
-    public void setMargin(State state, Margin margin, double value) {
+    public void setBackground( State state, Color value ) {
+        userConnection.setAttribute( NetworkController.BACKGROUND_COLOR, component, this, state, 1, 0, value );
+    }
 
+    public void setBackground( State state, Color value, long time ) {
+        userConnection.setAttribute( NetworkController.BACKGROUND_COLOR, component, this, state, 1, time, value );
     }
 
     @Override
-    public void setBorder(State state, Border border, double value) {
+    public void setMargin( State state, Margin margin, double value ) {
 
     }
 
     @Override
-    public void setBorderColor(State state, Border border, Color value) {
+    public void setBorder( State state, Border border, double value ) {
 
     }
 
     @Override
-    public void setPadding(State state, Padding padding, double value) {
+    public void setBorderColor( State state, Border border, Color value ) {
+
+    }
+
+    @Override
+    public void setPadding( State state, Padding padding, double value ) {
 
     }
 

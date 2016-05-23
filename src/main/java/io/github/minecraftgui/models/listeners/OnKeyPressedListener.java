@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnKeyPressedListener {
 
-    void onKeyPressed(Component component, int keyCode);
+    void onKeyPressed( Component component, int keyCode );
 
 }

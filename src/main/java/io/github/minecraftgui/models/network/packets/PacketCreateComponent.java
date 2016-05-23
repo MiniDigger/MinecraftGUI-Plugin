@@ -21,7 +21,13 @@
 package io.github.minecraftgui.models.network.packets;
 
 import io.github.minecraftgui.controllers.NetworkController;
-import io.github.minecraftgui.models.components.*;
+import io.github.minecraftgui.models.components.CheckBox;
+import io.github.minecraftgui.models.components.Component;
+import io.github.minecraftgui.models.components.List;
+import io.github.minecraftgui.models.components.Paragraph;
+import io.github.minecraftgui.models.components.ProgressBar;
+import io.github.minecraftgui.models.components.Slider;
+import io.github.minecraftgui.models.components.TextArea;
 import org.json.JSONObject;
 
 /**
@@ -31,65 +37,67 @@ public class PacketCreateComponent extends PacketOut {
 
     private final Component component;
 
-    public PacketCreateComponent(Component component) {
+    public PacketCreateComponent( Component component ) {
         this.component = component;
     }
 
     @Override
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(NetworkController.PARENT_ID, component.getParent().getUniqueId().toString());
-        jsonObject.put(NetworkController.COMPONENT, generateJSONObject(component));
+        jsonObject.put( NetworkController.PARENT_ID, component.getParent().getUniqueId().toString() );
+        jsonObject.put( NetworkController.COMPONENT, generateJSONObject( component ) );
 
         return jsonObject;
     }
 
-    private JSONObject generateJSONObject(Component component){
+    private JSONObject generateJSONObject( Component component ) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(NetworkController.COMPONENT_ID, component.getUniqueId().toString());
-        jsonObject.put(NetworkController.TYPE, component.getType());
-        jsonObject.put(NetworkController.SHAPE, component.getShape().getType());
+        jsonObject.put( NetworkController.COMPONENT_ID, component.getUniqueId().toString() );
+        jsonObject.put( NetworkController.TYPE, component.getType() );
+        jsonObject.put( NetworkController.SHAPE, component.getShape().getType() );
 
-        switch (component.getType()){
+        switch ( component.getType() ) {
             case NetworkController.CHECKBOX:
                 CheckBox checkBox = (CheckBox) component;
-                jsonObject.put(NetworkController.SHAPE_ON_VALUE_TRUE, checkBox.getShapeOnValueTrue().getType());
-                jsonObject.put(NetworkController.SHAPE_ON_VALUE_FALSE, checkBox.getShapeOnValueFalse().getType());
+                jsonObject.put( NetworkController.SHAPE_ON_VALUE_TRUE, checkBox.getShapeOnValueTrue().getType() );
+                jsonObject.put( NetworkController.SHAPE_ON_VALUE_FALSE, checkBox.getShapeOnValueFalse().getType() );
                 break;
-            case NetworkController.DIV: break;
-            case NetworkController.INPUT: break;
+            case NetworkController.DIV:
+                break;
+            case NetworkController.INPUT:
+                break;
             case NetworkController.PROGRESS_BAR_VERTICAL:
                 ProgressBar progressBarV = (ProgressBar) component;
-                jsonObject.put(NetworkController.SHAPE_ON_PROGRESS, progressBarV.getShapeOnProgress().getType());
+                jsonObject.put( NetworkController.SHAPE_ON_PROGRESS, progressBarV.getShapeOnProgress().getType() );
                 break;
             case NetworkController.PROGRESS_BAR_HORIZONTAL:
                 ProgressBar progressBarH = (ProgressBar) component;
-                jsonObject.put(NetworkController.SHAPE_ON_PROGRESS, progressBarH.getShapeOnProgress().getType());
+                jsonObject.put( NetworkController.SHAPE_ON_PROGRESS, progressBarH.getShapeOnProgress().getType() );
                 break;
             case NetworkController.LIST:
                 List list = (List) component;
-                jsonObject.put(NetworkController.BUTTON_LIST_BEFORE, generateJSONObject(list.getButtonListBefore()));
-                jsonObject.put(NetworkController.BUTTON_LIST_AFTER, generateJSONObject(list.getButtonListAfter()));
+                jsonObject.put( NetworkController.BUTTON_LIST_BEFORE, generateJSONObject( list.getButtonListBefore() ) );
+                jsonObject.put( NetworkController.BUTTON_LIST_AFTER, generateJSONObject( list.getButtonListAfter() ) );
                 break;
             case NetworkController.PARAGRAPH:
                 Paragraph paragraph = (Paragraph) component;
-                jsonObject.put(NetworkController.BUTTON_LINE_BEFORE, generateJSONObject(paragraph.getButtonLineBefore()));
-                jsonObject.put(NetworkController.BUTTON_LINE_AFTER, generateJSONObject(paragraph.getButtonLineAfter()));
+                jsonObject.put( NetworkController.BUTTON_LINE_BEFORE, generateJSONObject( paragraph.getButtonLineBefore() ) );
+                jsonObject.put( NetworkController.BUTTON_LINE_AFTER, generateJSONObject( paragraph.getButtonLineAfter() ) );
                 break;
             case NetworkController.SLIDER_VERTICAL:
                 Slider sliderV = (Slider) component;
-                jsonObject.put(NetworkController.SHAPE_ON_PROGRESS, sliderV.getShapeOnProgress().getType());
-                jsonObject.put(NetworkController.SLIDER_BUTTON, generateJSONObject(sliderV.getButton()));
+                jsonObject.put( NetworkController.SHAPE_ON_PROGRESS, sliderV.getShapeOnProgress().getType() );
+                jsonObject.put( NetworkController.SLIDER_BUTTON, generateJSONObject( sliderV.getButton() ) );
                 break;
             case NetworkController.SLIDER_HORIZONTAL:
                 Slider sliderH = (Slider) component;
-                jsonObject.put(NetworkController.SHAPE_ON_PROGRESS, sliderH.getShapeOnProgress().getType());
-                jsonObject.put(NetworkController.SLIDER_BUTTON, generateJSONObject(sliderH.getButton()));
+                jsonObject.put( NetworkController.SHAPE_ON_PROGRESS, sliderH.getShapeOnProgress().getType() );
+                jsonObject.put( NetworkController.SLIDER_BUTTON, generateJSONObject( sliderH.getButton() ) );
                 break;
             case NetworkController.TEXT_AREA:
                 TextArea textArea = (TextArea) component;
-                jsonObject.put(NetworkController.BUTTON_LINE_BEFORE, generateJSONObject(textArea.getButtonLineBefore()));
-                jsonObject.put(NetworkController.BUTTON_LINE_AFTER, generateJSONObject(textArea.getButtonLineAfter()));
+                jsonObject.put( NetworkController.BUTTON_LINE_BEFORE, generateJSONObject( textArea.getButtonLineBefore() ) );
+                jsonObject.put( NetworkController.BUTTON_LINE_AFTER, generateJSONObject( textArea.getButtonLineAfter() ) );
                 break;
         }
 

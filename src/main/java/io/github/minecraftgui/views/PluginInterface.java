@@ -30,14 +30,14 @@ import java.util.UUID;
  */
 public interface PluginInterface {
 
-    UserGui getUserGui(String plugin, UUID player);
+    UserGui getUserGui( String plugin, UUID player );
 
-    String getPlayerName(UUID player);
+    String getPlayerName( UUID player );
 
-    void sendCommand(UUID sender, String command);
+    void sendCommand( UUID sender, String command );
 
-    void setParagraphToWorldChangeEvent(UUID player, Paragraph paragraph);
+    void setParagraphToWorldChangeEvent( UUID player, Paragraph paragraph );
 
-    void setParagraphToEconomyTransactionEvent(UUID player, Paragraph paragraph, String currency);
+    void setParagraphToEconomyTransactionEvent( UUID player, Paragraph paragraph, String currency );
 
 }

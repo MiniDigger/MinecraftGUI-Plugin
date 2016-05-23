@@ -26,12 +26,8 @@ import io.github.minecraftgui.views.MinecraftGuiService;
 import io.github.minecraftgui.views.PluginInterface;
 import io.github.minecraftgui.views.sponge.commands.ReloadCommand;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
@@ -48,13 +44,14 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
 
-@Plugin(id = "MinecraftGui", name = "Minecraft Gui Server", version = "2.0")
+@Plugin( id = "MinecraftGui", name = "Minecraft Gui Server", version = "2.0" )
 public class Sponge implements PluginInterface {
 
     @Inject
     private Game game;
 
-    @Inject @DefaultConfig(sharedRoot = false)
+    @Inject
+    @DefaultConfig( sharedRoot = false )
     private Path defaultConfig;
 
     private SpongeNetwork spongeNetwork;
@@ -62,78 +59,81 @@ public class Sponge implements PluginInterface {
     private AdminPlugin adminPlugin;
 
     @Listener
-    public void onInitializationEvent(GameInitializationEvent event) {
-        this.spongeNetwork = new SpongeNetwork(this, game);
-        this.service = new MinecraftGuiService(spongeNetwork, this);
+    public void onInitializationEvent( GameInitializationEvent event ) {
+        this.spongeNetwork = new SpongeNetwork( this, game );
+        this.service = new MinecraftGuiService( spongeNetwork, this );
 
-        adminPlugin = new AdminPlugin(service, defaultConfig.toString().substring(0, defaultConfig.toString().lastIndexOf(File.separator)));
+        adminPlugin = new AdminPlugin( service, defaultConfig.toString().substring( 0, defaultConfig.toString().lastIndexOf( File.separator ) ) );
 
-        game.getServiceManager().setProvider(this, MinecraftGuiService.class, this.service);
+        game.getServiceManager().setProvider( this, MinecraftGuiService.class, this.service );
 
         CommandSpec commandReload = CommandSpec.builder()
-                .description(Text.of("MinecraftGui commands"))
-                .executor(new ReloadCommand(spongeNetwork))
-                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("action"))))
+                .description( Text.of( "MinecraftGui commands" ) )
+                .executor( new ReloadCommand( spongeNetwork ) )
+                .arguments( GenericArguments.onlyOne( GenericArguments.string( Text.of( "action" ) ) ) )
                 .build();
 
         CommandSpec commandDev = CommandSpec.builder()
-                .description(Text.of("MinecraftGui command to start the dev mode."))
+                .description( Text.of( "MinecraftGui command to start the dev mode." ) )
                 .executor( ( commandSource, commandContext ) -> {
-                    adminPlugin.setDevMode((Boolean) commandContext.getOne("state").get());
+                    adminPlugin.setDevMode( (Boolean) commandContext.getOne( "state" ).get() );
                     return CommandResult.success();
                 } )
-                .arguments(GenericArguments.onlyOne(GenericArguments.bool(Text.of("state"))))
+                .arguments( GenericArguments.onlyOne( GenericArguments.bool( Text.of( "state" ) ) ) )
                 .build();
 
-        game.getCommandManager().register(this, commandReload, "gui");
-        game.getCommandManager().register(this, commandDev, "guidev");
+        game.getCommandManager().register( this, commandReload, "gui" );
+        game.getCommandManager().register( this, commandDev, "guidev" );
     }
 
     @Listener
-    public void onStartingEvent(GameStartingServerEvent event) {
+    public void onStartingEvent( GameStartingServerEvent event ) {
         this.spongeNetwork.sortPlugins();
     }
 
     @Override
-    public UserGui getUserGui(String plugin, UUID player) {
-        return this.spongeNetwork.getUserConnection(player).getUserGui(plugin);
+    public UserGui getUserGui( String plugin, UUID player ) {
+        return this.spongeNetwork.getUserConnection( player ).getUserGui( plugin );
     }
 
     @Override
-    public String getPlayerName(UUID player) {
-        return org.spongepowered.api.Sponge.getGame().getServer().getPlayer(player).get().getName();
+    public String getPlayerName( UUID player ) {
+        return org.spongepowered.api.Sponge.getGame().getServer().getPlayer( player ).get().getName();
     }
 
     @Override
-    public void sendCommand(UUID sender, String command) {
+    public void sendCommand( UUID sender, String command ) {
         Task.Builder taskBuilder = game.getScheduler().createTaskBuilder();
 
-        taskBuilder.execute(() -> {
-                    org.spongepowered.api.Sponge.getGame().getCommandManager().process(org.spongepowered.api.Sponge.getGame().getServer().getPlayer(sender).get(), command);
-                }).submit(this);
+        taskBuilder.execute( () -> {
+            org.spongepowered.api.Sponge.getGame().getCommandManager().process( org.spongepowered.api.Sponge.getGame().getServer().getPlayer( sender ).get(), command );
+        } ).submit( this );
     }
 
     @Override
-    public void setParagraphToWorldChangeEvent(UUID player, Paragraph paragraph) {
-        game.getEventManager().registerListeners(this, new WorldChangeEvent(paragraph, player));
+    public void setParagraphToWorldChangeEvent( UUID player, Paragraph paragraph ) {
+        game.getEventManager().registerListeners( this, new WorldChangeEvent( paragraph, player ) );
 
-        paragraph.setText(org.spongepowered.api.Sponge.getGame().getServer().getPlayer(player).get().getWorld().getName());
+        paragraph.setText( org.spongepowered.api.Sponge.getGame().getServer().getPlayer( player ).get().getWorld().getName() );
     }
 
     @Override
-    public void setParagraphToEconomyTransactionEvent(UUID player, Paragraph paragraph, String currency) {
-        game.getEventManager().registerListeners(this, new EconomyTransactionEvent(paragraph, player, currency));
+    public void setParagraphToEconomyTransactionEvent( UUID player, Paragraph paragraph, String currency ) {
+        game.getEventManager().registerListeners( this, new EconomyTransactionEvent( paragraph, player, currency ) );
 
-        EconomyService economyService = game.getServiceManager().provide(EconomyService.class).get();
-        UniqueAccount account = economyService.getAccount(player).get();
+        EconomyService economyService = game.getServiceManager().provide( EconomyService.class ).get();
+        UniqueAccount account = economyService.getAccount( player ).get();
         Currency curr = null;
 
-        for(Currency c : economyService.getCurrencies())
-            if(c.getDisplayName().toPlain().equalsIgnoreCase(currency))
+        for ( Currency c : economyService.getCurrencies() ) {
+            if ( c.getDisplayName().toPlain().equalsIgnoreCase( currency ) ) {
                 curr = c;
+            }
+        }
 
-        if(curr != null)
-            paragraph.setText(account.getBalance(curr).toString());
+        if ( curr != null ) {
+            paragraph.setText( account.getBalance( curr ).toString() );
+        }
     }
 
 }

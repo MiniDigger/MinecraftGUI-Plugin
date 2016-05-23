@@ -31,13 +31,13 @@ public class PacketDeleteComponent extends PacketOut {
 
     private final Component component;
 
-    public PacketDeleteComponent(Component component) {
+    public PacketDeleteComponent( Component component ) {
         this.component = component;
     }
 
     @Override
     public JSONObject toJSON() {
-        return new JSONObject().put(NetworkController.COMPONENT_ID, component.getUniqueId().toString());
+        return new JSONObject().put( NetworkController.COMPONENT_ID, component.getUniqueId().toString() );
     }
 
 }

@@ -34,15 +34,17 @@ public class WorldChangeEvent {
     private final Paragraph paragraph;
     private final UUID player;
 
-    public WorldChangeEvent(Paragraph paragraph, UUID player) {
+    public WorldChangeEvent( Paragraph paragraph, UUID player ) {
         this.paragraph = paragraph;
         this.player = player;
     }
 
     @Listener
-    public void onWorldChange(DisplaceEntityEvent.TargetPlayer event){
-        if(event.getTargetEntity().getUniqueId().equals(player))
-            if(event.getFromTransform().getExtent() != event.getToTransform().getExtent())
-                paragraph.setText(event.getToTransform().getExtent().getName());
+    public void onWorldChange( DisplaceEntityEvent.TargetPlayer event ) {
+        if ( event.getTargetEntity().getUniqueId().equals( player ) ) {
+            if ( event.getFromTransform().getExtent() != event.getToTransform().getExtent() ) {
+                paragraph.setText( event.getToTransform().getExtent().getName() );
+            }
+        }
     }
 }

@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnMouseLeaveListener {
 
-    void onMouseLeave(Component component);
+    void onMouseLeave( Component component );
 
 }

@@ -27,6 +27,6 @@ import io.github.minecraftgui.models.components.Component;
  */
 public interface OnFocusListener {
 
-    void onFocus(Component component);
+    void onFocus( Component component );
 
 }

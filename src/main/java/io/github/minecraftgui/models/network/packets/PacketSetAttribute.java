@@ -44,7 +44,7 @@ public class PacketSetAttribute extends PacketOut {
     private String componentAttributeToLink;
     private String componentShapeToLink;
 
-    public PacketSetAttribute(Component component, Object value) {
+    public PacketSetAttribute( Component component, Object value ) {
         this.component = component;
         this.shape = component.getShape();
         this.state = State.NORMAL;
@@ -53,7 +53,7 @@ public class PacketSetAttribute extends PacketOut {
         this.value = value;
     }
 
-    public PacketSetAttribute(Component component, Shape shape, double positions[][]) {
+    public PacketSetAttribute( Component component, Shape shape, double positions[][] ) {
         this.component = component;
         this.shape = shape;
         this.state = State.NORMAL;
@@ -61,16 +61,16 @@ public class PacketSetAttribute extends PacketOut {
         this.time = 0;
         this.value = new JSONArray();
 
-        for(double pos[] : positions){
+        for ( double pos[] : positions ) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(NetworkController.X, pos[0]);
-            jsonObject.put(NetworkController.Y, pos[1]);
+            jsonObject.put( NetworkController.X, pos[0] );
+            jsonObject.put( NetworkController.Y, pos[1] );
 
-            ((JSONArray) value).put(jsonObject);
+            ( (JSONArray) value ).put( jsonObject );
         }
     }
 
-    public PacketSetAttribute(Component component, State state, int value) {
+    public PacketSetAttribute( Component component, State state, int value ) {
         this.component = component;
         this.shape = component.getShape();
         this.state = state;
@@ -79,16 +79,16 @@ public class PacketSetAttribute extends PacketOut {
         this.value = value;
     }
 
-    public PacketSetAttribute(Component component, State state, Color value) {
+    public PacketSetAttribute( Component component, State state, Color value ) {
         this.component = component;
         this.shape = component.getShape();
         this.state = state;
         this.percentage = 1;
         this.time = 0;
-        this.value = new JSONObject().put(NetworkController.R, value.getRed()).put(NetworkController.G, value.getGreen()).put(NetworkController.B, value.getBlue()).put(NetworkController.A, value.getAlpha());
+        this.value = new JSONObject().put( NetworkController.R, value.getRed() ).put( NetworkController.G, value.getGreen() ).put( NetworkController.B, value.getBlue() ).put( NetworkController.A, value.getAlpha() );
     }
 
-    public PacketSetAttribute(Component component, State state, String value) {
+    public PacketSetAttribute( Component component, State state, String value ) {
         this.component = component;
         this.shape = component.getShape();
         this.state = state;
@@ -97,7 +97,7 @@ public class PacketSetAttribute extends PacketOut {
         this.value = value;
     }
 
-    public PacketSetAttribute(Component component, Shape shape, State state, String value) {
+    public PacketSetAttribute( Component component, Shape shape, State state, String value ) {
         this.component = component;
         this.shape = shape;
         this.state = state;
@@ -106,25 +106,25 @@ public class PacketSetAttribute extends PacketOut {
         this.value = value;
     }
 
-    public PacketSetAttribute(Component component, Shape shape, State state, double percentage, long time, Double value) {
-        this.component = component;
-        this.shape = shape;
-        this.state = state;
-        this.percentage = percentage;
-        this.time = time;
-        this.value = value;
-    }
-
-    public PacketSetAttribute(Component component, Shape shape, State state, double percentage, long time, Color value) {
+    public PacketSetAttribute( Component component, Shape shape, State state, double percentage, long time, Double value ) {
         this.component = component;
         this.shape = shape;
         this.state = state;
         this.percentage = percentage;
         this.time = time;
-        this.value = new JSONObject().put(NetworkController.R, value.getRed()).put(NetworkController.G, value.getGreen()).put(NetworkController.B, value.getBlue()).put(NetworkController.A, value.getAlpha());
+        this.value = value;
     }
 
-    public PacketSetAttribute(Component component, Shape shape, State state, double percentage, long time, String componentIdToLink, String componentAttributeToLink, String componentShapeToLink) {
+    public PacketSetAttribute( Component component, Shape shape, State state, double percentage, long time, Color value ) {
+        this.component = component;
+        this.shape = shape;
+        this.state = state;
+        this.percentage = percentage;
+        this.time = time;
+        this.value = new JSONObject().put( NetworkController.R, value.getRed() ).put( NetworkController.G, value.getGreen() ).put( NetworkController.B, value.getBlue() ).put( NetworkController.A, value.getAlpha() );
+    }
+
+    public PacketSetAttribute( Component component, Shape shape, State state, double percentage, long time, String componentIdToLink, String componentAttributeToLink, String componentShapeToLink ) {
         this.component = component;
         this.shape = shape;
         this.state = state;
@@ -140,18 +140,19 @@ public class PacketSetAttribute extends PacketOut {
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonAttr = new JSONObject();
-        jsonObject.put(NetworkController.COMPONENT_ID, component.getUniqueId().toString());
-        jsonObject.put(NetworkController.STATE, state.name().toUpperCase());
-        jsonObject.put(NetworkController.ATTRIBUTE, jsonAttr);
-        jsonObject.put(NetworkController.SHAPE, shape.getComponentShape());
+        jsonObject.put( NetworkController.COMPONENT_ID, component.getUniqueId().toString() );
+        jsonObject.put( NetworkController.STATE, state.name().toUpperCase() );
+        jsonObject.put( NetworkController.ATTRIBUTE, jsonAttr );
+        jsonObject.put( NetworkController.SHAPE, shape.getComponentShape() );
 
-        jsonAttr.put(NetworkController.TIME, time);
-        jsonAttr.put(NetworkController.PERCENTAGE, percentage);
+        jsonAttr.put( NetworkController.TIME, time );
+        jsonAttr.put( NetworkController.PERCENTAGE, percentage );
 
-        if(value == null)
-            jsonAttr.put(NetworkController.COMPONENT_ID, componentIdToLink).put(NetworkController.ATTRIBUTE, componentAttributeToLink).put(NetworkController.SHAPE, componentShapeToLink);
-        else
-            jsonAttr.put(NetworkController.VALUE, value);
+        if ( value == null ) {
+            jsonAttr.put( NetworkController.COMPONENT_ID, componentIdToLink ).put( NetworkController.ATTRIBUTE, componentAttributeToLink ).put( NetworkController.SHAPE, componentShapeToLink );
+        } else {
+            jsonAttr.put( NetworkController.VALUE, value );
+        }
 
         return jsonObject;
     }

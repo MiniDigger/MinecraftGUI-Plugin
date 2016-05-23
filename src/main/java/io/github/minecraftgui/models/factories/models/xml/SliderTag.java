@@ -20,7 +20,10 @@
 
 package io.github.minecraftgui.models.factories.models.xml;
 
-import io.github.minecraftgui.models.components.*;
+import io.github.minecraftgui.models.components.Component;
+import io.github.minecraftgui.models.components.Div;
+import io.github.minecraftgui.models.components.Slider;
+import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.models.factories.GuiFactory;
 import io.github.minecraftgui.models.shapes.Rectangle;
 import io.github.minecraftgui.models.shapes.RectangleColor;
@@ -37,32 +40,34 @@ public class SliderTag extends ComponentTag {
     private final Slider.Type type;
     private final double percentage;
 
-    public SliderTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        button = (ComponentTag) getXmlTagSetAs(element, "button");
-        shapeProgress = (Class<? extends Rectangle>) getShapeByName(element.getAttribute("shapeProgress"));
-        type = element.hasAttribute("type")? Slider.Type.valueOf(element.getAttribute("type").toUpperCase()): Slider.Type.HORIZONTAL;
-        percentage = element.hasAttribute("percentage")?Double.parseDouble(element.getAttribute("percentage")):0;
+    public SliderTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        button = (ComponentTag) getXmlTagSetAs( element, "button" );
+        shapeProgress = (Class<? extends Rectangle>) getShapeByName( element.getAttribute( "shapeProgress" ) );
+        type = element.hasAttribute( "type" ) ? Slider.Type.valueOf( element.getAttribute( "type" ).toUpperCase() ) : Slider.Type.HORIZONTAL;
+        percentage = element.hasAttribute( "percentage" ) ? Double.parseDouble( element.getAttribute( "percentage" ) ) : 0;
 
-        if(button != null)
-            model.addTag(button);
+        if ( button != null ) {
+            model.addTag( button );
+        }
     }
 
     @Override
-    public Component createComponent(PluginInterface service, UserGui userGui) {
-        Component b = button == null?new Div(RectangleColor.class):button.createComponent(service, userGui);
+    public Component createComponent( PluginInterface service, UserGui userGui ) {
+        Component b = button == null ? new Div( RectangleColor.class ) : button.createComponent( service, userGui );
 
-        return new Slider(type, (Class<? extends Rectangle>) shape, shapeProgress, b, id);
+        return new Slider( type, (Class<? extends Rectangle>) shape, shapeProgress, b, id );
     }
 
     @Override
-    protected void setAttributes(PluginInterface plugin, UserGui userGui, Component component) {
-        super.setAttributes(plugin, userGui, component);
+    protected void setAttributes( PluginInterface plugin, UserGui userGui, Component component ) {
+        super.setAttributes( plugin, userGui, component );
         Slider slider = (Slider) component;
 
-        if(button != null)
-            button.setAttributes(plugin, userGui, slider.getButton());
+        if ( button != null ) {
+            button.setAttributes( plugin, userGui, slider.getButton() );
+        }
 
-        slider.setPercentage(percentage);
+        slider.setPercentage( percentage );
     }
 }

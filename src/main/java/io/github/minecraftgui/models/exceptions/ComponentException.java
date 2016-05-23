@@ -23,10 +23,10 @@ package io.github.minecraftgui.models.exceptions;
 /**
  * Created by Samuel on 2015-12-29.
  */
-public class ComponentException extends RuntimeException  {
+public class ComponentException extends RuntimeException {
 
-    public ComponentException(String message) {
-        super(message);
+    public ComponentException( String message ) {
+        super( message );
     }
 
 }

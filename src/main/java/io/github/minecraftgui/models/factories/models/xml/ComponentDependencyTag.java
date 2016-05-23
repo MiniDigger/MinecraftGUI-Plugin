@@ -33,14 +33,14 @@ public class ComponentDependencyTag extends ComponentTag {
 
     private final String plugin;
 
-    public ComponentDependencyTag(Element element, GuiFactory.GuiModel model) {
-        super(element, model);
-        this.plugin = element.getAttribute("plugin");
+    public ComponentDependencyTag( Element element, GuiFactory.GuiModel model ) {
+        super( element, model );
+        this.plugin = element.getAttribute( "plugin" );
     }
 
     @Override
-    protected Component createComponent(PluginInterface service, UserGui userGui) {
-        return plugin.equals("")?userGui.getComponent(id):service.getUserGui(plugin, userGui.getPlayerUUID()).getComponent(id);
+    protected Component createComponent( PluginInterface service, UserGui userGui ) {
+        return plugin.equals( "" ) ? userGui.getComponent( id ) : service.getUserGui( plugin, userGui.getPlayerUUID() ).getComponent( id );
     }
 
 }

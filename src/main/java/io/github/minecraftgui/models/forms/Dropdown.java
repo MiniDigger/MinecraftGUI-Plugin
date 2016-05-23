@@ -43,24 +43,26 @@ public class Dropdown implements Valuable<String> {
     public Dropdown() {
         this.values = new ConcurrentHashMap<>();
         this.onClickListener = component -> {
-            if(isListVisible)
-                setListVisibility(Visibility.INVISIBLE);
-            else
-                setListVisibility(Visibility.VISIBLE);
+            if ( isListVisible ) {
+                setListVisibility( Visibility.INVISIBLE );
+            } else {
+                setListVisibility( Visibility.VISIBLE );
+            }
 
             isListVisible = !isListVisible;
         };
     }
 
-    public void setParagraphValueDisplayed(Paragraph paragraphValueDisplayed) {
-        if(this.paragraphValueDisplayed != null)
-            this.paragraphValueDisplayed.removeOnClickListener(onClickListener);
+    public void setParagraphValueDisplayed( Paragraph paragraphValueDisplayed ) {
+        if ( this.paragraphValueDisplayed != null ) {
+            this.paragraphValueDisplayed.removeOnClickListener( onClickListener );
+        }
 
         this.paragraphValueDisplayed = paragraphValueDisplayed;
-        this.paragraphValueDisplayed.addOnClickListener(onClickListener);
+        this.paragraphValueDisplayed.addOnClickListener( onClickListener );
     }
 
-    public void setList(List list) {
+    public void setList( List list ) {
         this.list = list;
     }
 
@@ -72,21 +74,21 @@ public class Dropdown implements Valuable<String> {
         return paragraphValueDisplayed;
     }
 
-    public void init(){
+    public void init() {
         list.update();
-        list.setVisibility(Visibility.INVISIBLE);
+        list.setVisibility( Visibility.INVISIBLE );
     }
 
-    public void addValue(Paragraph paragraph, String value){
-        if(list != null) {
-            values.put(paragraph, value);
+    public void addValue( Paragraph paragraph, String value ) {
+        if ( list != null ) {
+            values.put( paragraph, value );
 
             paragraph.addOnClickListener( component -> {
                 Paragraph para = (Paragraph) component;
                 lastComponentClicked = component;
 
-                paragraphValueDisplayed.setText(para.getText());
-                list.setVisibility(Visibility.INVISIBLE);
+                paragraphValueDisplayed.setText( para.getText() );
+                list.setVisibility( Visibility.INVISIBLE );
                 isListVisible = false;
             } );
         }
@@ -94,12 +96,13 @@ public class Dropdown implements Valuable<String> {
 
     @Override
     public String getValue() {
-        return lastComponentClicked == null?null:values.get(lastComponentClicked);
+        return lastComponentClicked == null ? null : values.get( lastComponentClicked );
     }
 
-    private void setListVisibility(Visibility visibility){
-        if(list != null)
-            list.setVisibility(visibility);
+    private void setListVisibility( Visibility visibility ) {
+        if ( list != null ) {
+            list.setVisibility( visibility );
+        }
     }
 
 }

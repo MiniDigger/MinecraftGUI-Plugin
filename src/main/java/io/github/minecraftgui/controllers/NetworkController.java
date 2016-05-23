@@ -196,11 +196,11 @@ public abstract class NetworkController {
     }
 
     public void addPlugin(OnGuiListener plugin, String pluginName){
-        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<String>()));
+        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<>()));
     }
 
     public void addPlugin(OnGuiListener plugin, String pluginName, String... dependencies){
-        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<String>(Arrays.asList(dependencies))));
+        pluginsInfo.add(new PluginInfo(pluginName, plugin, new ArrayList<>(Arrays.asList(dependencies))));
     }
 
     public void sortPlugins(){
@@ -243,8 +243,7 @@ public abstract class NetworkController {
 
         pluginsInfo.clear();
 
-        for(PluginInfo pluginInfo : pluginsAdded)
-            pluginsInfo.add(pluginInfo);
+        pluginsInfo.addAll( pluginsAdded );
     }
 
     public UserConnection getUserConnection(UUID uuid){

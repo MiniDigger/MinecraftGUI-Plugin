@@ -78,13 +78,10 @@ public class Sponge implements PluginInterface {
 
         CommandSpec commandDev = CommandSpec.builder()
                 .description(Text.of("MinecraftGui command to start the dev mode."))
-                .executor(new CommandExecutor() {
-                    @Override
-                    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-                        adminPlugin.setDevMode((Boolean) commandContext.getOne("state").get());
-                        return CommandResult.success();
-                    }
-                })
+                .executor( ( commandSource, commandContext ) -> {
+                    adminPlugin.setDevMode((Boolean) commandContext.getOne("state").get());
+                    return CommandResult.success();
+                } )
                 .arguments(GenericArguments.onlyOne(GenericArguments.bool(Text.of("state"))))
                 .build();
 
@@ -111,8 +108,7 @@ public class Sponge implements PluginInterface {
     public void sendCommand(UUID sender, String command) {
         Task.Builder taskBuilder = game.getScheduler().createTaskBuilder();
 
-        taskBuilder
-                .execute(() -> {
+        taskBuilder.execute(() -> {
                     org.spongepowered.api.Sponge.getGame().getCommandManager().process(org.spongepowered.api.Sponge.getGame().getServer().getPlayer(sender).get(), command);
                 }).submit(this);
     }

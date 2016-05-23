@@ -42,16 +42,13 @@ public class Dropdown implements Valuable<String> {
 
     public Dropdown() {
         this.values = new ConcurrentHashMap<>();
-        this.onClickListener = new OnClickListener() {
-            @Override
-            public void onClick(Component component) {
-                if(isListVisible)
-                    setListVisibility(Visibility.INVISIBLE);
-                else
-                    setListVisibility(Visibility.VISIBLE);
+        this.onClickListener = component -> {
+            if(isListVisible)
+                setListVisibility(Visibility.INVISIBLE);
+            else
+                setListVisibility(Visibility.VISIBLE);
 
-                isListVisible = !isListVisible;
-            }
+            isListVisible = !isListVisible;
         };
     }
 
@@ -84,17 +81,14 @@ public class Dropdown implements Valuable<String> {
         if(list != null) {
             values.put(paragraph, value);
 
-            paragraph.addOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(Component component) {
-                    Paragraph para = (Paragraph) component;
-                    lastComponentClicked = component;
+            paragraph.addOnClickListener( component -> {
+                Paragraph para = (Paragraph) component;
+                lastComponentClicked = component;
 
-                    paragraphValueDisplayed.setText(para.getText());
-                    list.setVisibility(Visibility.INVISIBLE);
-                    isListVisible = false;
-                }
-            });
+                paragraphValueDisplayed.setText(para.getText());
+                list.setVisibility(Visibility.INVISIBLE);
+                isListVisible = false;
+            } );
         }
     }
 

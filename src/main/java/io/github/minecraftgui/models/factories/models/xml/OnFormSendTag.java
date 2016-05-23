@@ -47,12 +47,7 @@ public class OnFormSendTag extends Tag {
     }
 
     public void addEvent(PluginInterface pluginInterface, UserGui userGui){
-        userGui.getForm(this.form).addOnFormSendListener(new OnFormSendListener() {
-            @Override
-            public void onFormSend(Form form) {
-                pluginInterface.sendCommand(userGui.getPlayerUUID(), convertCommand(form));
-            }
-        });
+        userGui.getForm(this.form).addOnFormSendListener( form1 -> pluginInterface.sendCommand(userGui.getPlayerUUID(), convertCommand( form1 )) );
     }
 
     private String convertCommand(Form form){

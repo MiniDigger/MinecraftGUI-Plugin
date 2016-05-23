@@ -43,12 +43,9 @@ public class Form {
 
         Form form = this;
 
-        this.onClickListener = new OnClickListener() {
-            @Override
-            public void onClick(Component component) {
-                for (OnFormSendListener listener : listeners)
-                    listener.onFormSend(form);
-            }
+        this.onClickListener = component -> {
+            for (OnFormSendListener listener : listeners)
+                listener.onFormSend(form);
         };
     }
 

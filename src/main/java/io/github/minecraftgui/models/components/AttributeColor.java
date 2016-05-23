@@ -27,6 +27,8 @@ import io.github.minecraftgui.controllers.NetworkController;
  */
 public class AttributeColor extends Attribute {
 
+    //TODO is this class still usefull?
+
     public static final AttributeColor BACKGROUND_COLOR = new AttributeColor(NetworkController.BACKGROUND_COLOR);
     public static final AttributeColor BORDER_TOP_COLOR = new AttributeColor(NetworkController.BORDER_TOP_COLOR);
     public static final AttributeColor BORDER_LEFT_COLOR = new AttributeColor(NetworkController.BORDER_LEFT_COLOR);

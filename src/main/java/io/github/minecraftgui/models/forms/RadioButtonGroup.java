@@ -43,32 +43,29 @@ public class RadioButtonGroup implements Valuable<String> {
     public void addCheckBox(CheckBox checkBox, String value){
         this.checkBoxes.put(checkBox, value);
 
-        checkBox.addOnValueChangeListener(new OnValueChangeListener() {
-            @Override
-            public void onValueChange(ComponentValuable component) {
-                CheckBox box = (CheckBox) component;
+        checkBox.addOnValueChangeListener( component -> {
+            CheckBox box = (CheckBox) component;
 
-                if(current != box) {
-                    if (box.getValue().booleanValue()) {
-                        Enumeration<CheckBox> checks = checkBoxes.keys();
-                        current = box;
+            if(current != box) {
+                if ( box.getValue() ) {
+                    Enumeration<CheckBox> checks = checkBoxes.keys();
+                    current = box;
 
-                        while(checks.hasMoreElements()) {
-                            CheckBox check = checks.nextElement();
+                    while(checks.hasMoreElements()) {
+                        CheckBox check = checks.nextElement();
 
-                            if (check != box)
-                                check.setChecked(false);
-                        }
+                        if (check != box)
+                            check.setChecked(false);
                     }
                 }
-                else if(!skipNextEvent) {
-                    box.setChecked(true);
-                    skipNextEvent = true;
-                }
-                else
-                    skipNextEvent = false;
             }
-        });
+            else if(!skipNextEvent) {
+                box.setChecked(true);
+                skipNextEvent = true;
+            }
+            else
+                skipNextEvent = false;
+        } );
     }
 
     @Override

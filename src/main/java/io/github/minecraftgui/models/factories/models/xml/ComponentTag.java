@@ -165,47 +165,17 @@ public abstract class ComponentTag extends Tag {
 
             for(Function function : functions) {
                 if (listener == OnBlurListener.class) {
-                    component.addOnBlurListener(new OnBlurListener() {
-                        @Override
-                        public void onBlur(Component component) {
-                            function.execute(userGui, component);
-                        }
-                    });
+                    component.addOnBlurListener( component1 -> function.execute(userGui, component1 ) );
                 } else if (listener == OnClickListener.class) {
-                    component.addOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(Component component) {
-                            function.execute(userGui, component);
-                        }
-                    });
+                    component.addOnClickListener( component1 -> function.execute(userGui, component1 ) );
                 } else if (listener == OnDoubleClickListener.class) {
-                    component.addOnDoubleClickListener(new OnDoubleClickListener() {
-                        @Override
-                        public void onDoubleClick(Component component) {
-                            function.execute(userGui, component);
-                        }
-                    });
+                    component.addOnDoubleClickListener( component1 -> function.execute(userGui, component1 ) );
                 } else if (listener == OnFocusListener.class) {
-                    component.addOnFocusListener(new OnFocusListener() {
-                        @Override
-                        public void onFocus(Component component) {
-                            function.execute(userGui, component);
-                        }
-                    });
+                    component.addOnFocusListener( component1 -> function.execute(userGui, component1 ) );
                 } else if (listener == OnMouseLeaveListener.class) {
-                    component.addOnMouseLeaveListener(new OnMouseLeaveListener() {
-                        @Override
-                        public void onMouseLeave(Component component) {
-                            function.execute(userGui, component);
-                        }
-                    });
+                    component.addOnMouseLeaveListener( component1 -> function.execute(userGui, component1 ) );
                 } else if (listener == OnMouseEnterListener.class) {
-                    component.addOnMouseEnterListener(new OnMouseEnterListener() {
-                        @Override
-                        public void onMouseEnter(Component component) {
-                            function.execute(userGui, component);
-                        }
-                    });
+                    component.addOnMouseEnterListener( component1 -> function.execute(userGui, component1 ) );
                 }
             }
         }

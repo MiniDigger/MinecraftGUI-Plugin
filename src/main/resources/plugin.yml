@@ -1,0 +1,8 @@
+name: MinecraftGui
+version: 2.0
+main: io.github.minecraftgui.views.bukkit.Bukkit
+authors: [Djxy, MiniDigger]
+commands:
+    gui:
+    guidev:
+# TODO command descriptions and permissions

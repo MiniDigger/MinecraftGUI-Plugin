@@ -18,16 +18,14 @@
  *
  */
 
-package io.github.minecraftgui.views.sponge;
+package io.github.minecraftgui.views.bukkit;
 
 import io.github.minecraftgui.models.components.Paragraph;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.service.economy.account.UniqueAccount;
 
 import java.util.UUID;
 
 /**
- * Created by Samuel on 2016-01-19.
+ * Created by Martin on 23.05.2016.
  */
 public class EconomyTransactionEvent {
 
@@ -41,16 +39,10 @@ public class EconomyTransactionEvent {
         this.currency = currency;
     }
 
-    @Listener
-    public void onEconomyTransaction( org.spongepowered.api.event.economy.EconomyTransactionEvent event ) {
-        if ( event.getTransactionResult().getCurrency().getDisplayName().toPlain().equalsIgnoreCase( currency ) ) {
-            if ( event.getTransactionResult().getAccount() instanceof UniqueAccount ) {
-                UniqueAccount account = (UniqueAccount) event.getTransactionResult().getAccount();
-
-                if ( account.getUUID().equals( player ) ) {
-                    paragraph.setText( account.getBalance( event.getTransactionResult().getCurrency() ).toString() );
-                }
-            }
+    //TODO implement updating of the player's balance
+    public void changed( UUID id, double newValue ) {
+        if ( id.equals( player ) ) {
+            paragraph.setText( newValue + "" );
         }
     }
 }

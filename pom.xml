@@ -8,6 +8,16 @@
     <artifactId>MinecraftGUI-Plugin</artifactId>
     <version>1.0.1</version>
 
+    <contributors>
+        <contributor>
+            <name>MiniDigger</name>
+            <email>admin@minidigger.me</email>
+            <roles>
+                <role>Maintainer</role>
+            </roles>
+        </contributor>
+    </contributors>
+
     <repositories>
         <repository>
             <id>sponge-maven-repo</id>
@@ -43,6 +53,17 @@
             <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.9-R0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160212</version>
+        </dependency>
+    </dependencies>
 </project>

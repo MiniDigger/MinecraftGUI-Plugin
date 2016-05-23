@@ -1,49 +1,53 @@
 package io.github.minecraftgui.views.bukkit;
 
-import com.google.inject.Inject;
 import io.github.minecraftgui.models.components.Paragraph;
 import io.github.minecraftgui.models.components.UserGui;
 import io.github.minecraftgui.views.AdminPlugin;
 import io.github.minecraftgui.views.MinecraftGuiService;
 import io.github.minecraftgui.views.PluginInterface;
+import io.github.minecraftgui.views.bukkit.commands.DevCommand;
+import io.github.minecraftgui.views.bukkit.commands.ReloadCommand;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.UUID;
 
 /**
  * Created by Martin on 23.05.2016.
  */
-public class Bukkit extends JavaPlugin implements PluginInterface {
-    @Inject
-    private Game game;
-
-    @Inject
-    @DefaultConfig( sharedRoot = false )
-    private Path defaultConfig;
+public class Bukkit extends JavaPlugin implements PluginInterface, Listener {
 
     private BukkitNetwork bukkitNetwork;
     private MinecraftGuiService service;
     private AdminPlugin adminPlugin;
 
-    @Listener
-    public void onInitializationEvent( GameInitializationEvent event ) {
-        this.bukkitNetwork = new BukkitNetwork( this, game );
+    private int enabledPlugins = 0;
+
+    public void onEnable() {
+        this.bukkitNetwork = new BukkitNetwork( this );
         this.service = new MinecraftGuiService( bukkitNetwork, this );
 
-        adminPlugin = new AdminPlugin( service, defaultConfig.toString().substring( 0, defaultConfig.toString().lastIndexOf( File.separator ) ) );
+        adminPlugin = new AdminPlugin( service, getDataFolder().getAbsolutePath() );
 
-        game.getServiceManager().setProvider( this, MinecraftGuiService.class, this.service );
+        getServer().getServicesManager().register( MinecraftGuiService.class, this.service, this, ServicePriority.Normal );
 
+        getCommand( "gui" ).setExecutor( new ReloadCommand( bukkitNetwork ) );
+        getCommand( "guidev" ).setExecutor( new DevCommand( adminPlugin ) );
 
-        getCommand( "gui" ).setExecutor( new io.github.minecraftgui.views.bukkit.commands.ReloadCommand( bukkitNetwork ) );
-        getCommand( "guidev" ).setExecutor( new io.github.minecraftgui.views.bukkit.commands.DevCommand( adminPlugin ) );
+        getServer().getPluginManager().registerEvents( this, this );
     }
 
-    @Listener
-    public void onStartingEvent( GameStartingServerEvent event ) {
-        this.bukkitNetwork.sortPlugins();
+    @EventHandler
+    public void onPluginInitialize( PluginEnableEvent event ) {
+        enabledPlugins++;
+        if ( enabledPlugins >= getServer().getPluginManager().getPlugins().length ) {
+            System.out.println( "sort plugins" );
+            this.bukkitNetwork.sortPlugins();
+            enabledPlugins = 0;
+        }
     }
 
     @Override

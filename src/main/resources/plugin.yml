@@ -2,6 +2,7 @@ name: MinecraftGui
 version: 2.0
 main: io.github.minecraftgui.views.bukkit.Bukkit
 authors: [Djxy, MiniDigger]
+load: STARTUP
 commands:
     gui:
     guidev:

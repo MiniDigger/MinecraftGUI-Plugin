@@ -2,57 +2,61 @@ package io.github.minecraftgui.views.bukkit;
 
 import io.github.minecraftgui.controllers.NetworkController;
 import io.github.minecraftgui.models.network.UserConnection;
-import io.github.minecraftgui.views.sponge.SpongeNetwork;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.json.JSONObject;
-import org.spongepowered.api.Game;
-import org.spongepowered.api.Platform;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.network.ChannelBinding;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.spongepowered.api.network.ChannelBuf;
 import org.spongepowered.api.network.Message;
-import org.spongepowered.api.network.PlayerConnection;
-import org.spongepowered.api.network.RemoteConnection;
 
 import java.util.UUID;
 
 /**
  * Created by Martin on 23.05.2016.
  */
-public class BukkitNetwork extends NetworkController {
+public class BukkitNetwork extends NetworkController implements PluginMessageListener, Listener {
 
-    private final Game game;
-    private final ChannelBinding.IndexedMessageChannel indexedMessageChannel;
+    private final Plugin plugin;
+    private final JSONParser parser;
 
-    public BukkitNetwork( Object plugin, Game game ) {
-        this.game = game;
-        indexedMessageChannel = game.getChannelRegistrar().createChannel( plugin, NetworkController.MINECRAFT_GUI_CHANNEL );
-        indexedMessageChannel.registerMessage( BukkitNetwork.Packet.class, 0, this );
-        game.getEventManager().registerListeners( plugin, this );
+    public BukkitNetwork( Plugin plugin ) {
+        this.plugin = plugin;
+        parser = new JSONParser();
+        plugin.getServer().getMessenger().registerIncomingPluginChannel( plugin, NetworkController.MINECRAFT_GUI_CHANNEL, this );
+        plugin.getServer().getPluginManager().registerEvents( this, plugin );
     }
 
-    @Listener
-    public void playerDisconnect( ClientConnectionEvent.Disconnect event ) {
-        removeUserConnection( event.getTargetEntity().getUniqueId() );
+    @EventHandler
+    public void playerDisconnect( PlayerQuitEvent event ) {
+        removeUserConnection( event.getPlayer().getUniqueId() );
     }
 
     @Override
-    public void handleMessage( Packet packet, RemoteConnection remoteConnection, Platform.Type type ) {
-        if ( remoteConnection instanceof PlayerConnection ) {
-            UUID uuid = ( (PlayerConnection) remoteConnection ).getPlayer().getProfile().getUniqueId();
-            UserConnection userConnection = getUserConnection( uuid );
+    public void onPluginMessageReceived( String s, Player player, byte[] bytes ) {
+        UserConnection userConnection = getUserConnection( player.getUniqueId() );
+        JSONObject obj;
+        try {
+            obj = (JSONObject) parser.parse( new String( bytes ) );
+        } catch ( ParseException e ) {
+            e.printStackTrace();
+            return;
+        }
 
-            if ( userConnection != null ) {
-                userConnection.receivePacket( packet.jsonObject );
-            } else {
-                createUserConnection( uuid ).receivePacket( packet.jsonObject );
-            }
+        if ( userConnection != null ) {
+            userConnection.receivePacket( obj );
+        } else {
+            createUserConnection( player.getUniqueId() ).receivePacket( obj );
         }
     }
 
     @Override
     public void sendPacktTo( UUID uuid, JSONObject jsonObject ) {
-        indexedMessageChannel.sendTo( game.getServer().getPlayer( uuid ).get(), new Packet( jsonObject ) );
+        org.bukkit.Bukkit.getPlayer( uuid ).sendPluginMessage( plugin, NetworkController.MINECRAFT_GUI_CHANNEL, jsonObject.toString().getBytes() );
     }
 
     public static class Packet implements Message {
@@ -77,7 +81,5 @@ public class BukkitNetwork extends NetworkController {
                 channelBuf.writeByte( b );
             }
         }
-
     }
-
 }

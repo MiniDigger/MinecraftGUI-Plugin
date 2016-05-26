@@ -44,7 +44,6 @@ public class Bukkit extends JavaPlugin implements PluginInterface, Listener {
     public void onPluginInitialize( PluginEnableEvent event ) {
         enabledPlugins++;
         if ( enabledPlugins >= getServer().getPluginManager().getPlugins().length ) {
-            System.out.println( "sort plugins" );
             this.bukkitNetwork.sortPlugins();
             enabledPlugins = 0;
         }

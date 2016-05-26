@@ -1,5 +1,5 @@
 name: MinecraftGui
-version: 2.0
+version: 2.0.5
 main: io.github.minecraftgui.views.bukkit.Bukkit
 authors: [Djxy, MiniDigger]
 load: STARTUP

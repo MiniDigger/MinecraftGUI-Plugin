@@ -9,8 +9,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.json.JSONObject;
-import org.spongepowered.api.network.ChannelBuf;
-import org.spongepowered.api.network.Message;
 
 import java.util.UUID;
 
@@ -52,29 +50,5 @@ public class BukkitNetwork extends NetworkController implements PluginMessageLis
         System.arraycopy( temp, 0, data, 1, temp.length );
         data[0] = 0;
         org.bukkit.Bukkit.getPlayer( uuid ).sendPluginMessage( plugin, NetworkController.MINECRAFT_GUI_CHANNEL, data );
-    }
-
-    public static class Packet implements Message {
-
-        private JSONObject jsonObject;
-
-        public Packet( JSONObject jsonObject ) {
-            this.jsonObject = jsonObject;
-        }
-
-        public Packet() {
-        }
-
-        @Override
-        public void readFrom( ChannelBuf channelBuf ) {
-            jsonObject = new JSONObject( new String( channelBuf.array() ).trim() );
-        }
-
-        @Override
-        public void writeTo( ChannelBuf channelBuf ) {
-            for ( byte b : jsonObject.toString().getBytes() ) {
-                channelBuf.writeByte( b );
-            }
-        }
     }
 }

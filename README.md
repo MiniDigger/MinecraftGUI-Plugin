@@ -21,7 +21,7 @@ Features
 How to use MinecraftGui:
 --
 - **Server administrators**
-  - Download the last release of MinecraftGui and drop the jars in your mods file. Then restart your server.
+  - Download the last release of MinecraftGui and drop the jars in your mods folder (if on sponge) or in your plugins folder (if on spigot). Then restart your server.
   - You can create your interfaces by following this guide.
 - **Developers**
   - To implement MinecraftGui in your plugin, follow this guide.

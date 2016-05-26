@@ -46,8 +46,12 @@ public class BukkitNetwork extends NetworkController implements PluginMessageLis
 
     @Override
     public void sendPacktTo( UUID uuid, JSONObject jsonObject ) {
-        System.out.println( "send packet " + jsonObject.toString() );
-        org.bukkit.Bukkit.getPlayer( uuid ).sendPluginMessage( plugin, NetworkController.MINECRAFT_GUI_CHANNEL, jsonObject.toString().getBytes() );
+        // forge and its damm registries... we need to add a leading 0x0 byte so that forge can figure out the right packet class. Thanks md_5!
+        byte[] temp = jsonObject.toString().getBytes();
+        byte[] data = new byte[temp.length + 1];
+        System.arraycopy( temp, 0, data, 1, temp.length );
+        data[0] = 0;
+        org.bukkit.Bukkit.getPlayer( uuid ).sendPluginMessage( plugin, NetworkController.MINECRAFT_GUI_CHANNEL, data );
     }
 
     public static class Packet implements Message {

@@ -9,8 +9,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.spongepowered.api.network.ChannelBuf;
 import org.spongepowered.api.network.Message;
 
@@ -22,12 +20,11 @@ import java.util.UUID;
 public class BukkitNetwork extends NetworkController implements PluginMessageListener, Listener {
 
     private final Plugin plugin;
-    private final JSONParser parser;
 
     public BukkitNetwork( Plugin plugin ) {
         this.plugin = plugin;
-        parser = new JSONParser();
         plugin.getServer().getMessenger().registerIncomingPluginChannel( plugin, NetworkController.MINECRAFT_GUI_CHANNEL, this );
+        plugin.getServer().getMessenger().registerOutgoingPluginChannel( plugin, NetworkController.MINECRAFT_GUI_CHANNEL );
         plugin.getServer().getPluginManager().registerEvents( this, plugin );
     }
 
@@ -39,14 +36,7 @@ public class BukkitNetwork extends NetworkController implements PluginMessageLis
     @Override
     public void onPluginMessageReceived( String s, Player player, byte[] bytes ) {
         UserConnection userConnection = getUserConnection( player.getUniqueId() );
-        JSONObject obj;
-        try {
-            obj = (JSONObject) parser.parse( new String( bytes ) );
-        } catch ( ParseException e ) {
-            e.printStackTrace();
-            return;
-        }
-
+        JSONObject obj = new JSONObject( new String( bytes ).trim() );
         if ( userConnection != null ) {
             userConnection.receivePacket( obj );
         } else {
@@ -56,6 +46,7 @@ public class BukkitNetwork extends NetworkController implements PluginMessageLis
 
     @Override
     public void sendPacktTo( UUID uuid, JSONObject jsonObject ) {
+        System.out.println( "send packet " + jsonObject.toString() );
         org.bukkit.Bukkit.getPlayer( uuid ).sendPluginMessage( plugin, NetworkController.MINECRAFT_GUI_CHANNEL, jsonObject.toString().getBytes() );
     }
 
